@@ -11,22 +11,21 @@ const description = "Échauffez-vous avant de commencer à dessiner";
   
   <div id="sketch-container" style="margin-top: 2rem;"></div>
   
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js"></script>
   <script client:load>
-    import p5 from 'p5';
-    new p5((p) => {
-      p.setup = () => {
-        p.createCanvas(600, 400);
-      };
+    function setup() {
+      let canvas = createCanvas(600, 400);
+      canvas.parent('sketch-container');
+    }
+    
+    function draw() {
+      background(240);
       
-      p.draw = () => {
-        p.background(240);
-        
-        if (p.mouseIsPressed) {
-          p.stroke(0);
-          p.strokeWeight(5);
-          p.line(p.pmouseX, p.pmouseY, p.mouseX, p.mouseY);
-        }
-      };
-    }, 'sketch-container');
+      if (mouseIsPressed) {
+        stroke(0);
+        strokeWeight(5);
+        line(pmouseX, pmouseY, mouseX, mouseY);
+      }
+    }
   </script>
 </MainLayout>
