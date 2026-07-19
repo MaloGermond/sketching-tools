@@ -2,48 +2,19 @@
 import MainLayout from "../layouts/MainLayout.astro";
 import ToolCard from "../components/ToolCard.astro";
 
-const toolEntries = await Astro.glob("./tools/*.astro");
-
-const tools = toolEntries
-  .filter(entry => !entry.file.includes(".gitkeep"))
-  .map((entry) => {
-    const href = entry.url;
-    const slug = href.split("/").pop() || "";
-    const fm = entry.frontmatter;
-    
-    return {
-      title: fm?.title || slug.replace(/-/g, " ").replace(/\b\w/g, (l) => l.toUpperCase()),
-      description: fm?.description || "Un outil de sketching",
-      href: href,
-      icon: fm?.icon || "🛠️",
-      color: fm?.color || "blue",
-    };
-  });
+const tools = [
+  { title: "Canvas de dessin", href: "/tools/drawing-canvas", icon: "🎨", color: "blue", description: "Dessiner avec p5.js" },
+  { title: "Générateur de motifs", href: "/tools/pattern-generator", icon: "🔄", color: "green", description: "Créer des motifs" },
+];
 ---
 
-<MainLayout title="Accueil - Sketching Tools Hub">
-  <section class="text-center mb-12">
-    <h1 class="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-      Bienvenue sur le <span class="text-blue-600">Hub Sketching Tools</span>
-    </h1>
-    <p class="text-lg text-gray-600 max-w-2xl mx-auto">
-      Une collection d'outils spécialisés pour le sketching et la conception.
-    </p>
-  </section>
-
-  <section id="tools" class="mb-12">
-    <h2 class="text-2xl font-bold text-gray-900 mb-8">Nos outils</h2>
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      {tools.map((tool) => (
-        <ToolCard 
-          title={tool.title}
-          description={tool.description}
-          href={tool.href}
-          icon={tool.icon}
-          color={tool.color}
-        />
-      ))}
-    </div>
-  </section>
+<MainLayout title="Hub">
+  <h1>Mes outils</h1>
+  
+  <div style="display: grid; gap: 1rem; margin-top: 2rem;">
+    {tools.map((tool) => (
+      <ToolCard title={tool.title} href={tool.href} icon={tool.icon} color={tool.color} description={tool.description} />
+    ))}
+  </div>
 </MainLayout>
 
