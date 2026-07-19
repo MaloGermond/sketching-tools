@@ -8,4 +8,26 @@ const description = "Échauffez-vous avant de commencer à dessiner";
 <MainLayout title={title}>
   <h1>{title}</h1>
   <p>{description}</p>
+  
+  <div id="sketch-container" style="margin-top: 2rem;"></div>
+  
+  <script>
+    function setup() {
+      createCanvas(600, 400);
+    }
+    
+    function draw() {
+      background(240);
+      
+      if (mouseIsPressed) {
+        stroke(0);
+        strokeWeight(5);
+        line(pmouseX, pmouseY, mouseX, mouseY);
+      }
+    }
+  </script>
+  
+  <p style="margin-top: 1rem; font-size: 0.875rem; color: #666;">
+    Note: p5.js doit être installé (npm install p5)
+  </p>
 </MainLayout>
