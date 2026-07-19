@@ -17,6 +17,8 @@ function setup() {
 function draw() {
   if (mouseIsPressed) {
     if (!drawing) {
+      // Nouveau trait : effacer l'ancien
+      clear();
       beginShape(LINE_STRIP);
       drawing = true;
     }
