@@ -1,5 +1,6 @@
 ---
 import MainLayout from "../../layouts/MainLayout.astro";
+import p5 from 'p5';
 
 const title = "Échauffement";
 const description = "Échauffez-vous avant de commencer à dessiner";
@@ -12,22 +13,20 @@ const description = "Échauffez-vous avant de commencer à dessiner";
   <div id="sketch-container" style="margin-top: 2rem;"></div>
   
   <script>
-    function setup() {
-      createCanvas(600, 400);
-    }
-    
-    function draw() {
-      background(240);
+    new p5((p) => {
+      p.setup = () => {
+        p.createCanvas(600, 400);
+      };
       
-      if (mouseIsPressed) {
-        stroke(0);
-        strokeWeight(5);
-        line(pmouseX, pmouseY, mouseX, mouseY);
-      }
-    }
+      p.draw = () => {
+        p.background(240);
+        
+        if (p.mouseIsPressed) {
+          p.stroke(0);
+          p.strokeWeight(5);
+          p.line(p.pmouseX, p.pmouseY, p.mouseX, p.mouseY);
+        }
+      };
+    }, 'sketch-container');
   </script>
-  
-  <p style="margin-top: 1rem; font-size: 0.875rem; color: #666;">
-    Note: p5.js doit être installé (npm install p5)
-  </p>
 </MainLayout>
