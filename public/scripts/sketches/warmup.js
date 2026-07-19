@@ -11,7 +11,6 @@ function setup() {
   strokeWeight(3);
   strokeCap(ROUND);
   strokeJoin(ROUND);
-  noFill();
 }
 
 function draw() {
@@ -19,28 +18,13 @@ function draw() {
     if (!drawing) {
       // Nouveau trait : effacer l'ancien
       clear();
-      beginShape(LINE_STRIP);
       drawing = true;
     }
-    vertex(mouseX, mouseY);
-  } else {
-    if (drawing) {
-      endShape();
-      drawing = false;
-    }
+    // Dessiner la ligne en temps réel
+    line(pmouseX, pmouseY, mouseX, mouseY);
   }
 }
 
 function mouseReleased() {
-  if (drawing) {
-    endShape();
-    drawing = false;
-  }
-}
-
-function mouseLeft() {
-  if (drawing) {
-    endShape();
-    drawing = false;
-  }
+  drawing = false;
 }
