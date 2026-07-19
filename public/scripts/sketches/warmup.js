@@ -1,17 +1,44 @@
 // Warmup sketch - Échauffement avant dessin
-// Utilise p5.js via CDN
+// Effet crayon avec p5.js
+
+let drawing = false;
 
 function setup() {
   let canvas = createCanvas(600, 400);
   canvas.parent('sketch-container');
+  background(255);
+  stroke(0);
+  strokeWeight(3);
+  strokeCap(ROUND);
+  strokeJoin(ROUND);
+  noFill();
 }
 
 function draw() {
-  background(240);
-  
   if (mouseIsPressed) {
-    stroke(0);
-    strokeWeight(5);
-    line(pmouseX, pmouseY, mouseX, mouseY);
+    if (!drawing) {
+      beginShape(LINE_STRIP);
+      drawing = true;
+    }
+    vertex(mouseX, mouseY);
+  } else {
+    if (drawing) {
+      endShape();
+      drawing = false;
+    }
+  }
+}
+
+function mouseReleased() {
+  if (drawing) {
+    endShape();
+    drawing = false;
+  }
+}
+
+function mouseLeft() {
+  if (drawing) {
+    endShape();
+    drawing = false;
   }
 }
