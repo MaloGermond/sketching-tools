@@ -7,10 +7,10 @@ interface Props {
   color?: string;
 }
 
-const { title, description, href, icon = "🛠️", color = "var(--color-primary-500)" } = Astro.props;
+const { title, description, href, icon = "🛠️" } = Astro.props;
 ---
 
-<a href={href} style={`border-left: 4px solid ${color}`}>
+<a href={href}>
   <div>
     <div>
       <span>{icon}</span>
@@ -23,18 +23,18 @@ const { title, description, href, icon = "🛠️", color = "var(--color-primary
     a {
       display: block;
       text-decoration: none;
+      border-left: 4px solid var(--color-accent);
     }
     div {
       background: var(--bg-card);
-      border-radius: var(--radius-lg);
-      box-shadow: var(--shadow-md);
-      padding: var(--space-lg);
-      margin-bottom: var(--space-md);
-      transition: transform var(--transition-normal), box-shadow var(--transition-normal);
+      border-radius: var(--radius-md);
+      border: var(--border-light);
+      padding: var(--space-md);
+      margin-bottom: var(--space-sm);
+      transition: box-shadow var(--transition-fast);
     }
     a:hover div {
-      transform: translateY(-2px);
-      box-shadow: var(--shadow-lg);
+      box-shadow: var(--shadow-md);
     }
     div > div {
       display: flex;
@@ -43,16 +43,18 @@ const { title, description, href, icon = "🛠️", color = "var(--color-primary
       margin-bottom: var(--space-sm);
     }
     span {
-      font-size: var(--font-size-xl);
+      font-size: var(--font-size-lg);
     }
     h3 {
       margin: 0;
-      font-size: var(--font-size-lg);
+      font-size: var(--font-size-base);
+      font-weight: var(--font-weight-medium);
       color: var(--color-gray-900);
     }
     p {
       margin: 0;
-      color: var(--color-gray-600);
+      font-size: var(--font-size-sm);
+      color: var(--color-gray-400);
     }
   </style>
 </a>
