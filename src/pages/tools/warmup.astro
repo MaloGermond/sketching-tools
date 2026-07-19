@@ -1,6 +1,5 @@
 ---
 import MainLayout from "../../layouts/MainLayout.astro";
-import p5 from 'p5';
 
 const title = "Échauffement";
 const description = "Échauffez-vous avant de commencer à dessiner";
@@ -12,7 +11,8 @@ const description = "Échauffez-vous avant de commencer à dessiner";
   
   <div id="sketch-container" style="margin-top: 2rem;"></div>
   
-  <script>
+  <script client:load>
+    import p5 from 'p5';
     new p5((p) => {
       p.setup = () => {
         p.createCanvas(600, 400);
