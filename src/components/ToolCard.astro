@@ -10,12 +10,51 @@ interface Props {
 const { title, description, href, icon = "🛠️", color = "#667eea" } = Astro.props;
 ---
 
-<a href={href} class="tool-card" style="border-left-color: {color};">
-  <div class="tool-card__container">
-    <div class="tool-card__header">
-      <span class="tool-card__icon">{icon}</span>
-      <h3 class="tool-card__title">{title}</h3>
+<a href={href} style={`border-left: 4px solid ${color}`}>
+  <div>
+    <div>
+      <span>{icon}</span>
+      <h3>{title}</h3>
     </div>
-    <p class="tool-card__description">{description}</p>
+    <p>{description}</p>
   </div>
+  
+  <style>
+    a {
+      display: block;
+      text-decoration: none;
+      border-left: 4px solid var(--color);
+    }
+    div {
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      padding: 1.5rem;
+      margin-bottom: 1rem;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    a:hover div {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    }
+    div > div {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 0.75rem;
+    }
+    span {
+      font-size: 1.5rem;
+    }
+    h3 {
+      margin: 0;
+      font-size: 1.25rem;
+      color: #333;
+    }
+    p {
+      margin: 0;
+      color: #666;
+      line-height: 1.5;
+    }
+  </style>
 </a>
