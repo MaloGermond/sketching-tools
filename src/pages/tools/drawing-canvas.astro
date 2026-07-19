@@ -1,0 +1,99 @@
+---
+import MainLayout from "../../layouts/MainLayout.astro";
+
+// Métadonnées pour l'affichage dans le hub
+const title = "Canvas de dessin";
+const description = "Un canvas interactif avec p5.js pour dessiner et tester des idées";
+const icon = "🎨";
+const color = "blue";
+---
+
+<MainLayout title={title}>
+  <div class="max-w-4xl mx-auto">
+    <header class="mb-8">
+      <h1 class="text-3xl font-bold text-gray-900 mb-2">{title}</h1>
+      <p class="text-gray-600">{description}</p>
+    </header>
+
+    <section class="mb-8">
+      <h2 class="text-xl font-semibold text-gray-800 mb-4">Instructions</h2>
+      <ul class="list-disc list-inside text-gray-600 space-y-2">
+        <li>Cliquez et glissez pour dessiner</li>
+        <li>Appuyez sur "Effacer" pour tout supprimer</li>
+        <li>Changez la couleur avec le sélecteur</li>
+        <li>Réglez l'épaisseur du trait avec le curseur</li>
+      </ul>
+    </section>
+
+    <!-- Conteneur pour le canvas p5.js -->
+    <div class="bg-white rounded-lg shadow-md p-4 mb-8">
+      <div id="sketch-container" class="w-full h-96 border border-gray-200 rounded"></div>
+    </div>
+
+    <!-- Contrôles -->
+    <div class="flex flex-wrap gap-4 mb-8">
+      <div class="flex items-center gap-2">
+        <label for="stroke-color" class="text-sm font-medium text-gray-700">Couleur:</label>
+        <input 
+          type="color" 
+          id="stroke-color" 
+          value="#000000" 
+          class="w-8 h-8 p-0 border border-gray-300 rounded cursor-pointer"
+        />
+      </div>
+      <div class="flex items-center gap-2">
+        <label for="stroke-weight" class="text-sm font-medium text-gray-700">Épaisseur:</label>
+        <input 
+          type="range" 
+          id="stroke-weight" 
+          min="1" 
+          max="50" 
+          value="5" 
+          class="w-32"
+        />
+        <span id="stroke-weight-value" class="text-sm text-gray-600">5</span>
+      </div>
+      <button 
+        id="clear-btn" 
+        class="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 transition-colors font-medium"
+      >
+        Effacer
+      </button>
+      <button 
+        id="save-btn" 
+        class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors font-medium"
+      >
+        Sauvegarder
+      </button>
+    </div>
+
+    <!-- Info p5.js -->
+    <div class="text-sm text-gray-500">
+      <p>⚠️ p5.js doit être installé pour que cet outil fonctionne.</p>
+      <p>Exécute: <code class="bg-gray-100 px-2 py-1 rounded">npm install p5</code></p>
+    </div>
+  </div>
+
+  <!-- Script p5.js - sera activé quand p5 sera installé -->
+  <script>
+    // Ce script sera remplacé par une intégration propre une fois p5 installé
+    console.log("Canvas de dessin - en attente de p5.js");
+    
+    // Contrôles basiques sans p5 (pour l'instant)
+    const weightSlider = document.getElementById('stroke-weight');
+    const weightValue = document.getElementById('stroke-weight-value');
+    
+    if (weightSlider && weightValue) {
+      weightSlider.addEventListener('input', () => {
+        weightValue.textContent = weightSlider.value;
+      });
+    }
+    
+    const clearBtn = document.getElementById('clear-btn');
+    if (clearBtn) {
+      clearBtn.addEventListener('click', () => {
+        alert("p5.js requis pour effacer le canvas");
+      });
+    }
+  </script>
+</MainLayout>

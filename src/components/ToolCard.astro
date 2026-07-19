@@ -1,0 +1,45 @@
+---
+interface Props {
+  title: string;
+  description: string;
+  href: string;
+  icon?: string;
+  color?: string;
+}
+
+const { title, description, href, icon = "🛠️", color = "blue" } = Astro.props;
+
+const colorClasses = {
+  blue: "bg-blue-500 hover:bg-blue-600",
+  green: "bg-green-500 hover:bg-green-600",
+  purple: "bg-purple-500 hover:bg-purple-600",
+  orange: "bg-orange-500 hover:bg-orange-600",
+  red: "bg-red-500 hover:bg-red-600",
+  pink: "bg-pink-500 hover:bg-pink-600",
+  indigo: "bg-indigo-500 hover:bg-indigo-600",
+  teal: "bg-teal-500 hover:bg-teal-600",
+};
+
+const selectedColor = colorClasses[color as keyof typeof colorClasses] || colorClasses.blue;
+---
+
+<a 
+  href={href}
+  class="block group transition-transform duration-200 hover:scale-105"
+>
+  <div class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-shadow">
+    <div class={`h-2 ${selectedColor}`}></div>
+    <div class="p-6">
+      <div class="flex items-center gap-3 mb-3">
+        <span class="text-3xl">{icon}</span>
+        <h3 class="text-xl font-bold text-gray-900 group-hover:text-blue-600 transition-colors">{title}</h3>
+      </div>
+      <p class="text-gray-600">{description}</p>
+      <div class="mt-4 flex justify-end">
+        <span class="text-sm font-medium text-blue-600 group-hover:translate-x-1 transition-transform">
+          → Voir l'outil
+        </span>
+      </div>
+    </div>
+  </div>
+</a>

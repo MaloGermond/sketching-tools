@@ -1,17 +1,49 @@
 ---
+import MainLayout from "../layouts/MainLayout.astro";
+import ToolCard from "../components/ToolCard.astro";
 
+const toolEntries = await Astro.glob("./tools/*.astro");
+
+const tools = toolEntries
+  .filter(entry => !entry.file.includes(".gitkeep"))
+  .map((entry) => {
+    const href = entry.url;
+    const slug = href.split("/").pop() || "";
+    const fm = entry.frontmatter;
+    
+    return {
+      title: fm?.title || slug.replace(/-/g, " ").replace(/\b\w/g, (l) => l.toUpperCase()),
+      description: fm?.description || "Un outil de sketching",
+      href: href,
+      icon: fm?.icon || "🛠️",
+      color: fm?.color || "blue",
+    };
+  });
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+<MainLayout title="Accueil - Sketching Tools Hub">
+  <section class="text-center mb-12">
+    <h1 class="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+      Bienvenue sur le <span class="text-blue-600">Hub Sketching Tools</span>
+    </h1>
+    <p class="text-lg text-gray-600 max-w-2xl mx-auto">
+      Une collection d'outils spécialisés pour le sketching et la conception.
+    </p>
+  </section>
+
+  <section id="tools" class="mb-12">
+    <h2 class="text-2xl font-bold text-gray-900 mb-8">Nos outils</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {tools.map((tool) => (
+        <ToolCard 
+          title={tool.title}
+          description={tool.description}
+          href={tool.href}
+          icon={tool.icon}
+          color={tool.color}
+        />
+      ))}
+    </div>
+  </section>
+</MainLayout>
+
