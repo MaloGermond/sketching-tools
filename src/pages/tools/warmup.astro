@@ -12,20 +12,5 @@ const description = "Échauffez-vous avant de commencer à dessiner";
   <div id="sketch-container" style="margin-top: 2rem;"></div>
   
   <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js"></script>
-  <script client:load>
-    function setup() {
-      let canvas = createCanvas(600, 400);
-      canvas.parent('sketch-container');
-    }
-    
-    function draw() {
-      background(240);
-      
-      if (mouseIsPressed) {
-        stroke(0);
-        strokeWeight(5);
-        line(pmouseX, pmouseY, mouseX, mouseY);
-      }
-    }
-  </script>
+  <script src="/scripts/sketches/warmup.js" client:load></script>
 </MainLayout>
