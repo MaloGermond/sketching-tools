@@ -22,7 +22,8 @@ let shapeSettings = {
   circle: true,
   square: true,
   triangle: true,
-  line: true
+  'horizontal-line': true,
+  'vertical-line': true
 };
 
 // ============================================
@@ -89,7 +90,7 @@ function getAvailableShapes(settings) {
   
   // Si aucune forme n'est activée, retourner toutes les formes par défaut
   if (availableShapes.length === 0) {
-    return ['circle', 'square', 'triangle', 'line'];
+    return ['circle', 'square', 'triangle', 'horizontal-line', 'vertical-line'];
   }
   
   return availableShapes;
@@ -174,6 +175,10 @@ function renderCurrentStroke() {
  */
 function generateNewShape(level = currentLevel, settings = shapeSettings) {
   const availableShapes = getAvailableShapes(settings);
+  // Fallback si aucune forme disponible
+  if (availableShapes.length === 0) {
+    availableShapes.push('circle', 'square', 'triangle', 'horizontal-line', 'vertical-line');
+  }
   selectedShape = random(availableShapes);
   currentLevel = level;
   generateShapeParams();
@@ -215,19 +220,20 @@ function getShapeParams() {
   const baseSize = min(width, height) * 0.6;
   
   switch(selectedShape) {
-    case 'line':
+    case 'horizontal-line':
       switch(currentLevel) {
         case 1: return { type: 'horizontal', x1: width * 0.2, y1: height/2, x2: width * 0.8, y2: height/2, size: baseSize };
         case 2: return { type: 'horizontal', x1: width * 0.2, y1: height/2, x2: width * 0.8, y2: height/2, size: random(0.4, 0.8) * width };
         case 3: return { type: 'horizontal', x1: random(width * 0.2, width * 0.8), y1: random(height * 0.2, height * 0.8), x2: random(width * 0.2, width * 0.8), y2: random(height * 0.2, height * 0.8), size: baseSize };
-        case 4: return { type: 'vertical', x1: width/2, y1: height * 0.2, x2: width/2, y2: height * 0.8, size: baseSize };
-        case 5: return { type: 'vertical', x1: width/2, y1: height * 0.2, x2: width/2, y2: height * 0.8, size: random(0.4, 0.8) * height };
-        case 6: return { type: 'vertical', x1: random(width * 0.2, width * 0.8), y1: random(height * 0.2, height * 0.8), x2: random(width * 0.2, width * 0.8), y2: random(height * 0.2, height * 0.8), size: baseSize };
-        case 7: return { type: 'diagonal', angle: 45, x1: width * 0.2, y1: height * 0.8, x2: width * 0.8, y2: height * 0.2, size: baseSize };
-        case 8: return { type: 'diagonal', angle: 45, x1: width * 0.2, y1: height * 0.8, x2: width * 0.8, y2: height * 0.2, size: random(0.4, 0.8) * width };
-        case 9: return { type: 'diagonal', angle: 135, x1: width * 0.2, y1: height * 0.2, x2: width * 0.8, y2: height * 0.8, size: baseSize };
-        case 10: return { type: 'random', angle: random(0, 180), size: baseSize };
         default: return { type: 'horizontal', x1: width * 0.2, y1: height/2, x2: width * 0.8, y2: height/2, size: baseSize };
+      }
+    
+    case 'vertical-line':
+      switch(currentLevel) {
+        case 1: return { type: 'vertical', x1: width/2, y1: height * 0.2, x2: width/2, y2: height * 0.8, size: baseSize };
+        case 2: return { type: 'vertical', x1: width/2, y1: height * 0.2, x2: width/2, y2: height * 0.8, size: random(0.4, 0.8) * height };
+        case 3: return { type: 'vertical', x1: random(width * 0.2, width * 0.8), y1: random(height * 0.2, height * 0.8), x2: random(width * 0.2, width * 0.8), y2: random(height * 0.2, height * 0.8), size: baseSize };
+        default: return { type: 'vertical', x1: width/2, y1: height * 0.2, x2: width/2, y2: height * 0.8, size: baseSize };
       }
     
     case 'circle':
@@ -287,7 +293,8 @@ function drawGuideShape() {
   strokeWeight(2);
   
   switch(selectedShape) {
-    case 'line':
+    case 'horizontal-line':
+    case 'vertical-line':
       line(params.x1, params.y1, params.x2, params.y2);
       break;
     
@@ -354,13 +361,22 @@ function calculateScore() {
   let scoringAvgError = 0;
   
   switch(selectedShape) {
-    case 'line': {
-      const lineY = params.y1; // La ligne peut être à n'importe quelle position
+    case 'horizontal-line': {
+      const lineY = params.y1;
       for (let p of userPoints) {
         totalDistance += abs(p.y - lineY);
       }
       scoringAvgError = totalDistance / userPoints.length;
       return max(0, 100 - (scoringAvgError / (height * 0.2) * 100) * tolerance);
+    }
+    
+    case 'vertical-line': {
+      const lineX = params.x1;
+      for (let p of userPoints) {
+        totalDistance += abs(p.x - lineX);
+      }
+      scoringAvgError = totalDistance / userPoints.length;
+      return max(0, 100 - (scoringAvgError / (width * 0.2) * 100) * tolerance);
     }
     
     case 'circle':
