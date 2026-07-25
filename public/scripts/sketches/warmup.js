@@ -7,6 +7,7 @@ let currentLevel = 1; // Niveau de difficulté (1-10)
 let userPoints = []; // Stocke les points du dessin utilisateur
 let scoreHistory = []; // Historique des scores de la session
 let shapeParams = {}; // Paramètres de la forme actuelle (pour recalcul)
+let guideVisible = true; // La forme guide est-elle visible ?
 
 function setup() {
   let canvas = createCanvas(600, 400);
@@ -16,18 +17,16 @@ function setup() {
   strokeWeight(3);
   strokeCap(ROUND);
   strokeJoin(ROUND);
+  drawGuideShape();
 }
 
 let currentScore = null;
 
 function draw() {
-  // Toujours afficher la forme guide (sauf pendant le dessin)
-  if (!drawing && userPoints.length === 0) {
-    drawGuideShape();
-  }
-  
   if (mouseIsPressed) {
     if (!drawing) {
+      // Masquer la forme guide pendant le dessin
+      guideVisible = false;
       userPoints = [];
       drawing = true;
     }
@@ -47,6 +46,11 @@ function draw() {
       endShape();
     }
   }
+  
+  // Dessiner la forme guide si elle est visible
+  if (guideVisible && !drawing) {
+    drawGuideShape();
+  }
 }
 
 function mouseReleased() {
@@ -61,11 +65,13 @@ function mouseReleased() {
     updateScoreDisplay();
     showTemporaryScore();
     
-    // Effacer le dessin et préparer pour le prochain
+    // Réafficher la forme guide et préparer pour le prochain dessin
     setTimeout(() => {
-      clear();
+      guideVisible = true;
       userPoints = [];
-      drawGuideShape();
+      clear();
+      // Générer une nouvelle forme aléatoire au même niveau
+      generateRandomShape();
       redraw();
     }, 100);
   }
@@ -137,8 +143,16 @@ function setLevel(level) {
   userPoints = [];
   currentScore = null;
   scoreHistory = [];
+  guideVisible = true;
   drawGuideShape();
   updateScoreDisplay();
+}
+
+// Générer une forme aléatoire (même niveau)
+function generateRandomShape() {
+  const shapes = ['circle', 'square', 'triangle', 'line'];
+  selectedShape = random(shapes);
+  drawGuideShape();
 }
 
 
