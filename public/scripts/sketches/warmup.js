@@ -127,7 +127,7 @@ function drawGuideShape() {
 
 // Calculer le score (0-100)
 function calculateScore() {
-  if (userPoints.length < 10) return 0; // Trop peu de points
+  if (userPoints.length === 0) return 0;
   
   const size = min(width, height) * 0.6;
   const centerX = width / 2;
