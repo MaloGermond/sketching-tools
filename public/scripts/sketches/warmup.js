@@ -258,6 +258,35 @@ function calculateBaseSize(w, h) {
 }
 
 /**
+ * Calculate safe size for rotated shapes to stay within canvas
+ * @pure
+ * @param {number} w - Canvas width
+ * @param {number} h - Canvas height
+ * @param {number} angle - Rotation angle in degrees
+ * @returns {number} Safe size that fits when rotated
+ */
+function calculateSafeSize(w, h, angle) {
+  // For rotated shapes, the bounding box increases
+  // The maximum dimension after rotation is size * (|cos(a)| + |sin(a)|)
+  // We need this to be <= min(w, h) * 0.8 (with margin)
+  const maxDimension = min(w, h) * 0.8;
+  const rotationFactor = abs(cos(radians(angle))) + abs(sin(radians(angle)));
+  return maxDimension / rotationFactor;
+}
+
+/**
+ * Clamp value between min and max
+ * @pure
+ * @param {number} value
+ * @param {number} minVal
+ * @param {number} maxVal
+ * @returns {number}
+ */
+function clamp(value, minVal, maxVal) {
+  return max(minVal, min(maxVal, value));
+}
+
+/**
  * Get horizontal line parameters
  * @impure - Uses random()
  * @param {number} level - Difficulty level (1-3)
@@ -266,15 +295,25 @@ function calculateBaseSize(w, h) {
  * @returns {Object} Shape parameters
  */
 function getHorizontalLineParams(level, w, h) {
-  const baseSize = calculateBaseSize(w, h);
-  
   // Early returns for each level
-  if (level === 1) return { type: 'horizontal', x1: w * 0.2, y1: h/2, x2: w * 0.8, y2: h/2, size: baseSize };
-  if (level === 2) return { type: 'horizontal', x1: w * 0.2, y1: h/2, x2: w * 0.8, y2: h/2, size: random(0.4, 0.8) * w };
-  if (level === 3) return { type: 'horizontal', x1: random(w * 0.2, w * 0.8), y1: random(h * 0.2, h * 0.8), x2: random(w * 0.2, w * 0.8), y2: random(h * 0.2, h * 0.8), size: baseSize };
+  if (level === 1) return { type: 'horizontal', x1: w * 0.2, y1: h/2, x2: w * 0.8, y2: h/2 };
+  if (level === 2) return { type: 'horizontal', x1: w * 0.2, y1: h/2, x2: w * 0.8, y2: h/2 };
+  if (level === 3) return { 
+    type: 'horizontal', 
+    x1: clamp(random(w * 0.2, w * 0.8), 0, w),
+    y1: clamp(random(h * 0.2, h * 0.8), 0, h),
+    x2: clamp(random(w * 0.2, w * 0.8), 0, w),
+    y2: clamp(random(h * 0.2, h * 0.8), 0, h)
+  };
   
-  // For levels > 3, use highest difficulty (level 3)
-  return { type: 'horizontal', x1: random(w * 0.2, w * 0.8), y1: random(h * 0.2, h * 0.8), x2: random(w * 0.2, w * 0.8), y2: random(h * 0.2, h * 0.8), size: baseSize };
+  // For levels > 3, use highest difficulty (level 3) with clamped positions
+  return { 
+    type: 'horizontal', 
+    x1: clamp(random(w * 0.2, w * 0.8), 0, w),
+    y1: clamp(random(h * 0.2, h * 0.8), 0, h),
+    x2: clamp(random(w * 0.2, w * 0.8), 0, w),
+    y2: clamp(random(h * 0.2, h * 0.8), 0, h)
+  };
 }
 
 /**
@@ -286,14 +325,25 @@ function getHorizontalLineParams(level, w, h) {
  * @returns {Object} Shape parameters
  */
 function getVerticalLineParams(level, w, h) {
-  const baseSize = calculateBaseSize(w, h);
+  // Early returns for each level
+  if (level === 1) return { type: 'vertical', x1: w/2, y1: h * 0.2, x2: w/2, y2: h * 0.8 };
+  if (level === 2) return { type: 'vertical', x1: w/2, y1: h * 0.2, x2: w/2, y2: h * 0.8 };
+  if (level === 3) return { 
+    type: 'vertical', 
+    x1: clamp(random(w * 0.2, w * 0.8), 0, w),
+    y1: clamp(random(h * 0.2, h * 0.8), 0, h),
+    x2: clamp(random(w * 0.2, w * 0.8), 0, w),
+    y2: clamp(random(h * 0.2, h * 0.8), 0, h)
+  };
   
-  if (level === 1) return { type: 'vertical', x1: w/2, y1: h * 0.2, x2: w/2, y2: h * 0.8, size: baseSize };
-  if (level === 2) return { type: 'vertical', x1: w/2, y1: h * 0.2, x2: w/2, y2: h * 0.8, size: random(0.4, 0.8) * h };
-  if (level === 3) return { type: 'vertical', x1: random(w * 0.2, w * 0.8), y1: random(h * 0.2, h * 0.8), x2: random(w * 0.2, w * 0.8), y2: random(h * 0.2, h * 0.8), size: baseSize };
-  
-  // For levels > 3, use highest difficulty (level 3)
-  return { type: 'vertical', x1: random(w * 0.2, w * 0.8), y1: random(h * 0.2, h * 0.8), x2: random(w * 0.2, w * 0.8), y2: random(h * 0.2, h * 0.8), size: baseSize };
+  // For levels > 3, use highest difficulty (level 3) with clamped positions
+  return { 
+    type: 'vertical', 
+    x1: clamp(random(w * 0.2, w * 0.8), 0, w),
+    y1: clamp(random(h * 0.2, h * 0.8), 0, h),
+    x2: clamp(random(w * 0.2, w * 0.8), 0, w),
+    y2: clamp(random(h * 0.2, h * 0.8), 0, h)
+  };
 }
 
 /**
@@ -309,14 +359,20 @@ function getCircleParams(level, w, h) {
   
   if (level === 1) return { type: 'circle', cx: w/2, cy: h/2, size: baseSize, angle: 0 };
   if (level === 2) return { type: 'circle', cx: w/2, cy: h/2, size: random(0.4, 0.8) * baseSize, angle: 0 };
-  if (level === 3) return { type: 'circle', cx: random(w * 0.2, w * 0.8), cy: random(h * 0.2, h * 0.8), size: baseSize, angle: 0 };
-  if (level === 4) return { type: 'circle', cx: random(w * 0.2, w * 0.8), cy: random(h * 0.2, h * 0.8), size: random(0.4, 0.8) * baseSize, angle: 0 };
+  if (level === 3) return { type: 'circle', cx: clamp(w/2, baseSize/2, w - baseSize/2), cy: clamp(h/2, baseSize/2, h - baseSize/2), size: baseSize, angle: 0 };
+  if (level === 4) return { type: 'circle', cx: clamp(random(w * 0.2, w * 0.8), baseSize/2, w - baseSize/2), cy: clamp(random(h * 0.2, h * 0.8), baseSize/2, h - baseSize/2), size: random(0.4, 0.8) * baseSize, angle: 0 };
   if (level === 5) return { type: 'ellipse', cx: w/2, cy: h/2, w: baseSize, h: baseSize * 0.6, angle: 0 };
   if (level === 6) return { type: 'ellipse', cx: w/2, cy: h/2, w: random(0.4, 0.8) * baseSize, h: random(0.4, 0.8) * baseSize * 0.6, angle: random([0, 45, 90]) };
-  if (level === 7) return { type: 'ellipse', cx: random(w * 0.2, w * 0.8), cy: random(h * 0.2, h * 0.8), w: baseSize, h: baseSize * 0.6, angle: random(0, 180) };
+  if (level === 7) {
+    const angle = random(0, 180);
+    const safeSize = calculateSafeSize(w, h, angle);
+    return { type: 'ellipse', cx: w/2, cy: h/2, w: safeSize, h: safeSize * 0.6, angle: angle };
+  }
   
   // For levels > 7, use highest difficulty (level 7) with random rotation
-  return { type: 'ellipse', cx: random(w * 0.2, w * 0.8), cy: random(h * 0.2, h * 0.8), w: baseSize, h: baseSize * 0.6, angle: random(0, 180) };
+  const angle = random(0, 180);
+  const safeSize = calculateSafeSize(w, h, angle);
+  return { type: 'ellipse', cx: w/2, cy: h/2, w: safeSize, h: safeSize * 0.6, angle: angle };
 }
 
 /**
@@ -332,14 +388,28 @@ function getSquareParams(level, w, h) {
   
   if (level === 1) return { type: 'square', cx: w/2, cy: h/2, size: baseSize, angle: 0 };
   if (level === 2) return { type: 'square', cx: w/2, cy: h/2, size: random(0.4, 0.8) * baseSize, angle: 0 };
-  if (level === 3) return { type: 'square', cx: random(w * 0.2, w * 0.8), cy: random(h * 0.2, h * 0.8), size: baseSize, angle: 0 };
-  if (level === 4) return { type: 'square', cx: random(w * 0.2, w * 0.8), cy: random(h * 0.2, h * 0.8), size: random(0.4, 0.8) * baseSize, angle: 0 };
-  if (level === 5) return { type: 'square', cx: w/2, cy: h/2, size: baseSize, angle: 45 };
-  if (level === 6) return { type: 'square', cx: w/2, cy: h/2, size: random(0.4, 0.8) * baseSize, angle: random([0, 45, 90]) };
-  if (level === 7) return { type: 'square', cx: random(w * 0.2, w * 0.8), cy: random(h * 0.2, h * 0.8), size: baseSize, angle: random(0, 180) };
+  if (level === 3) return { type: 'square', cx: clamp(random(w * 0.2, w * 0.8), baseSize/2, w - baseSize/2), cy: clamp(random(h * 0.2, h * 0.8), baseSize/2, h - baseSize/2), size: baseSize, angle: 0 };
+  if (level === 4) return { type: 'square', cx: clamp(random(w * 0.2, w * 0.8), baseSize/2, w - baseSize/2), cy: clamp(random(h * 0.2, h * 0.8), baseSize/2, h - baseSize/2), size: random(0.4, 0.8) * baseSize, angle: 0 };
+  if (level === 5) {
+    const angle = 45;
+    const safeSize = calculateSafeSize(w, h, angle);
+    return { type: 'square', cx: w/2, cy: h/2, size: safeSize, angle: angle };
+  }
+  if (level === 6) {
+    const angle = random([0, 45, 90]);
+    const safeSize = calculateSafeSize(w, h, angle);
+    return { type: 'square', cx: w/2, cy: h/2, size: safeSize, angle: angle };
+  }
+  if (level === 7) {
+    const angle = random(0, 180);
+    const safeSize = calculateSafeSize(w, h, angle);
+    return { type: 'square', cx: w/2, cy: h/2, size: safeSize, angle: angle };
+  }
   
   // For levels > 7, use highest difficulty (level 7) with random rotation
-  return { type: 'square', cx: random(w * 0.2, w * 0.8), cy: random(h * 0.2, h * 0.8), size: baseSize, angle: random(0, 180) };
+  const angle = random(0, 180);
+  const safeSize = calculateSafeSize(w, h, angle);
+  return { type: 'square', cx: w/2, cy: h/2, size: safeSize, angle: angle };
 }
 
 /**
@@ -358,14 +428,20 @@ function getTriangleParams(level, w, h) {
     return { type: 'equilateral', cx: w/2, cy: h/2, size: size, angle: 0 };
   }
   if (level >= 4 && level <= 6) {
-    return { type: 'isosceles', cx: w/2, cy: h/2, size: baseSize * 0.8, baseRatio: 0.7, angle: random([0, 45, 90, 180]) };
+    const angle = random([0, 45, 90, 180]);
+    const safeSize = calculateSafeSize(w, h, angle) * 0.8;
+    return { type: 'isosceles', cx: w/2, cy: h/2, size: safeSize, baseRatio: 0.7, angle: angle };
   }
   if (level >= 7 && level <= 8) {
-    return { type: 'scalene', cx: w/2, cy: h/2, size: baseSize * 0.8, angle: random(0, 180) };
+    const angle = random(0, 180);
+    const safeSize = calculateSafeSize(w, h, angle) * 0.8;
+    return { type: 'scalene', cx: w/2, cy: h/2, size: safeSize, angle: angle };
   }
   
   // For levels > 8, use highest difficulty (level 8) with random rotation
-  return { type: 'scalene', cx: w/2, cy: h/2, size: baseSize * 0.8, angle: random(0, 180) };
+  const angle = random(0, 180);
+  const safeSize = calculateSafeSize(w, h, angle) * 0.8;
+  return { type: 'scalene', cx: w/2, cy: h/2, size: safeSize, angle: angle };
 }
 
 /**
