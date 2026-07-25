@@ -28,7 +28,19 @@ function draw() {
       drawGuideShape();
       drawing = true;
     }
+    
+    // Ajouter le point actuel
     userPoints.push({x: mouseX, y: mouseY});
+    
+    // Ajouter des points intermédiaires pour plus de fluidité
+    const steps = 2; // Nombre de points intermédiaires
+    for (let i = 1; i <= steps; i++) {
+      const t = i / (steps + 1);
+      const x = lerp(pmouseX, mouseX, t);
+      const y = lerp(pmouseY, mouseY, t);
+      userPoints.push({x: x, y: y});
+    }
+    
     line(pmouseX, pmouseY, mouseX, mouseY);
   }
 }
