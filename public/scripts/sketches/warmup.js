@@ -17,6 +17,7 @@ function setup() {
   strokeWeight(3);
   strokeCap(ROUND);
   strokeJoin(ROUND);
+  generateShapeParams();
   drawGuideShape();
 }
 
@@ -132,6 +133,8 @@ function setShape(shape) {
   userPoints = [];
   currentScore = null;
   scoreHistory = [];
+  guideVisible = true;
+  generateShapeParams();
   drawGuideShape();
   updateScoreDisplay();
 }
@@ -144,6 +147,7 @@ function setLevel(level) {
   currentScore = null;
   scoreHistory = [];
   guideVisible = true;
+  generateShapeParams();
   drawGuideShape();
   updateScoreDisplay();
 }
@@ -152,7 +156,13 @@ function setLevel(level) {
 function generateRandomShape() {
   const shapes = ['circle', 'square', 'triangle', 'line'];
   selectedShape = random(shapes);
+  generateShapeParams();
   drawGuideShape();
+}
+
+// Générer les paramètres de la forme actuelle
+function generateShapeParams() {
+  shapeParams = getShapeParams();
 }
 
 
@@ -220,8 +230,8 @@ function getShapeParams() {
 
 // Dessiner la forme guide en gris clair
 function drawGuideShape() {
-  const params = getShapeParams();
-  shapeParams = params; // Stocker pour le calcul du score
+  // Utiliser les paramètres déjà générés
+  const params = shapeParams;
   
   push();
   stroke(200);
@@ -255,6 +265,8 @@ function drawGuideShape() {
     
     case 'triangle':
       const size = params.size;
+      push();
+      translate(params.cx, params.cy);
       if (params.type === 'equilateral') {
         const h = size * sqrt(3) / 2;
         triangle(0, -h/2, -size/2, h/2, size/2, h/2);
@@ -266,9 +278,9 @@ function drawGuideShape() {
         const a = size * 0.6;
         const b = size * 0.7;
         const c = size * 0.8;
-        // Approximation d'un triangle scalène
         triangle(0, -c/2, -a/2, c/2, a/2, c/2);
       }
+      pop();
       break;
   }
   pop();
