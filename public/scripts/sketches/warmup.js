@@ -84,10 +84,10 @@ function showTemporaryScore() {
     popupEl.style.opacity = '1';
     popupEl.style.color = currentScore >= 80 ? '#22c55e' : currentScore >= 50 ? '#f59e0b' : '#ef4444';
     
-    // Faire disparaître après 5 secondes
+    // Faire disparaître après 2 secondes
     scoreTimeout = setTimeout(() => {
       popupEl.style.opacity = '0';
-    }, 5000);
+    }, 2000);
   }
 }
 
