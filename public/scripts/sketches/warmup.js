@@ -16,6 +16,14 @@ let guideVisible = true; // La forme guide est-elle visible ?
 let currentScore = null;
 let scoreTimeout = null;
 
+// Paramètres des formes disponibles (toutes activées par défaut)
+let shapeSettings = {
+  circle: true,
+  square: true,
+  triangle: true,
+  line: true
+};
+
 
 // ============================================
 // 2. INITIALISATION
@@ -121,12 +129,29 @@ function renderCurrentStroke() {
   }
 }
 
-// Générer une nouvelle forme aléatoire
-function generateNewShape() {
-  const shapes = ['circle', 'square', 'triangle', 'line'];
-  selectedShape = random(shapes);
+// Générer une nouvelle forme aléatoire en tenant compte des settings et du niveau
+// @param {number} level - Niveau de difficulté (1-10), utilise currentLevel si non fourni
+// @param {Object} settings - Paramètres des formes (ex: {circle: true, square: false}), utilise shapeSettings si non fourni
+function generateNewShape(level = currentLevel, settings = shapeSettings) {
+  // Filtrer les formes activées dans les settings
+  const availableShapes = Object.keys(settings).filter(shape => settings[shape]);
+  
+  // Si aucune forme n'est activée, activer toutes par défaut
+  if (availableShapes.length === 0) {
+    availableShapes.push('circle', 'square', 'triangle', 'line');
+  }
+  
+  // Choisir une forme aléatoire parmi celles disponibles
+  selectedShape = random(availableShapes);
+  currentLevel = level;
   generateShapeParams();
   return selectedShape;
+}
+
+// Configurer quelles formes sont disponibles
+// @param {Object} settings - Objet avec les formes comme clés et boolean comme valeur
+function setShapeSettings(settings) {
+  shapeSettings = { ...shapeSettings, ...settings };
 }
 
 
