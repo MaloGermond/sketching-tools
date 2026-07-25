@@ -117,6 +117,7 @@ function setShape(shape) {
   clear();
   userPoints = [];
   currentScore = null;
+  scoreHistory = []; // Réinitialiser l'historique des scores
   drawGuideShape();
   updateScoreDisplay();
 }
