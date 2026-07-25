@@ -580,7 +580,7 @@ function drawGuideShape() {
 /**
  * Minimum number of points required for a valid score calculation
  */
-const MIN_POINTS_FOR_SCORE = 10;
+const MIN_POINTS_FOR_SCORE = 15;
 
 /**
  * Calculer le score (0-100) avec tolérance selon le niveau
@@ -594,9 +594,9 @@ function calculateScore() {
   }
   
   const params = shapeParams;
-  // Tolérance: plus le niveau est élevé, plus on est strict (diviseur plus grand = score plus bas pour même erreur)
-  // toleranceFactor: 1.0 (niveau 1) à 3.0 (niveau 10)
-  const toleranceFactor = map(currentLevel, 1, 10, 1.0, 3.0);
+  // Tolérance: plus le niveau est élevé, plus on est strict
+  // toleranceFactor: 1.0 (niveau 1) à 5.0 (niveau 10)
+  const toleranceFactor = map(currentLevel, 1, 10, 1.0, 5.0);
   
   let totalDistance = 0;
   let scoringAvgError = 0;
@@ -608,9 +608,9 @@ function calculateScore() {
         totalDistance += abs(p.y - lineY);
       }
       scoringAvgError = totalDistance / userPoints.length;
-      // Normaliser par rapport à la hauteur du canvas (plus petit diviseur = plus strict)
-      // Diviser par height * 0.1 pour être plus strict
-      return max(0, 100 - (scoringAvgError / (height * 0.1) * 100) / toleranceFactor);
+      // Diviser par height * 0.05 pour être beaucoup plus strict
+      // Multiplier par toleranceFactor pour être plus strict aux niveaux élevés
+      return max(0, 100 - (scoringAvgError / (height * 0.05) * 100) * toleranceFactor);
     }
     
     case 'vertical-line': {
@@ -619,7 +619,7 @@ function calculateScore() {
         totalDistance += abs(p.x - lineX);
       }
       scoringAvgError = totalDistance / userPoints.length;
-      return max(0, 100 - (scoringAvgError / (width * 0.1) * 100) / toleranceFactor);
+      return max(0, 100 - (scoringAvgError / (width * 0.05) * 100) * toleranceFactor);
     }
     
     case 'circle':
@@ -632,9 +632,8 @@ function calculateScore() {
         totalDistance += abs(d - radius);
       }
       scoringAvgError = totalDistance / userPoints.length;
-      // Normaliser par rapport au rayon (erreur relative)
-      // Plus le niveau est élevé, plus toleranceFactor est grand, donc score plus bas
-      return max(0, 100 - (scoringAvgError / radius * 100) / toleranceFactor);
+      // Normaliser par rapport au rayon, multiplier par toleranceFactor pour plus de rigueur
+      return max(0, 100 - (scoringAvgError / (radius * 0.3) * 100) * toleranceFactor);
     }
     
     case 'square': {
@@ -653,8 +652,8 @@ function calculateScore() {
         totalDistance += minDist;
       }
       scoringAvgError = totalDistance / userPoints.length;
-      // Normaliser par rapport à halfSize
-      return max(0, 100 - (scoringAvgError / halfSize * 100) / toleranceFactor);
+      // Normaliser par rapport à halfSize, multiplier par toleranceFactor
+      return max(0, 100 - (scoringAvgError / (halfSize * 0.3) * 100) * toleranceFactor);
     }
     
     case 'triangle': {
@@ -690,8 +689,9 @@ function calculateScore() {
         totalDistance += min(d1, d2, d3);
       }
       scoringAvgError = totalDistance / userPoints.length;
-      // Normaliser par rapport à size/2 (demi-taille du triangle)
-      return max(0, 100 - (scoringAvgError / (size / 2) * 100) / toleranceFactor);
+      // Normaliser par rapport à size/2 (demi-taille du triangle), plus strict
+      // Multiplier par toleranceFactor pour être plus strict aux niveaux élevés
+      return max(0, 100 - (scoringAvgError / (size * 0.2) * 100) * toleranceFactor);
     }
   }
   
