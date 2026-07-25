@@ -102,19 +102,20 @@ function calculateScore() {
   const centerY = height / 2;
   
   let totalDistance = 0;
+  let avgError = 0;
   
   switch(selectedShape) {
-    case 'circle':
+    case 'circle': {
       const radius = size / 2;
       for (let p of userPoints) {
         const d = dist(p.x, p.y, centerX, centerY);
         totalDistance += abs(d - radius);
       }
-      // Score = 100 - (écart moyen / rayon * 100)
-      const avgError = totalDistance / userPoints.length;
+      avgError = totalDistance / userPoints.length;
       return max(0, 100 - (avgError / radius * 100));
-      
-    case 'square':
+    }
+    
+    case 'square': {
       const halfSize = size / 2;
       const left = centerX - halfSize;
       const right = centerX + halfSize;
@@ -122,7 +123,6 @@ function calculateScore() {
       const bottom = centerY + halfSize;
       
       for (let p of userPoints) {
-        // Distance aux côtés du carré
         const distToLeft = abs(p.x - left);
         const distToRight = abs(p.x - right);
         const distToTop = abs(p.y - top);
@@ -130,32 +130,34 @@ function calculateScore() {
         const minDist = min(distToLeft, distToRight, distToTop, distToBottom);
         totalDistance += minDist;
       }
-      const avgError = totalDistance / userPoints.length;
+      avgError = totalDistance / userPoints.length;
       return max(0, 100 - (avgError / (size/2) * 100));
-      
-    case 'line':
+    }
+    
+    case 'line': {
       const lineY = height / 2;
       for (let p of userPoints) {
         totalDistance += abs(p.y - lineY);
       }
-      const avgError = totalDistance / userPoints.length;
+      avgError = totalDistance / userPoints.length;
       return max(0, 100 - (avgError / (height/4) * 100));
-      
-    case 'triangle':
+    }
+    
+    case 'triangle': {
       const triSize = size * 0.8;
       const v1 = {x: width/2, y: height/2 - triSize/2};
       const v2 = {x: width/2 - triSize/2, y: height/2 + triSize/2};
       const v3 = {x: width/2 + triSize/2, y: height/2 + triSize/2};
       
       for (let p of userPoints) {
-        // Distance à chaque côté du triangle
         const d1 = pointToLineDistance(p, v1, v2);
         const d2 = pointToLineDistance(p, v2, v3);
         const d3 = pointToLineDistance(p, v3, v1);
         totalDistance += min(d1, d2, d3);
       }
-      const avgError = totalDistance / userPoints.length;
+      avgError = totalDistance / userPoints.length;
       return max(0, 100 - (avgError / (triSize/2) * 100));
+    }
   }
   
   return 0;
