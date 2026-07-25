@@ -16,19 +16,19 @@ function setup() {
   strokeWeight(3);
   strokeCap(ROUND);
   strokeJoin(ROUND);
-  
-  drawGuideShape();
 }
 
 let currentScore = null;
 
 function draw() {
+  // Toujours afficher la forme guide (sauf pendant le dessin)
+  if (!drawing && userPoints.length === 0) {
+    drawGuideShape();
+  }
+  
   if (mouseIsPressed) {
     if (!drawing) {
-      clear();
       userPoints = [];
-      // NE PAS redessiner la forme guide ici
-      // Elle sera redessinée après le calcul du score
       drawing = true;
     }
     
@@ -61,9 +61,10 @@ function mouseReleased() {
     updateScoreDisplay();
     showTemporaryScore();
     
-    // Dessiner une nouvelle forme guide pour le prochain dessin
+    // Effacer le dessin et préparer pour le prochain
     setTimeout(() => {
       clear();
+      userPoints = [];
       drawGuideShape();
       redraw();
     }, 100);
