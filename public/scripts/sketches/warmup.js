@@ -240,69 +240,148 @@ function generateShapeParams() {
   shapeParams = getShapeParams();
 }
 
+// ============================================
+// PURE FUNCTIONS for shape parameter generation
+// Note: These use random() so they are not purely pure,
+// but they have no side effects and only depend on parameters
+// ============================================
+
+/**
+ * Calculate base size for shape parameters
+ * @pure
+ * @param {number} w - Canvas width
+ * @param {number} h - Canvas height
+ * @returns {number} Base size
+ */
+function calculateBaseSize(w, h) {
+  return min(w, h) * 0.6;
+}
+
+/**
+ * Get horizontal line parameters
+ * @impure - Uses random()
+ * @param {number} level - Difficulty level (1-3)
+ * @param {number} w - Canvas width
+ * @param {number} h - Canvas height
+ * @returns {Object} Shape parameters
+ */
+function getHorizontalLineParams(level, w, h) {
+  const baseSize = calculateBaseSize(w, h);
+  
+  // Early returns for each level
+  if (level === 1) return { type: 'horizontal', x1: w * 0.2, y1: h/2, x2: w * 0.8, y2: h/2, size: baseSize };
+  if (level === 2) return { type: 'horizontal', x1: w * 0.2, y1: h/2, x2: w * 0.8, y2: h/2, size: random(0.4, 0.8) * w };
+  if (level === 3) return { type: 'horizontal', x1: random(w * 0.2, w * 0.8), y1: random(h * 0.2, h * 0.8), x2: random(w * 0.2, w * 0.8), y2: random(h * 0.2, h * 0.8), size: baseSize };
+  
+  return { type: 'horizontal', x1: w * 0.2, y1: h/2, x2: w * 0.8, y2: h/2, size: baseSize };
+}
+
+/**
+ * Get vertical line parameters
+ * @impure - Uses random()
+ * @param {number} level - Difficulty level (1-3)
+ * @param {number} w - Canvas width
+ * @param {number} h - Canvas height
+ * @returns {Object} Shape parameters
+ */
+function getVerticalLineParams(level, w, h) {
+  const baseSize = calculateBaseSize(w, h);
+  
+  if (level === 1) return { type: 'vertical', x1: w/2, y1: h * 0.2, x2: w/2, y2: h * 0.8, size: baseSize };
+  if (level === 2) return { type: 'vertical', x1: w/2, y1: h * 0.2, x2: w/2, y2: h * 0.8, size: random(0.4, 0.8) * h };
+  if (level === 3) return { type: 'vertical', x1: random(w * 0.2, w * 0.8), y1: random(h * 0.2, h * 0.8), x2: random(w * 0.2, w * 0.8), y2: random(h * 0.2, h * 0.8), size: baseSize };
+  
+  return { type: 'vertical', x1: w/2, y1: h * 0.2, x2: w/2, y2: h * 0.8, size: baseSize };
+}
+
+/**
+ * Get circle or ellipse parameters
+ * @impure - Uses random()
+ * @param {number} level - Difficulty level (1-7)
+ * @param {number} w - Canvas width
+ * @param {number} h - Canvas height
+ * @returns {Object} Shape parameters
+ */
+function getCircleParams(level, w, h) {
+  const baseSize = calculateBaseSize(w, h);
+  
+  if (level === 1) return { type: 'circle', cx: w/2, cy: h/2, size: baseSize };
+  if (level === 2) return { type: 'circle', cx: w/2, cy: h/2, size: random(0.4, 0.8) * baseSize };
+  if (level === 3) return { type: 'circle', cx: random(w * 0.2, w * 0.8), cy: random(h * 0.2, h * 0.8), size: baseSize };
+  if (level === 4) return { type: 'circle', cx: random(w * 0.2, w * 0.8), cy: random(h * 0.2, h * 0.8), size: random(0.4, 0.8) * baseSize };
+  if (level === 5) return { type: 'ellipse', cx: w/2, cy: h/2, w: baseSize, h: baseSize * 0.6 };
+  if (level === 6) return { type: 'ellipse', cx: w/2, cy: h/2, w: random(0.4, 0.8) * baseSize, h: random(0.4, 0.8) * baseSize * 0.6 };
+  if (level === 7) return { type: 'ellipse', cx: random(w * 0.2, w * 0.8), cy: random(h * 0.2, h * 0.8), w: baseSize, h: baseSize * 0.6 };
+  
+  return { type: 'circle', cx: w/2, cy: h/2, size: baseSize };
+}
+
+/**
+ * Get square parameters
+ * @impure - Uses random()
+ * @param {number} level - Difficulty level (1-7)
+ * @param {number} w - Canvas width
+ * @param {number} h - Canvas height
+ * @returns {Object} Shape parameters
+ */
+function getSquareParams(level, w, h) {
+  const baseSize = calculateBaseSize(w, h);
+  
+  if (level === 1) return { type: 'square', cx: w/2, cy: h/2, size: baseSize, angle: 0 };
+  if (level === 2) return { type: 'square', cx: w/2, cy: h/2, size: random(0.4, 0.8) * baseSize, angle: 0 };
+  if (level === 3) return { type: 'square', cx: random(w * 0.2, w * 0.8), cy: random(h * 0.2, h * 0.8), size: baseSize, angle: 0 };
+  if (level === 4) return { type: 'square', cx: random(w * 0.2, w * 0.8), cy: random(h * 0.2, h * 0.8), size: random(0.4, 0.8) * baseSize, angle: 0 };
+  if (level === 5) return { type: 'square', cx: w/2, cy: h/2, size: baseSize, angle: 45 };
+  if (level === 6) return { type: 'square', cx: w/2, cy: h/2, size: random(0.4, 0.8) * baseSize, angle: 45 };
+  if (level === 7) return { type: 'square', cx: random(w * 0.2, w * 0.8), cy: random(h * 0.2, h * 0.8), size: baseSize, angle: 45 };
+  
+  return { type: 'square', cx: w/2, cy: h/2, size: baseSize, angle: 0 };
+}
+
+/**
+ * Get triangle parameters
+ * @impure - Uses random()
+ * @param {number} level - Difficulty level (1-8)
+ * @param {number} w - Canvas width
+ * @param {number} h - Canvas height
+ * @returns {Object} Shape parameters
+ */
+function getTriangleParams(level, w, h) {
+  const baseSize = calculateBaseSize(w, h);
+  
+  if (level >= 1 && level <= 3) {
+    const size = baseSize * (level === 2 ? random(0.4, 0.8) : 0.8);
+    return { type: 'equilateral', cx: w/2, cy: h/2, size: size };
+  }
+  if (level >= 4 && level <= 6) {
+    return { type: 'isosceles', cx: w/2, cy: h/2, size: baseSize * 0.8, baseRatio: 0.7 };
+  }
+  if (level >= 7 && level <= 8) {
+    return { type: 'scalene', cx: w/2, cy: h/2, size: baseSize * 0.8 };
+  }
+  
+  return { type: 'equilateral', cx: w/2, cy: h/2, size: baseSize * 0.8 };
+}
+
 /**
  * Génère les paramètres de la forme selon le niveau
  * @impure - Uses random(), depends on global selectedShape and currentLevel
  * @returns {Object} Paramètres de la forme
  */
 function getShapeParams() {
-  const baseSize = min(width, height) * 0.6;
+  // Validation précoce
+  if (!selectedShape || !currentLevel) {
+    return { type: 'circle', cx: width/2, cy: height/2, size: min(width, height) * 0.6 };
+  }
   
+  // Dispatch vers les fonctions spécifiques
   switch(selectedShape) {
-    case 'horizontal-line':
-      switch(currentLevel) {
-        case 1: return { type: 'horizontal', x1: width * 0.2, y1: height/2, x2: width * 0.8, y2: height/2, size: baseSize };
-        case 2: return { type: 'horizontal', x1: width * 0.2, y1: height/2, x2: width * 0.8, y2: height/2, size: random(0.4, 0.8) * width };
-        case 3: return { type: 'horizontal', x1: random(width * 0.2, width * 0.8), y1: random(height * 0.2, height * 0.8), x2: random(width * 0.2, width * 0.8), y2: random(height * 0.2, height * 0.8), size: baseSize };
-        default: return { type: 'horizontal', x1: width * 0.2, y1: height/2, x2: width * 0.8, y2: height/2, size: baseSize };
-      }
-    
-    case 'vertical-line':
-      switch(currentLevel) {
-        case 1: return { type: 'vertical', x1: width/2, y1: height * 0.2, x2: width/2, y2: height * 0.8, size: baseSize };
-        case 2: return { type: 'vertical', x1: width/2, y1: height * 0.2, x2: width/2, y2: height * 0.8, size: random(0.4, 0.8) * height };
-        case 3: return { type: 'vertical', x1: random(width * 0.2, width * 0.8), y1: random(height * 0.2, height * 0.8), x2: random(width * 0.2, width * 0.8), y2: random(height * 0.2, height * 0.8), size: baseSize };
-        default: return { type: 'vertical', x1: width/2, y1: height * 0.2, x2: width/2, y2: height * 0.8, size: baseSize };
-      }
-    
-    case 'circle':
-      switch(currentLevel) {
-        case 1: return { type: 'circle', cx: width/2, cy: height/2, size: baseSize };
-        case 2: return { type: 'circle', cx: width/2, cy: height/2, size: random(0.4, 0.8) * baseSize };
-        case 3: return { type: 'circle', cx: random(width * 0.2, width * 0.8), cy: random(height * 0.2, height * 0.8), size: baseSize };
-        case 4: return { type: 'circle', cx: random(width * 0.2, width * 0.8), cy: random(height * 0.2, height * 0.8), size: random(0.4, 0.8) * baseSize };
-        case 5: return { type: 'ellipse', cx: width/2, cy: height/2, w: baseSize, h: baseSize * 0.6 };
-        case 6: return { type: 'ellipse', cx: width/2, cy: height/2, w: random(0.4, 0.8) * baseSize, h: random(0.4, 0.8) * baseSize * 0.6 };
-        case 7: return { type: 'ellipse', cx: random(width * 0.2, width * 0.8), cy: random(height * 0.2, height * 0.8), w: baseSize, h: baseSize * 0.6 };
-        default: return { type: 'circle', cx: width/2, cy: height/2, size: baseSize };
-      }
-    
-    case 'square':
-      switch(currentLevel) {
-        case 1: return { type: 'square', cx: width/2, cy: height/2, size: baseSize, angle: 0 };
-        case 2: return { type: 'square', cx: width/2, cy: height/2, size: random(0.4, 0.8) * baseSize, angle: 0 };
-        case 3: return { type: 'square', cx: random(width * 0.2, width * 0.8), cy: random(height * 0.2, height * 0.8), size: baseSize, angle: 0 };
-        case 4: return { type: 'square', cx: random(width * 0.2, width * 0.8), cy: random(height * 0.2, height * 0.8), size: random(0.4, 0.8) * baseSize, angle: 0 };
-        case 5: return { type: 'square', cx: width/2, cy: height/2, size: baseSize, angle: 45 };
-        case 6: return { type: 'square', cx: width/2, cy: height/2, size: random(0.4, 0.8) * baseSize, angle: 45 };
-        case 7: return { type: 'square', cx: random(width * 0.2, width * 0.8), cy: random(height * 0.2, height * 0.8), size: baseSize, angle: 45 };
-        default: return { type: 'square', cx: width/2, cy: height/2, size: baseSize, angle: 0 };
-      }
-    
-    case 'triangle':
-      switch(currentLevel) {
-        case 1: case 2: case 3:
-          return { type: 'equilateral', cx: width/2, cy: height/2, size: baseSize * (currentLevel === 2 ? random(0.4, 0.8) : 0.8) };
-        case 4: case 5: case 6:
-          return { type: 'isosceles', cx: width/2, cy: height/2, size: baseSize * 0.8, baseRatio: 0.7 };
-        case 7: case 8:
-          return { type: 'scalene', cx: width/2, cy: height/2, size: baseSize * 0.8 };
-        default:
-          return { type: 'equilateral', cx: width/2, cy: height/2, size: baseSize * 0.8 };
-      }
-    
-    default:
-      return { type: 'circle', cx: width/2, cy: height/2, size: baseSize };
+    case 'horizontal-line': return getHorizontalLineParams(currentLevel, width, height);
+    case 'vertical-line': return getVerticalLineParams(currentLevel, width, height);
+    case 'circle': return getCircleParams(currentLevel, width, height);
+    case 'square': return getSquareParams(currentLevel, width, height);
+    case 'triangle': return getTriangleParams(currentLevel, width, height);
+    default: return getCircleParams(1, width, height);
   }
 }
 
