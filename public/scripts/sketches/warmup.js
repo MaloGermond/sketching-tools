@@ -54,17 +54,12 @@ function updateScoreDisplay() {
   if (scoreEl) {
     let html = `<div style="font-size: 20px; margin-bottom: 5px;">Score: ${floor(currentScore)}%</div>`;
     
-    // Historique
-    const maxHistory = 100;
-    const displayCount = min(scoreHistory.length, maxHistory);
-    if (displayCount > 0) {
-      html += '<div style="font-size: 14px;">';
-      for (let i = 0; i < displayCount; i++) {
-        const idx = scoreHistory.length - 1 - i;
-        html += `<div>#${i+1}: ${floor(scoreHistory[idx])}%</div>`;
-      }
-      html += '</div>';
+    // Moyenne de l'historique
+    if (scoreHistory.length > 0) {
+      const average = scoreHistory.reduce((sum, s) => sum + s, 0) / scoreHistory.length;
+      html += `<div style="font-size: 16px; margin-top: 5px;">Moyenne: ${floor(average)}%</div>`;
     }
+    
     scoreEl.innerHTML = html;
   }
 }
