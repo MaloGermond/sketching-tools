@@ -194,6 +194,35 @@ function setShapeSettings(settings) {
   shapeSettings = { ...shapeSettings, ...settings };
 }
 
+/**
+ * Activer/désactiver une forme
+ * @impure - Modifies shapeSettings and DOM
+ * @param {string} shape - Nom de la forme à toggler
+ */
+function toggleShape(shape) {
+  shapeSettings[shape] = !shapeSettings[shape];
+  // Réinitialiser la forme active pour forcer la génération d'une nouvelle forme
+  currentShape = null;
+  clear();
+  userPoints = [];
+  guideVisible = true;
+  redraw();
+}
+
+/**
+ * Initialiser les checkboxes de l'interface selon shapeSettings
+ * @impure - Modifies DOM
+ */
+function initShapeCheckboxes() {
+  const shapes = ['circle', 'square', 'triangle', 'horizontal-line', 'vertical-line'];
+  shapes.forEach(shape => {
+    const checkbox = document.getElementById(`shape-${shape}`);
+    if (checkbox) {
+      checkbox.checked = shapeSettings[shape] || false;
+    }
+  });
+}
+
 
 // ============================================
 // 4. END OF DRAWING
