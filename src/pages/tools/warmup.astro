@@ -9,7 +9,14 @@ const description = "Échauffez-vous avant de commencer à dessiner";
   <h1>{title}</h1>
   <p>{description}</p>
   
-  <div id="sketch-container" style="margin-top: 2rem;"></div>
+  <div style="margin: 1.5rem 0;">
+    <button onclick="setShape('circle')" style="margin-right: 0.5rem; padding: 0.5rem 1rem;">Cercle</button>
+    <button onclick="setShape('square')" style="margin-right: 0.5rem; padding: 0.5rem 1rem;">Carré</button>
+    <button onclick="setShape('triangle')" style="margin-right: 0.5rem; padding: 0.5rem 1rem;">Triangle</button>
+    <button onclick="setShape('line')" style="padding: 0.5rem 1rem;">Ligne</button>
+  </div>
+  
+  <div id="sketch-container"></div>
   
   <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js"></script>
   <script src="/scripts/sketches/warmup.js" client:load></script>
