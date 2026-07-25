@@ -34,13 +34,13 @@ function draw() {
   // Afficher le score en bas à gauche
   if (currentScore !== null) {
     push();
-    fill(255);
+    fill(240);
     noStroke();
-    rect(20, height - 50, 150, 40);
+    rect(20, height - 60, 200, 50, 8);
     fill(0);
-    textSize(20);
+    textSize(28);
     textAlign(LEFT, CENTER);
-    text(`Score: ${floor(currentScore)}%`, 30, height - 30);
+    text(`Score: ${floor(currentScore)}%`, 35, height - 35);
     pop();
   }
 }
@@ -192,30 +192,4 @@ function pointToLineDistance(point, lineStart, lineEnd) {
   const dx = x - xx;
   const dy = y - yy;
   return sqrt(dx * dx + dy * dy);
-}
-
-function draw() {
-  if (mouseIsPressed) {
-    if (!drawing) {
-      clear();
-      userPoints = [];
-      drawGuideShape();
-      drawing = true;
-    }
-    userPoints.push({x: mouseX, y: mouseY});
-    line(pmouseX, pmouseY, mouseX, mouseY);
-  }
-  
-  // Afficher le score en bas à gauche
-  if (currentScore !== null) {
-    push();
-    fill(255);
-    noStroke();
-    rect(20, height - 50, 150, 40);
-    fill(0);
-    textSize(20);
-    textAlign(LEFT, CENTER);
-    text(`Score: ${floor(currentScore)}%`, 30, height - 30);
-    pop();
-  }
 }
