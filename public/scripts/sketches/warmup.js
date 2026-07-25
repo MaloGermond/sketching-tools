@@ -38,22 +38,30 @@ function setup() {
 // ============================================
 
 function draw() {
-  // --- ETAPE 1: DETECTION DU DEBUT DE DESSIN ---
-  // Quand l'utilisateur clique pour la première fois
+  handleDrawingStart();
+  collectDrawingPoints();
+  renderCurrentStroke();
+  renderGuideIfNeeded();
+}
+
+// --- ETAPE 1: Initialiser un nouveau dessin ---
+function handleDrawingStart() {
   if (mouseIsPressed && !drawing) {
     guideVisible = false;
     userPoints = [];
     drawing = true;
   }
-  
-  // --- ETAPE 2: COLLECTE DES POINTS ---
-  // tant que la souris est enfoncée, on enregistre la position
+}
+
+// --- ETAPE 2: Capturer les points du tracé ---
+function collectDrawingPoints() {
   if (mouseIsPressed && drawing) {
     userPoints.push({x: mouseX, y: mouseY});
   }
-  
-  // --- ETAPE 3: RENDU DU TRACÉ EN COURS ---
-  // Dessiner la courbe à partir des points collectés
+}
+
+// --- ETAPE 3: Dessiner le tracé en cours ---
+function renderCurrentStroke() {
   if (drawing && userPoints.length >= 2) {
     noFill();
     beginShape();
@@ -64,9 +72,10 @@ function draw() {
     curveVertex(userPoints[userPoints.length - 1].x, userPoints[userPoints.length - 1].y);
     endShape();
   }
-  
-  // --- ETAPE 4: AFFICHAGE DE LA FORME GUIDE ---
-  // Afficher la forme à recopier si on ne dessine pas
+}
+
+// --- ETAPE 4: Afficher la forme guide ---
+function renderGuideIfNeeded() {
   if (guideVisible && !drawing) {
     drawGuideShape();
   }
