@@ -32,16 +32,18 @@ function draw() {
     // Ajouter le point actuel
     userPoints.push({x: mouseX, y: mouseY});
     
-    // Ajouter des points intermédiaires pour plus de fluidité
-    const steps = 2; // Nombre de points intermédiaires
-    for (let i = 1; i <= steps; i++) {
-      const t = i / (steps + 1);
-      const x = lerp(pmouseX, mouseX, t);
-      const y = lerp(pmouseY, mouseY, t);
-      userPoints.push({x: x, y: y});
+    // Dessiner avec courbe de p5.js
+    if (userPoints.length >= 2) {
+      beginShape();
+      // Premier point répété pour un bon départ de la courbe
+      curveVertex(userPoints[0].x, userPoints[0].y);
+      for (let i = 0; i < userPoints.length; i++) {
+        curveVertex(userPoints[i].x, userPoints[i].y);
+      }
+      // Dernier point répété pour une bonne fin de la courbe
+      curveVertex(userPoints[userPoints.length - 1].x, userPoints[userPoints.length - 1].y);
+      endShape();
     }
-    
-    line(pmouseX, pmouseY, mouseX, mouseY);
   }
 }
 
