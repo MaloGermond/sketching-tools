@@ -52,12 +52,22 @@ function mouseReleased() {
 function updateScoreDisplay() {
   const scoreEl = document.getElementById('score-display');
   if (scoreEl) {
-    let html = `<div style="font-size: 20px; margin-bottom: 5px;">Score: ${floor(currentScore)}%</div>`;
+    let html = '';
     
-    // Moyenne de l'historique
+    // Moyenne de tous les scores
     if (scoreHistory.length > 0) {
       const average = scoreHistory.reduce((sum, s) => sum + s, 0) / scoreHistory.length;
-      html += `<div style="font-size: 16px; margin-top: 5px;">Moyenne: ${floor(average)}%</div>`;
+      html += `<div style="font-size: 20px; margin-bottom: 10px;">Moyenne: ${floor(average)}%</div>`;
+    }
+    
+    // Historique des scores
+    if (scoreHistory.length > 0) {
+      html += '<div style="font-size: 14px;">';
+      for (let i = 0; i < scoreHistory.length; i++) {
+        const idx = scoreHistory.length - 1 - i;
+        html += `<div>#${i+1}: ${floor(scoreHistory[idx])}%</div>`;
+      }
+      html += '</div>';
     }
     
     scoreEl.innerHTML = html;
