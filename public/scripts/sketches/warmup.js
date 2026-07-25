@@ -122,13 +122,7 @@ function setShape(shape) {
   updateScoreDisplay();
 }
 
-// Réinitialiser l'historique
-function resetHistory() {
-  scoreHistory = [];
-  currentScore = null;
-  updateScoreDisplay();
-  redraw();
-}
+
 
 // Dessiner la forme guide en gris clair
 function drawGuideShape() {
