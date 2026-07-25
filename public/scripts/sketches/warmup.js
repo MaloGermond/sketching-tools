@@ -38,32 +38,35 @@ function setup() {
 // ============================================
 
 function draw() {
-  // --- Dessiner pendant que l'utilisateur trace ---
-  if (mouseIsPressed) {
-    if (!drawing) {
-      // Masquer la forme guide pendant le dessin
-      guideVisible = false;
-      userPoints = [];
-      drawing = true;
-    }
-    
-    // Ajouter le point actuel
-    userPoints.push({x: mouseX, y: mouseY});
-    
-    // Dessiner avec courbe de p5.js
-    if (userPoints.length >= 2) {
-      noFill();
-      beginShape();
-      curveVertex(userPoints[0].x, userPoints[0].y);
-      for (let i = 0; i < userPoints.length; i++) {
-        curveVertex(userPoints[i].x, userPoints[i].y);
-      }
-      curveVertex(userPoints[userPoints.length - 1].x, userPoints[userPoints.length - 1].y);
-      endShape();
-    }
+  // --- ETAPE 1: DETECTION DU DEBUT DE DESSIN ---
+  // Quand l'utilisateur clique pour la première fois
+  if (mouseIsPressed && !drawing) {
+    guideVisible = false;
+    userPoints = [];
+    drawing = true;
   }
   
-  // --- Afficher la forme guide si visible ---
+  // --- ETAPE 2: COLLECTE DES POINTS ---
+  // tant que la souris est enfoncée, on enregistre la position
+  if (mouseIsPressed && drawing) {
+    userPoints.push({x: mouseX, y: mouseY});
+  }
+  
+  // --- ETAPE 3: RENDU DU TRACÉ EN COURS ---
+  // Dessiner la courbe à partir des points collectés
+  if (drawing && userPoints.length >= 2) {
+    noFill();
+    beginShape();
+    curveVertex(userPoints[0].x, userPoints[0].y);
+    for (let i = 0; i < userPoints.length; i++) {
+      curveVertex(userPoints[i].x, userPoints[i].y);
+    }
+    curveVertex(userPoints[userPoints.length - 1].x, userPoints[userPoints.length - 1].y);
+    endShape();
+  }
+  
+  // --- ETAPE 4: AFFICHAGE DE LA FORME GUIDE ---
+  // Afficher la forme à recopier si on ne dessine pas
   if (guideVisible && !drawing) {
     drawGuideShape();
   }
