@@ -34,6 +34,7 @@ function draw() {
     
     // Dessiner avec courbe de p5.js
     if (userPoints.length >= 2) {
+      noFill();
       beginShape();
       // Premier point répété pour un bon départ de la courbe
       curveVertex(userPoints[0].x, userPoints[0].y);
