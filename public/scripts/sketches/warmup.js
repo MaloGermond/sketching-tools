@@ -38,11 +38,13 @@ function draw() {
     fill(240);
     noStroke();
     
-    // Hauteur totale : 50px pour le score + 30px par score historique (max 5)
-    const historyHeight = min(scoreHistory.length, 5) * 30;
+    // Hauteur totale : 50px pour le score + 20px par score historique (max 100)
+    const maxHistory = 100;
+    const displayCount = min(scoreHistory.length, maxHistory);
+    const historyHeight = displayCount * 20;
     const totalHeight = 50 + historyHeight + 10;
     
-    rect(20, height - totalHeight, 200, totalHeight, 8);
+    rect(20, height - totalHeight, 250, totalHeight, 8);
     
     fill(0);
     textSize(20);
@@ -51,13 +53,13 @@ function draw() {
     // Score actuel
     text(`Score: ${floor(currentScore)}%`, 30, height - totalHeight + 10);
     
-    // Historique (derniers 5 scores)
-    textSize(16);
+    // Historique (derniers 100 scores)
+    textSize(14);
     textAlign(LEFT, TOP);
-    const startY = height - totalHeight + 50;
-    for (let i = 0; i < min(scoreHistory.length, 5); i++) {
+    const startY = height - totalHeight + 40;
+    for (let i = 0; i < displayCount; i++) {
       const idx = scoreHistory.length - 1 - i;
-      text(`#${i+1}: ${floor(scoreHistory[idx])}%`, 30, startY + i * 25);
+      text(`#${i+1}: ${floor(scoreHistory[idx])}%`, 30, startY + i * 18);
     }
     
     pop();
@@ -69,7 +71,11 @@ function mouseReleased() {
     drawing = false;
     const score = calculateScore();
     currentScore = score;
-    scoreHistory.push(score); // Ajouter à l'historique
+    scoreHistory.push(score);
+    // Garder seulement les 100 derniers scores
+    if (scoreHistory.length > 100) {
+      scoreHistory.shift();
+    }
     redraw();
   }
 }
