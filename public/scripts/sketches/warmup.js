@@ -43,6 +43,7 @@ function mouseReleased() {
       scoreHistory.shift();
     }
     updateScoreDisplay();
+    showTemporaryScore();
     redraw();
   }
 }
@@ -65,6 +66,28 @@ function updateScoreDisplay() {
       html += '</div>';
     }
     scoreEl.innerHTML = html;
+  }
+}
+
+// Afficher le score temporairement au centre
+let scoreTimeout = null;
+
+function showTemporaryScore() {
+  const popupEl = document.getElementById('score-popup');
+  if (popupEl) {
+    // Effacer le timeout précédent s'il existe
+    if (scoreTimeout) {
+      clearTimeout(scoreTimeout);
+    }
+    
+    popupEl.textContent = `${floor(currentScore)}%`;
+    popupEl.style.opacity = '1';
+    popupEl.style.color = currentScore >= 80 ? '#22c55e' : currentScore >= 50 ? '#f59e0b' : '#ef4444';
+    
+    // Faire disparaître après 5 secondes
+    scoreTimeout = setTimeout(() => {
+      popupEl.style.opacity = '0';
+    }, 5000);
   }
 }
 
