@@ -51,17 +51,75 @@ function generateNewShape(level = currentLevel, settings = shapeSettings) {
 }
 ```
 
-## Additional Rules
+## Core Rules
 
-### 1. Prefer Small, Single-Responsibility Functions
+### 1. Pure Functions
+**Every function must be deterministic (same inputs → same outputs).**
+
+- **No external state dependencies** - No global variables, no modification of props/arguments
+- **No side effects** - No DOM modification, no API calls, no logging, no state mutation
+- **Only depends on parameters** - All data must come through function arguments
+
+### 2. Early Input Validation
+**Validate inputs at the start of functions.**
+
+- Check for invalid values (`null`, `undefined`, empty arrays) immediately
+- Return early with `return;` or a default value if validation fails
+- Example:
+  ```javascript
+  if (!array || array.length === 0) return;
+  if (!user || !user.id) return null;
+  ```
+
+### 3. Avoid Nested Conditions
+**No `if` inside `if` (or `else if`/`switch` nesting).**
+
+- Use **early returns** to flatten logic
+- Use **logical operators** (`&&`, `||`) where appropriate
+- Example to avoid:
+  ```javascript
+  if (condition1) {
+    if (condition2) { ... } // ❌ Nested
+  }
+  ```
+- Prefer:
+  ```javascript
+  if (!condition1) return;
+  if (!condition2) return;
+  // Main logic here
+  ```
+
+### 4. Avoid Nested Arrays
+**No arrays inside arrays in chained operations.**
+
+- Replace `array.map(item => item.subArray.map(...))` with explicit variables or dedicated functions
+- Example to avoid:
+  ```javascript
+  const result = data.map(group => group.items.map(item => item.value)); // ❌ Nesting
+  ```
+- Prefer:
+  ```javascript
+  const extractValues = (items) => items.map(item => item.value);
+  const result = data.map(group => extractValues(group.items));
+  ```
+
+### 5. Clarity and Readability
+- Use **explicit names** (e.g., `isValidUser` instead of `check`)
+- Use **descriptive variable names** that reveal intent
+- Comments **only if necessary** - code should be self-documenting
+- Prefer clear code over clever code
+
+## Organization Rules
+
+### 1. Single-Responsibility Functions
 - Each function should do ONE thing
 - Functions should be short (ideally < 20 lines)
 - Complex logic should be broken into smaller pure functions
 
-### 2. Document All Functions
+### 2. Documentation
 - Use JSDoc comments for all functions
 - Document parameters, return types, and side effects
-- Mark purity explicitly
+- Mark purity explicitly with `@pure` or `@impure`
 
 ### 3. Section Organization
 - Group related functions together
@@ -69,7 +127,7 @@ function generateNewShape(level = currentLevel, settings = shapeSettings) {
 - Order: Pure functions first, then impure functions
 
 ### 4. Naming Conventions
-- Use camelCase for functions
+- Use camelCase for functions and variables
 - Use descriptive names that reveal intent
 - Prefix getters with `get` (e.g., `getAvailableShapes`)
 - Prefix setters with `set` (e.g., `setShapeSettings`)
