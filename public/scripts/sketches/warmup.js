@@ -578,15 +578,25 @@ function drawGuideShape() {
 // ============================================
 
 /**
+ * Minimum number of points required for a valid score calculation
+ */
+const MIN_POINTS_FOR_SCORE = 10;
+
+/**
  * Calculer le score (0-100) avec tolérance selon le niveau
- * @pure - Does not modify state, but depends on global userPoints, shapeParams, currentLevel
+ * @pure - Does not modify state, but depends on global userPoints, shapeParams, currentLevel, width, height
  * @returns {number} Score entre 0 et 100
  */
 function calculateScore() {
-  if (userPoints.length === 0) return 0;
+  // Validation précoce: besoin d'un minimum de points pour évaluer
+  if (userPoints.length < MIN_POINTS_FOR_SCORE) {
+    return 0;
+  }
   
   const params = shapeParams;
-  const tolerance = map(currentLevel, 1, 10, 0.3, 0.05); // Plus le niveau est élevé, moins la tolérance est grande
+  // Tolérance: plus le niveau est élevé, plus on est strict (diviseur plus grand = score plus bas pour même erreur)
+  // toleranceFactor: 1.0 (niveau 1) à 3.0 (niveau 10)
+  const toleranceFactor = map(currentLevel, 1, 10, 1.0, 3.0);
   
   let totalDistance = 0;
   let scoringAvgError = 0;
@@ -598,7 +608,9 @@ function calculateScore() {
         totalDistance += abs(p.y - lineY);
       }
       scoringAvgError = totalDistance / userPoints.length;
-      return max(0, 100 - (scoringAvgError / (height * 0.2) * 100) * tolerance);
+      // Normaliser par rapport à la hauteur du canvas (plus petit diviseur = plus strict)
+      // Diviser par height * 0.1 pour être plus strict
+      return max(0, 100 - (scoringAvgError / (height * 0.1) * 100) / toleranceFactor);
     }
     
     case 'vertical-line': {
@@ -607,7 +619,7 @@ function calculateScore() {
         totalDistance += abs(p.x - lineX);
       }
       scoringAvgError = totalDistance / userPoints.length;
-      return max(0, 100 - (scoringAvgError / (width * 0.2) * 100) * tolerance);
+      return max(0, 100 - (scoringAvgError / (width * 0.1) * 100) / toleranceFactor);
     }
     
     case 'circle':
@@ -620,7 +632,9 @@ function calculateScore() {
         totalDistance += abs(d - radius);
       }
       scoringAvgError = totalDistance / userPoints.length;
-      return max(0, 100 - (scoringAvgError / radius * 100) * tolerance);
+      // Normaliser par rapport au rayon (erreur relative)
+      // Plus le niveau est élevé, plus toleranceFactor est grand, donc score plus bas
+      return max(0, 100 - (scoringAvgError / radius * 100) / toleranceFactor);
     }
     
     case 'square': {
@@ -639,11 +653,13 @@ function calculateScore() {
         totalDistance += minDist;
       }
       scoringAvgError = totalDistance / userPoints.length;
-      return max(0, 100 - (scoringAvgError / (halfSize) * 100) * tolerance);
+      // Normaliser par rapport à halfSize
+      return max(0, 100 - (scoringAvgError / halfSize * 100) / toleranceFactor);
     }
     
     case 'triangle': {
-      // Calculer les sommets du triangle basé sur params
+      // Calculer les sommets du triangle basé sur params (sans rotation pour le calcul de score)
+      // Note: La rotation est déjà appliquée dans drawGuideShape(), ici on calcule les sommets non rotationnés
       let v1, v2, v3;
       const size = params.size;
       
@@ -674,7 +690,8 @@ function calculateScore() {
         totalDistance += min(d1, d2, d3);
       }
       scoringAvgError = totalDistance / userPoints.length;
-      return max(0, 100 - (scoringAvgError / (size/2) * 100) * tolerance);
+      // Normaliser par rapport à size/2 (demi-taille du triangle)
+      return max(0, 100 - (scoringAvgError / (size / 2) * 100) / toleranceFactor);
     }
   }
   
