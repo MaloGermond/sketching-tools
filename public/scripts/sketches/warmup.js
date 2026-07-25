@@ -27,7 +27,8 @@ function draw() {
     if (!drawing) {
       clear();
       userPoints = [];
-      drawGuideShape();
+      // NE PAS redessiner la forme guide ici
+      // Elle sera redessinée après le calcul du score
       drawing = true;
     }
     
@@ -38,12 +39,10 @@ function draw() {
     if (userPoints.length >= 2) {
       noFill();
       beginShape();
-      // Premier point répété pour un bon départ de la courbe
       curveVertex(userPoints[0].x, userPoints[0].y);
       for (let i = 0; i < userPoints.length; i++) {
         curveVertex(userPoints[i].x, userPoints[i].y);
       }
-      // Dernier point répété pour une bonne fin de la courbe
       curveVertex(userPoints[userPoints.length - 1].x, userPoints[userPoints.length - 1].y);
       endShape();
     }
@@ -61,7 +60,13 @@ function mouseReleased() {
     }
     updateScoreDisplay();
     showTemporaryScore();
-    redraw();
+    
+    // Dessiner une nouvelle forme guide pour le prochain dessin
+    setTimeout(() => {
+      clear();
+      drawGuideShape();
+      redraw();
+    }, 100);
   }
 }
 
