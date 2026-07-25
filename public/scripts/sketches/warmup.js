@@ -287,6 +287,29 @@ function clamp(value, minVal, maxVal) {
 }
 
 /**
+ * Calculate safe position range for a shape to stay within canvas
+ * @pure
+ * @param {number} w - Canvas width
+ * @param {number} h - Canvas height
+ * @param {number} size - Shape size (width for ellipses, size for squares/circles)
+ * @param {number} angle - Rotation angle in degrees
+ * @returns {Object} Min and max safe positions { minX, maxX, minY, maxY }
+ */
+function getSafePositionRange(w, h, size, angle) {
+  // Calculate the margin needed to keep the shape within canvas
+  // For rotated shapes, margin = size * (|cos(a)| + |sin(a)|) / 2
+  const rotationFactor = abs(cos(radians(angle))) + abs(sin(radians(angle)));
+  const margin = size * rotationFactor / 2;
+  
+  return {
+    minX: margin,
+    maxX: w - margin,
+    minY: margin,
+    maxY: h - margin
+  };
+}
+
+/**
  * Get horizontal line parameters
  * @impure - Uses random()
  * @param {number} level - Difficulty level (1-3)
@@ -359,20 +382,22 @@ function getCircleParams(level, w, h) {
   
   if (level === 1) return { type: 'circle', cx: w/2, cy: h/2, size: baseSize, angle: 0 };
   if (level === 2) return { type: 'circle', cx: w/2, cy: h/2, size: random(0.4, 0.8) * baseSize, angle: 0 };
-  if (level === 3) return { type: 'circle', cx: clamp(w/2, baseSize/2, w - baseSize/2), cy: clamp(h/2, baseSize/2, h - baseSize/2), size: baseSize, angle: 0 };
-  if (level === 4) return { type: 'circle', cx: clamp(random(w * 0.2, w * 0.8), baseSize/2, w - baseSize/2), cy: clamp(random(h * 0.2, h * 0.8), baseSize/2, h - baseSize/2), size: random(0.4, 0.8) * baseSize, angle: 0 };
-  if (level === 5) return { type: 'ellipse', cx: w/2, cy: h/2, w: baseSize, h: baseSize * 0.6, angle: 0 };
-  if (level === 6) return { type: 'ellipse', cx: w/2, cy: h/2, w: random(0.4, 0.8) * baseSize, h: random(0.4, 0.8) * baseSize * 0.6, angle: random([0, 45, 90]) };
+  if (level === 3) return { type: 'circle', cx: random(w * 0.2, w * 0.8), cy: random(h * 0.2, h * 0.8), size: baseSize, angle: 0 };
+  if (level === 4) return { type: 'circle', cx: random(w * 0.2, w * 0.8), cy: random(h * 0.2, h * 0.8), size: random(0.4, 0.8) * baseSize, angle: 0 };
+  if (level === 5) return { type: 'ellipse', cx: random(w * 0.3, w * 0.7), cy: random(h * 0.3, h * 0.7), w: baseSize, h: baseSize * 0.6, angle: 0 };
+  if (level === 6) return { type: 'ellipse', cx: random(w * 0.3, w * 0.7), cy: random(h * 0.3, h * 0.7), w: random(0.4, 0.8) * baseSize, h: random(0.4, 0.8) * baseSize * 0.6, angle: random([0, 45, 90]) };
   if (level === 7) {
     const angle = random(0, 180);
     const safeSize = calculateSafeSize(w, h, angle);
-    return { type: 'ellipse', cx: w/2, cy: h/2, w: safeSize, h: safeSize * 0.6, angle: angle };
+    const range = getSafePositionRange(w, h, safeSize, angle);
+    return { type: 'ellipse', cx: random(range.minX, range.maxX), cy: random(range.minY, range.maxY), w: safeSize, h: safeSize * 0.6, angle: angle };
   }
   
   // For levels > 7, use highest difficulty (level 7) with random rotation
   const angle = random(0, 180);
   const safeSize = calculateSafeSize(w, h, angle);
-  return { type: 'ellipse', cx: w/2, cy: h/2, w: safeSize, h: safeSize * 0.6, angle: angle };
+  const range = getSafePositionRange(w, h, safeSize, angle);
+  return { type: 'ellipse', cx: random(range.minX, range.maxX), cy: random(range.minY, range.maxY), w: safeSize, h: safeSize * 0.6, angle: angle };
 }
 
 /**
@@ -388,28 +413,32 @@ function getSquareParams(level, w, h) {
   
   if (level === 1) return { type: 'square', cx: w/2, cy: h/2, size: baseSize, angle: 0 };
   if (level === 2) return { type: 'square', cx: w/2, cy: h/2, size: random(0.4, 0.8) * baseSize, angle: 0 };
-  if (level === 3) return { type: 'square', cx: clamp(random(w * 0.2, w * 0.8), baseSize/2, w - baseSize/2), cy: clamp(random(h * 0.2, h * 0.8), baseSize/2, h - baseSize/2), size: baseSize, angle: 0 };
-  if (level === 4) return { type: 'square', cx: clamp(random(w * 0.2, w * 0.8), baseSize/2, w - baseSize/2), cy: clamp(random(h * 0.2, h * 0.8), baseSize/2, h - baseSize/2), size: random(0.4, 0.8) * baseSize, angle: 0 };
+  if (level === 3) return { type: 'square', cx: random(w * 0.2, w * 0.8), cy: random(h * 0.2, h * 0.8), size: baseSize, angle: 0 };
+  if (level === 4) return { type: 'square', cx: random(w * 0.2, w * 0.8), cy: random(h * 0.2, h * 0.8), size: random(0.4, 0.8) * baseSize, angle: 0 };
   if (level === 5) {
     const angle = 45;
     const safeSize = calculateSafeSize(w, h, angle);
-    return { type: 'square', cx: w/2, cy: h/2, size: safeSize, angle: angle };
+    const range = getSafePositionRange(w, h, safeSize, angle);
+    return { type: 'square', cx: random(range.minX, range.maxX), cy: random(range.minY, range.maxY), size: safeSize, angle: angle };
   }
   if (level === 6) {
     const angle = random([0, 45, 90]);
     const safeSize = calculateSafeSize(w, h, angle);
-    return { type: 'square', cx: w/2, cy: h/2, size: safeSize, angle: angle };
+    const range = getSafePositionRange(w, h, safeSize, angle);
+    return { type: 'square', cx: random(range.minX, range.maxX), cy: random(range.minY, range.maxY), size: safeSize, angle: angle };
   }
   if (level === 7) {
     const angle = random(0, 180);
     const safeSize = calculateSafeSize(w, h, angle);
-    return { type: 'square', cx: w/2, cy: h/2, size: safeSize, angle: angle };
+    const range = getSafePositionRange(w, h, safeSize, angle);
+    return { type: 'square', cx: random(range.minX, range.maxX), cy: random(range.minY, range.maxY), size: safeSize, angle: angle };
   }
   
   // For levels > 7, use highest difficulty (level 7) with random rotation
   const angle = random(0, 180);
   const safeSize = calculateSafeSize(w, h, angle);
-  return { type: 'square', cx: w/2, cy: h/2, size: safeSize, angle: angle };
+  const range = getSafePositionRange(w, h, safeSize, angle);
+  return { type: 'square', cx: random(range.minX, range.maxX), cy: random(range.minY, range.maxY), size: safeSize, angle: angle };
 }
 
 /**
@@ -425,23 +454,26 @@ function getTriangleParams(level, w, h) {
   
   if (level >= 1 && level <= 3) {
     const size = baseSize * (level === 2 ? random(0.4, 0.8) : 0.8);
-    return { type: 'equilateral', cx: w/2, cy: h/2, size: size, angle: 0 };
+    return { type: 'equilateral', cx: random(w * 0.3, w * 0.7), cy: random(h * 0.3, h * 0.7), size: size, angle: 0 };
   }
   if (level >= 4 && level <= 6) {
     const angle = random([0, 45, 90, 180]);
     const safeSize = calculateSafeSize(w, h, angle) * 0.8;
-    return { type: 'isosceles', cx: w/2, cy: h/2, size: safeSize, baseRatio: 0.7, angle: angle };
+    const range = getSafePositionRange(w, h, safeSize, angle);
+    return { type: 'isosceles', cx: random(range.minX, range.maxX), cy: random(range.minY, range.maxY), size: safeSize, baseRatio: 0.7, angle: angle };
   }
   if (level >= 7 && level <= 8) {
     const angle = random(0, 180);
     const safeSize = calculateSafeSize(w, h, angle) * 0.8;
-    return { type: 'scalene', cx: w/2, cy: h/2, size: safeSize, angle: angle };
+    const range = getSafePositionRange(w, h, safeSize, angle);
+    return { type: 'scalene', cx: random(range.minX, range.maxX), cy: random(range.minY, range.maxY), size: safeSize, angle: angle };
   }
   
   // For levels > 8, use highest difficulty (level 8) with random rotation
   const angle = random(0, 180);
   const safeSize = calculateSafeSize(w, h, angle) * 0.8;
-  return { type: 'scalene', cx: w/2, cy: h/2, size: safeSize, angle: angle };
+  const range = getSafePositionRange(w, h, safeSize, angle);
+  return { type: 'scalene', cx: random(range.minX, range.maxX), cy: random(range.minY, range.maxY), size: safeSize, angle: angle };
 }
 
 /**
