@@ -273,7 +273,8 @@ function getHorizontalLineParams(level, w, h) {
   if (level === 2) return { type: 'horizontal', x1: w * 0.2, y1: h/2, x2: w * 0.8, y2: h/2, size: random(0.4, 0.8) * w };
   if (level === 3) return { type: 'horizontal', x1: random(w * 0.2, w * 0.8), y1: random(h * 0.2, h * 0.8), x2: random(w * 0.2, w * 0.8), y2: random(h * 0.2, h * 0.8), size: baseSize };
   
-  return { type: 'horizontal', x1: w * 0.2, y1: h/2, x2: w * 0.8, y2: h/2, size: baseSize };
+  // For levels > 3, use highest difficulty (level 3)
+  return { type: 'horizontal', x1: random(w * 0.2, w * 0.8), y1: random(h * 0.2, h * 0.8), x2: random(w * 0.2, w * 0.8), y2: random(h * 0.2, h * 0.8), size: baseSize };
 }
 
 /**
@@ -291,7 +292,8 @@ function getVerticalLineParams(level, w, h) {
   if (level === 2) return { type: 'vertical', x1: w/2, y1: h * 0.2, x2: w/2, y2: h * 0.8, size: random(0.4, 0.8) * h };
   if (level === 3) return { type: 'vertical', x1: random(w * 0.2, w * 0.8), y1: random(h * 0.2, h * 0.8), x2: random(w * 0.2, w * 0.8), y2: random(h * 0.2, h * 0.8), size: baseSize };
   
-  return { type: 'vertical', x1: w/2, y1: h * 0.2, x2: w/2, y2: h * 0.8, size: baseSize };
+  // For levels > 3, use highest difficulty (level 3)
+  return { type: 'vertical', x1: random(w * 0.2, w * 0.8), y1: random(h * 0.2, h * 0.8), x2: random(w * 0.2, w * 0.8), y2: random(h * 0.2, h * 0.8), size: baseSize };
 }
 
 /**
@@ -313,7 +315,8 @@ function getCircleParams(level, w, h) {
   if (level === 6) return { type: 'ellipse', cx: w/2, cy: h/2, w: random(0.4, 0.8) * baseSize, h: random(0.4, 0.8) * baseSize * 0.6 };
   if (level === 7) return { type: 'ellipse', cx: random(w * 0.2, w * 0.8), cy: random(h * 0.2, h * 0.8), w: baseSize, h: baseSize * 0.6 };
   
-  return { type: 'circle', cx: w/2, cy: h/2, size: baseSize };
+  // For levels > 7, use highest difficulty (level 7)
+  return { type: 'ellipse', cx: random(w * 0.2, w * 0.8), cy: random(h * 0.2, h * 0.8), w: baseSize, h: baseSize * 0.6 };
 }
 
 /**
@@ -335,7 +338,8 @@ function getSquareParams(level, w, h) {
   if (level === 6) return { type: 'square', cx: w/2, cy: h/2, size: random(0.4, 0.8) * baseSize, angle: 45 };
   if (level === 7) return { type: 'square', cx: random(w * 0.2, w * 0.8), cy: random(h * 0.2, h * 0.8), size: baseSize, angle: 45 };
   
-  return { type: 'square', cx: w/2, cy: h/2, size: baseSize, angle: 0 };
+  // For levels > 7, use highest difficulty (level 7)
+  return { type: 'square', cx: random(w * 0.2, w * 0.8), cy: random(h * 0.2, h * 0.8), size: baseSize, angle: 45 };
 }
 
 /**
@@ -360,7 +364,8 @@ function getTriangleParams(level, w, h) {
     return { type: 'scalene', cx: w/2, cy: h/2, size: baseSize * 0.8 };
   }
   
-  return { type: 'equilateral', cx: w/2, cy: h/2, size: baseSize * 0.8 };
+  // For levels > 8, use highest difficulty (level 8)
+  return { type: 'scalene', cx: w/2, cy: h/2, size: baseSize * 0.8 };
 }
 
 /**
