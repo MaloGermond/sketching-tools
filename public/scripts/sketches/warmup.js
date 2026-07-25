@@ -1,6 +1,10 @@
 // Warmup sketch - Échauffement avant dessin
 // Recopier les formes affichées et obtenir un score
 
+// ============================================
+// 1. GLOBAL VARIABLES
+// ============================================
+
 let drawing = false;
 let selectedShape = 'circle';
 let currentLevel = 1; // Niveau de difficulté (1-10)
@@ -8,6 +12,13 @@ let userPoints = []; // Stocke les points du dessin utilisateur
 let scoreHistory = []; // Historique des scores de la session
 let shapeParams = {}; // Paramètres de la forme actuelle (pour recalcul)
 let guideVisible = true; // La forme guide est-elle visible ?
+let currentScore = null;
+let scoreTimeout = null;
+
+
+// ============================================
+// 2. INITIALISATION
+// ============================================
 
 function setup() {
   let canvas = createCanvas(600, 400);
@@ -21,9 +32,13 @@ function setup() {
   drawGuideShape();
 }
 
-let currentScore = null;
+
+// ============================================
+// 3. MAIN LOOP
+// ============================================
 
 function draw() {
+  // --- Dessiner pendant que l'utilisateur trace ---
   if (mouseIsPressed) {
     if (!drawing) {
       // Masquer la forme guide pendant le dessin
@@ -48,11 +63,16 @@ function draw() {
     }
   }
   
-  // Dessiner la forme guide si elle est visible
+  // --- Afficher la forme guide si visible ---
   if (guideVisible && !drawing) {
     drawGuideShape();
   }
 }
+
+
+// ============================================
+// 4. END OF DRAWING
+// ============================================
 
 function mouseReleased() {
   if (drawing) {
@@ -78,79 +98,10 @@ function mouseReleased() {
   }
 }
 
-// Mettre à jour l'affichage du score dans le DOM
-function updateScoreDisplay() {
-  const scoreEl = document.getElementById('score-display');
-  if (scoreEl) {
-    let html = '';
-    
-    // Moyenne de tous les scores
-    if (scoreHistory.length > 0) {
-      const average = scoreHistory.reduce((sum, s) => sum + s, 0) / scoreHistory.length;
-      html += `<div style="font-size: 20px; margin-bottom: 10px;">Moyenne: ${floor(average)}%</div>`;
-    }
-    
-    // Historique des scores
-    if (scoreHistory.length > 0) {
-      html += '<div style="font-size: 14px;">';
-      for (let i = 0; i < scoreHistory.length; i++) {
-        const idx = scoreHistory.length - 1 - i;
-        html += `<div>#${i+1}: ${floor(scoreHistory[idx])}%</div>`;
-      }
-      html += '</div>';
-    }
-    
-    scoreEl.innerHTML = html;
-  }
-}
 
-// Afficher le score temporairement au centre
-let scoreTimeout = null;
-
-function showTemporaryScore() {
-  const popupEl = document.getElementById('score-popup');
-  if (popupEl) {
-    // Effacer le timeout précédent s'il existe
-    if (scoreTimeout) {
-      clearTimeout(scoreTimeout);
-    }
-    
-    popupEl.textContent = `${floor(currentScore)}%`;
-    popupEl.style.opacity = '1';
-    popupEl.style.color = currentScore >= 80 ? '#22c55e' : currentScore >= 50 ? '#f59e0b' : '#ef4444';
-    
-    // Faire disparaître après 2 secondes
-    scoreTimeout = setTimeout(() => {
-      popupEl.style.opacity = '0';
-    }, 2000);
-  }
-}
-
-// Changer la forme
-function setShape(shape) {
-  selectedShape = shape;
-  clear();
-  userPoints = [];
-  currentScore = null;
-  scoreHistory = [];
-  guideVisible = true;
-  generateShapeParams();
-  drawGuideShape();
-  updateScoreDisplay();
-}
-
-// Changer le niveau de difficulté (1-10)
-function setLevel(level) {
-  currentLevel = parseInt(level);
-  clear();
-  userPoints = [];
-  currentScore = null;
-  scoreHistory = [];
-  guideVisible = true;
-  generateShapeParams();
-  drawGuideShape();
-  updateScoreDisplay();
-}
+// ============================================
+// 5. SHAPE GENERATION
+// ============================================
 
 // Générer une forme aléatoire (même niveau)
 function generateRandomShape() {
@@ -164,8 +115,6 @@ function generateRandomShape() {
 function generateShapeParams() {
   shapeParams = getShapeParams();
 }
-
-
 
 // Générer les paramètres de la forme selon le niveau
 function getShapeParams() {
@@ -228,6 +177,11 @@ function getShapeParams() {
   }
 }
 
+
+// ============================================
+// 6. DISPLAY
+// ============================================
+
 // Dessiner la forme guide en gris clair
 function drawGuideShape() {
   // Utiliser les paramètres déjà générés
@@ -286,6 +240,11 @@ function drawGuideShape() {
   pop();
 }
 
+
+// ============================================
+// 7. SCORING
+// ============================================
+
 // Calculer le score (0-100) avec tolérance selon le niveau
 function calculateScore() {
   if (userPoints.length === 0) return 0;
@@ -294,7 +253,7 @@ function calculateScore() {
   const tolerance = map(currentLevel, 1, 10, 0.3, 0.05); // Plus le niveau est élevé, moins la tolérance est grande
   
   let totalDistance = 0;
-  let avgError = 0;
+  let scoringAvgError = 0;
   
   switch(selectedShape) {
     case 'line': {
@@ -302,8 +261,8 @@ function calculateScore() {
       for (let p of userPoints) {
         totalDistance += abs(p.y - lineY);
       }
-      avgError = totalDistance / userPoints.length;
-      return max(0, 100 - (avgError / (height * 0.2) * 100) * tolerance);
+      scoringAvgError = totalDistance / userPoints.length;
+      return max(0, 100 - (scoringAvgError / (height * 0.2) * 100) * tolerance);
     }
     
     case 'circle':
@@ -315,8 +274,8 @@ function calculateScore() {
         const d = dist(p.x, p.y, cx, cy);
         totalDistance += abs(d - radius);
       }
-      avgError = totalDistance / userPoints.length;
-      return max(0, 100 - (avgError / radius * 100) * tolerance);
+      scoringAvgError = totalDistance / userPoints.length;
+      return max(0, 100 - (scoringAvgError / radius * 100) * tolerance);
     }
     
     case 'square': {
@@ -334,8 +293,8 @@ function calculateScore() {
         const minDist = min(distToLeft, distToRight, distToTop, distToBottom);
         totalDistance += minDist;
       }
-      avgError = totalDistance / userPoints.length;
-      return max(0, 100 - (avgError / (halfSize) * 100) * tolerance);
+      scoringAvgError = totalDistance / userPoints.length;
+      return max(0, 100 - (scoringAvgError / (halfSize) * 100) * tolerance);
     }
     
     case 'triangle': {
@@ -369,8 +328,8 @@ function calculateScore() {
         const d3 = pointToLineDistance(p, v3, v1);
         totalDistance += min(d1, d2, d3);
       }
-      avgError = totalDistance / userPoints.length;
-      return max(0, 100 - (avgError / (size/2) * 100) * tolerance);
+      scoringAvgError = totalDistance / userPoints.length;
+      return max(0, 100 - (scoringAvgError / (size/2) * 100) * tolerance);
     }
   }
   
@@ -408,4 +367,81 @@ function pointToLineDistance(point, lineStart, lineEnd) {
   const dx = x - xx;
   const dy = y - yy;
   return sqrt(dx * dx + dy * dy);
+}
+
+
+// ============================================
+// 8. USER INTERACTIONS
+// ============================================
+
+// Changer la forme
+function setShape(shape) {
+  selectedShape = shape;
+  clear();
+  userPoints = [];
+  currentScore = null;
+  scoreHistory = [];
+  guideVisible = true;
+  generateShapeParams();
+  drawGuideShape();
+  updateScoreDisplay();
+}
+
+// Changer le niveau de difficulté (1-10)
+function setLevel(level) {
+  currentLevel = parseInt(level);
+  clear();
+  userPoints = [];
+  currentScore = null;
+  scoreHistory = [];
+  guideVisible = true;
+  generateShapeParams();
+  drawGuideShape();
+  updateScoreDisplay();
+}
+
+// Mettre à jour l'affichage du score dans le DOM
+function updateScoreDisplay() {
+  const scoreEl = document.getElementById('score-display');
+  if (scoreEl) {
+    let html = '';
+    
+    // Moyenne de tous les scores
+    if (scoreHistory.length > 0) {
+      const average = scoreHistory.reduce((sum, s) => sum + s, 0) / scoreHistory.length;
+      html += `<div style="font-size: 20px; margin-bottom: 10px;">Moyenne: ${floor(average)}%</div>`;
+    }
+    
+    // Historique des scores
+    if (scoreHistory.length > 0) {
+      html += '<div style="font-size: 14px;">';
+      for (let i = 0; i < scoreHistory.length; i++) {
+        const idx = scoreHistory.length - 1 - i;
+        html += `<div>#${i+1}: ${floor(scoreHistory[idx])}%</div>`;
+      }
+      html += '</div>';
+    }
+    
+    scoreEl.innerHTML = html;
+  }
+}
+
+// Afficher le score temporairement au centre
+function showTemporaryScore() {
+  const popupEl = document.getElementById('score-popup');
+  if (popupEl) {
+    // Effacer le timeout précédent s'il existe
+    if (scoreTimeout) {
+      clearTimeout(scoreTimeout);
+    }
+    
+    popupEl.textContent = `${floor(currentScore)}%`;
+    popupEl.style.opacity = '1';
+    popupEl.style.color = currentScore >= 80 ? '#22c55e' : currentScore >= 50 ? '#f59e0b' : '#ef4444';
+    
+    // Faire disparaître après 2 secondes
+    scoreTimeout = setTimeout(() => {
+      popupEl.style.opacity = '0';
+    }, 2000);
+  }
 }
