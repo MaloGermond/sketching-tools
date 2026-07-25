@@ -10,10 +10,28 @@ const description = "Échauffez-vous avant de commencer à dessiner";
   <p>{description}</p>
   
   <div style="margin: 1.5rem 0;">
-    <button onclick="setShape('circle')" style="margin-right: 0.5rem; padding: 0.5rem 1rem;">Cercle</button>
-    <button onclick="setShape('square')" style="margin-right: 0.5rem; padding: 0.5rem 1rem;">Carré</button>
-    <button onclick="setShape('triangle')" style="margin-right: 0.5rem; padding: 0.5rem 1rem;">Triangle</button>
-    <button onclick="setShape('line')" style="padding: 0.5rem 1rem;">Ligne</button>
+    <div style="margin-bottom: 1rem;">
+      <span style="margin-right: 1rem;">Forme:</span>
+      <button onclick="setShape('circle')" style="margin-right: 0.5rem; padding: 0.5rem 1rem;">Cercle</button>
+      <button onclick="setShape('square')" style="margin-right: 0.5rem; padding: 0.5rem 1rem;">Carré</button>
+      <button onclick="setShape('triangle')" style="margin-right: 0.5rem; padding: 0.5rem 1rem;">Triangle</button>
+      <button onclick="setShape('line')" style="padding: 0.5rem 1rem;">Ligne</button>
+    </div>
+    <div>
+      <span style="margin-right: 1rem;">Niveau:</span>
+      <select onchange="setLevel(this.value)" style="padding: 0.5rem;">
+        <option value="1">1 - Débutant</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5 - Intermédiaire</option>
+        <option value="6">6</option>
+        <option value="7">7</option>
+        <option value="8">8</option>
+        <option value="9">9</option>
+        <option value="10">10 - Expert</option>
+      </select>
+    </div>
   </div>
   
   <div id="sketch-container"></div>

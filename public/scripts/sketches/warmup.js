@@ -3,8 +3,10 @@
 
 let drawing = false;
 let selectedShape = 'circle';
+let currentLevel = 1; // Niveau de difficulté (1-10)
 let userPoints = []; // Stocke les points du dessin utilisateur
 let scoreHistory = []; // Historique des scores de la session
+let shapeParams = {}; // Paramètres de la forme actuelle (pour recalcul)
 
 function setup() {
   let canvas = createCanvas(600, 400);
@@ -117,71 +119,180 @@ function setShape(shape) {
   clear();
   userPoints = [];
   currentScore = null;
-  scoreHistory = []; // Réinitialiser l'historique des scores
+  scoreHistory = [];
+  drawGuideShape();
+  updateScoreDisplay();
+}
+
+// Changer le niveau de difficulté (1-10)
+function setLevel(level) {
+  currentLevel = parseInt(level);
+  clear();
+  userPoints = [];
+  currentScore = null;
+  scoreHistory = [];
   drawGuideShape();
   updateScoreDisplay();
 }
 
 
 
+// Générer les paramètres de la forme selon le niveau
+function getShapeParams() {
+  const baseSize = min(width, height) * 0.6;
+  
+  switch(selectedShape) {
+    case 'line':
+      switch(currentLevel) {
+        case 1: return { type: 'horizontal', x1: width * 0.2, y1: height/2, x2: width * 0.8, y2: height/2, size: baseSize };
+        case 2: return { type: 'horizontal', x1: width * 0.2, y1: height/2, x2: width * 0.8, y2: height/2, size: random(0.4, 0.8) * width };
+        case 3: return { type: 'horizontal', x1: random(width * 0.2, width * 0.8), y1: random(height * 0.2, height * 0.8), x2: random(width * 0.2, width * 0.8), y2: random(height * 0.2, height * 0.8), size: baseSize };
+        case 4: return { type: 'vertical', x1: width/2, y1: height * 0.2, x2: width/2, y2: height * 0.8, size: baseSize };
+        case 5: return { type: 'vertical', x1: width/2, y1: height * 0.2, x2: width/2, y2: height * 0.8, size: random(0.4, 0.8) * height };
+        case 6: return { type: 'vertical', x1: random(width * 0.2, width * 0.8), y1: random(height * 0.2, height * 0.8), x2: random(width * 0.2, width * 0.8), y2: random(height * 0.2, height * 0.8), size: baseSize };
+        case 7: return { type: 'diagonal', angle: 45, x1: width * 0.2, y1: height * 0.8, x2: width * 0.8, y2: height * 0.2, size: baseSize };
+        case 8: return { type: 'diagonal', angle: 45, x1: width * 0.2, y1: height * 0.8, x2: width * 0.8, y2: height * 0.2, size: random(0.4, 0.8) * width };
+        case 9: return { type: 'diagonal', angle: 135, x1: width * 0.2, y1: height * 0.2, x2: width * 0.8, y2: height * 0.8, size: baseSize };
+        case 10: return { type: 'random', angle: random(0, 180), size: baseSize };
+        default: return { type: 'horizontal', x1: width * 0.2, y1: height/2, x2: width * 0.8, y2: height/2, size: baseSize };
+      }
+    
+    case 'circle':
+      switch(currentLevel) {
+        case 1: return { type: 'circle', cx: width/2, cy: height/2, size: baseSize };
+        case 2: return { type: 'circle', cx: width/2, cy: height/2, size: random(0.4, 0.8) * baseSize };
+        case 3: return { type: 'circle', cx: random(width * 0.2, width * 0.8), cy: random(height * 0.2, height * 0.8), size: baseSize };
+        case 4: return { type: 'circle', cx: random(width * 0.2, width * 0.8), cy: random(height * 0.2, height * 0.8), size: random(0.4, 0.8) * baseSize };
+        case 5: return { type: 'ellipse', cx: width/2, cy: height/2, w: baseSize, h: baseSize * 0.6 };
+        case 6: return { type: 'ellipse', cx: width/2, cy: height/2, w: random(0.4, 0.8) * baseSize, h: random(0.4, 0.8) * baseSize * 0.6 };
+        case 7: return { type: 'ellipse', cx: random(width * 0.2, width * 0.8), cy: random(height * 0.2, height * 0.8), w: baseSize, h: baseSize * 0.6 };
+        default: return { type: 'circle', cx: width/2, cy: height/2, size: baseSize };
+      }
+    
+    case 'square':
+      switch(currentLevel) {
+        case 1: return { type: 'square', cx: width/2, cy: height/2, size: baseSize, angle: 0 };
+        case 2: return { type: 'square', cx: width/2, cy: height/2, size: random(0.4, 0.8) * baseSize, angle: 0 };
+        case 3: return { type: 'square', cx: random(width * 0.2, width * 0.8), cy: random(height * 0.2, height * 0.8), size: baseSize, angle: 0 };
+        case 4: return { type: 'square', cx: random(width * 0.2, width * 0.8), cy: random(height * 0.2, height * 0.8), size: random(0.4, 0.8) * baseSize, angle: 0 };
+        case 5: return { type: 'square', cx: width/2, cy: height/2, size: baseSize, angle: 45 };
+        case 6: return { type: 'square', cx: width/2, cy: height/2, size: random(0.4, 0.8) * baseSize, angle: 45 };
+        case 7: return { type: 'square', cx: random(width * 0.2, width * 0.8), cy: random(height * 0.2, height * 0.8), size: baseSize, angle: 45 };
+        default: return { type: 'square', cx: width/2, cy: height/2, size: baseSize, angle: 0 };
+      }
+    
+    case 'triangle':
+      switch(currentLevel) {
+        case 1: case 2: case 3:
+          return { type: 'equilateral', cx: width/2, cy: height/2, size: baseSize * (currentLevel === 2 ? random(0.4, 0.8) : 0.8) };
+        case 4: case 5: case 6:
+          return { type: 'isosceles', cx: width/2, cy: height/2, size: baseSize * 0.8, baseRatio: 0.7 };
+        case 7: case 8:
+          return { type: 'scalene', cx: width/2, cy: height/2, size: baseSize * 0.8 };
+        default:
+          return { type: 'equilateral', cx: width/2, cy: height/2, size: baseSize * 0.8 };
+      }
+    
+    default:
+      return { type: 'circle', cx: width/2, cy: height/2, size: baseSize };
+  }
+}
+
 // Dessiner la forme guide en gris clair
 function drawGuideShape() {
+  const params = getShapeParams();
+  shapeParams = params; // Stocker pour le calcul du score
+  
   push();
   stroke(200);
   noFill();
   strokeWeight(2);
   
-  const size = min(width, height) * 0.6;
-  
   switch(selectedShape) {
-    case 'circle':
-      ellipse(width/2, height/2, size, size);
-      break;
-    case 'square':
-      rectMode(CENTER);
-      rect(width/2, height/2, size, size);
-      break;
-    case 'triangle':
-      const triSize = size * 0.8;
-      triangle(width/2, height/2 - triSize/2, 
-               width/2 - triSize/2, height/2 + triSize/2,
-               width/2 + triSize/2, height/2 + triSize/2);
-      break;
     case 'line':
-      line(width * 0.2, height/2, width * 0.8, height/2);
+      line(params.x1, params.y1, params.x2, params.y2);
+      break;
+    
+    case 'circle':
+    case 'ellipse':
+      if (params.type === 'circle') {
+        ellipse(params.cx, params.cy, params.size, params.size);
+      } else {
+        ellipse(params.cx, params.cy, params.w, params.h);
+      }
+      break;
+    
+    case 'square':
+      push();
+      translate(params.cx, params.cy);
+      if (params.angle) {
+        rotate(radians(params.angle));
+      }
+      rectMode(CENTER);
+      rect(0, 0, params.size, params.size);
+      pop();
+      break;
+    
+    case 'triangle':
+      const size = params.size;
+      if (params.type === 'equilateral') {
+        const h = size * sqrt(3) / 2;
+        triangle(0, -h/2, -size/2, h/2, size/2, h/2);
+      } else if (params.type === 'isosceles') {
+        const base = size;
+        const h = size * (params.baseRatio || 0.7);
+        triangle(0, -h/2, -base/2, h/2, base/2, h/2);
+      } else { // scalene
+        const a = size * 0.6;
+        const b = size * 0.7;
+        const c = size * 0.8;
+        // Approximation d'un triangle scalène
+        triangle(0, -c/2, -a/2, c/2, a/2, c/2);
+      }
       break;
   }
   pop();
 }
 
-// Calculer le score (0-100)
+// Calculer le score (0-100) avec tolérance selon le niveau
 function calculateScore() {
   if (userPoints.length === 0) return 0;
   
-  const size = min(width, height) * 0.6;
-  const centerX = width / 2;
-  const centerY = height / 2;
+  const params = shapeParams;
+  const tolerance = map(currentLevel, 1, 10, 0.3, 0.05); // Plus le niveau est élevé, moins la tolérance est grande
   
   let totalDistance = 0;
   let avgError = 0;
   
   switch(selectedShape) {
-    case 'circle': {
-      const radius = size / 2;
+    case 'line': {
+      const lineY = params.y1; // La ligne peut être à n'importe quelle position
       for (let p of userPoints) {
-        const d = dist(p.x, p.y, centerX, centerY);
+        totalDistance += abs(p.y - lineY);
+      }
+      avgError = totalDistance / userPoints.length;
+      return max(0, 100 - (avgError / (height * 0.2) * 100) * tolerance);
+    }
+    
+    case 'circle':
+    case 'ellipse': {
+      const cx = params.cx;
+      const cy = params.cy;
+      const radius = params.type === 'circle' ? params.size / 2 : max(params.w, params.h) / 2;
+      for (let p of userPoints) {
+        const d = dist(p.x, p.y, cx, cy);
         totalDistance += abs(d - radius);
       }
       avgError = totalDistance / userPoints.length;
-      return max(0, 100 - (avgError / radius * 100));
+      return max(0, 100 - (avgError / radius * 100) * tolerance);
     }
     
     case 'square': {
-      const halfSize = size / 2;
-      const left = centerX - halfSize;
-      const right = centerX + halfSize;
-      const top = centerY - halfSize;
-      const bottom = centerY + halfSize;
+      const halfSize = params.size / 2;
+      const left = params.cx - halfSize;
+      const right = params.cx + halfSize;
+      const top = params.cy - halfSize;
+      const bottom = params.cy + halfSize;
       
       for (let p of userPoints) {
         const distToLeft = abs(p.x - left);
@@ -192,23 +303,33 @@ function calculateScore() {
         totalDistance += minDist;
       }
       avgError = totalDistance / userPoints.length;
-      return max(0, 100 - (avgError / (size/2) * 100));
-    }
-    
-    case 'line': {
-      const lineY = height / 2;
-      for (let p of userPoints) {
-        totalDistance += abs(p.y - lineY);
-      }
-      avgError = totalDistance / userPoints.length;
-      return max(0, 100 - (avgError / (height/4) * 100));
+      return max(0, 100 - (avgError / (halfSize) * 100) * tolerance);
     }
     
     case 'triangle': {
-      const triSize = size * 0.8;
-      const v1 = {x: width/2, y: height/2 - triSize/2};
-      const v2 = {x: width/2 - triSize/2, y: height/2 + triSize/2};
-      const v3 = {x: width/2 + triSize/2, y: height/2 + triSize/2};
+      // Calculer les sommets du triangle basé sur params
+      let v1, v2, v3;
+      const size = params.size;
+      
+      if (params.type === 'equilateral') {
+        const h = size * sqrt(3) / 2;
+        v1 = {x: params.cx, y: params.cy - h/2};
+        v2 = {x: params.cx - size/2, y: params.cy + h/2};
+        v3 = {x: params.cx + size/2, y: params.cy + h/2};
+      } else if (params.type === 'isosceles') {
+        const base = size;
+        const h = size * (params.baseRatio || 0.7);
+        v1 = {x: params.cx, y: params.cy - h/2};
+        v2 = {x: params.cx - base/2, y: params.cy + h/2};
+        v3 = {x: params.cx + base/2, y: params.cy + h/2};
+      } else { // scalene
+        const a = size * 0.6;
+        const b = size * 0.7;
+        const c = size * 0.8;
+        v1 = {x: params.cx, y: params.cy - c/2};
+        v2 = {x: params.cx - a/2, y: params.cy + c/2};
+        v3 = {x: params.cx + a/2, y: params.cy + c/2};
+      }
       
       for (let p of userPoints) {
         const d1 = pointToLineDistance(p, v1, v2);
@@ -217,7 +338,7 @@ function calculateScore() {
         totalDistance += min(d1, d2, d3);
       }
       avgError = totalDistance / userPoints.length;
-      return max(0, 100 - (avgError / (triSize/2) * 100));
+      return max(0, 100 - (avgError / (size/2) * 100) * tolerance);
     }
   }
   
