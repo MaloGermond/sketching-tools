@@ -6,6 +6,7 @@
 // ============================================
 
 let drawing = false;
+let currentShape = null; // Forme active actuellement (null = aucune)
 let selectedShape = 'circle';
 let currentLevel = 1; // Niveau de difficulté (1-10)
 let userPoints = []; // Stocke les points du dessin utilisateur
@@ -28,8 +29,8 @@ function setup() {
   strokeWeight(3);
   strokeCap(ROUND);
   strokeJoin(ROUND);
-  generateShapeParams();
-  drawGuideShape();
+  currentShape = null; // Pas de forme active au démarrage
+  // La première forme sera générée dans ensureActiveShape() lors du premier draw()
 }
 
 
@@ -38,29 +39,75 @@ function setup() {
 // ============================================
 
 function draw() {
-  handleDrawingStart();
-  collectDrawingPoints();
+  // Étape 1 : Sélectionner une forme si aucune n'est active
+  ensureActiveShape();
+  
+  // Étape 2 : Attendre une interaction utilisateur
+  if (mouseIsPressed) {
+    handleUserDrawing();
+  } else {
+    // Étape 5 : Si pas d'interaction, vérifier si on a des points à traiter
+    processCompletedDrawing();
+  }
+  
+  // Affichage
   renderCurrentStroke();
-  renderGuideIfNeeded();
+  renderActiveShape();
 }
 
-// --- ETAPE 1: Initialiser un nouveau dessin ---
-function handleDrawingStart() {
-  if (mouseIsPressed && !drawing) {
+// --- Étape 1 : Garantir qu'une forme est active ---
+function ensureActiveShape() {
+  if (currentShape == null) {
+    currentShape = generateNewShape();
+    guideVisible = true;
+  }
+}
+
+// --- Étape 2-4 : Gérer le dessin utilisateur ---
+function handleUserDrawing() {
+  // Début du dessin
+  if (!drawing) {
     guideVisible = false;
     userPoints = [];
     drawing = true;
   }
+  
+  // Collecte des points (Étape 3)
+  userPoints.push({x: mouseX, y: mouseY});
 }
 
-// --- ETAPE 2: Capturer les points du tracé ---
-function collectDrawingPoints() {
-  if (mouseIsPressed && drawing) {
-    userPoints.push({x: mouseX, y: mouseY});
+// --- Étape 5 : Traiter le dessin terminé ---
+function processCompletedDrawing() {
+  if (drawing && userPoints.length > 0) {
+    drawing = false;
+    const score = calculateScore();
+    currentScore = score;
+    scoreHistory.push(score);
+    if (scoreHistory.length > 100) {
+      scoreHistory.shift();
+    }
+    updateScoreDisplay();
+    showTemporaryScore();
+    
+    // Réinitialiser pour le prochain dessin
+    setTimeout(() => {
+      userPoints = [];
+      clear();
+      guideVisible = true;
+      currentShape = generateNewShape();
+      redraw();
+    }, 100);
   }
 }
 
-// --- ETAPE 3: Dessiner le tracé en cours ---
+// --- Affichage : Forme active (guide) ---
+function renderActiveShape() {
+  if (guideVisible && !drawing && currentShape != null) {
+    drawGuideShape();
+  }
+}
+
+// --- Affichage : Tracé en cours ---
 function renderCurrentStroke() {
   if (drawing && userPoints.length >= 2) {
     noFill();
@@ -74,54 +121,25 @@ function renderCurrentStroke() {
   }
 }
 
-// --- ETAPE 4: Afficher la forme guide ---
-function renderGuideIfNeeded() {
-  if (guideVisible && !drawing) {
-    drawGuideShape();
-  }
+// Générer une nouvelle forme aléatoire
+function generateNewShape() {
+  const shapes = ['circle', 'square', 'triangle', 'line'];
+  selectedShape = random(shapes);
+  generateShapeParams();
+  return selectedShape;
 }
 
 
 // ============================================
 // 4. END OF DRAWING
 // ============================================
-
-function mouseReleased() {
-  if (drawing) {
-    drawing = false;
-    const score = calculateScore();
-    currentScore = score;
-    scoreHistory.push(score);
-    if (scoreHistory.length > 100) {
-      scoreHistory.shift();
-    }
-    updateScoreDisplay();
-    showTemporaryScore();
-    
-    // Réafficher la forme guide et préparer pour le prochain dessin
-    setTimeout(() => {
-      guideVisible = true;
-      userPoints = [];
-      clear();
-      // Générer une nouvelle forme aléatoire au même niveau
-      generateRandomShape();
-      redraw();
-    }, 100);
-  }
-}
+// La logique de fin de dessin est maintenant dans processCompletedDrawing()
+// qui est appelée dans la boucle draw()
 
 
 // ============================================
 // 5. SHAPE GENERATION
 // ============================================
-
-// Générer une forme aléatoire (même niveau)
-function generateRandomShape() {
-  const shapes = ['circle', 'square', 'triangle', 'line'];
-  selectedShape = random(shapes);
-  generateShapeParams();
-  drawGuideShape();
-}
 
 // Générer les paramètres de la forme actuelle
 function generateShapeParams() {
@@ -389,14 +407,15 @@ function pointToLineDistance(point, lineStart, lineEnd) {
 // Changer la forme
 function setShape(shape) {
   selectedShape = shape;
+  currentShape = shape;
   clear();
   userPoints = [];
   currentScore = null;
   scoreHistory = [];
   guideVisible = true;
   generateShapeParams();
-  drawGuideShape();
   updateScoreDisplay();
+  redraw();
 }
 
 // Changer le niveau de difficulté (1-10)
@@ -407,9 +426,9 @@ function setLevel(level) {
   currentScore = null;
   scoreHistory = [];
   guideVisible = true;
-  generateShapeParams();
-  drawGuideShape();
+  currentShape = generateNewShape();
   updateScoreDisplay();
+  redraw();
 }
 
 // Mettre à jour l'affichage du score dans le DOM
