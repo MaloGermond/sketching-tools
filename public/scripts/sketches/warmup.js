@@ -31,39 +31,6 @@ function draw() {
     userPoints.push({x: mouseX, y: mouseY});
     line(pmouseX, pmouseY, mouseX, mouseY);
   }
-  
-  // Afficher le score et l'historique en bas à gauche
-  if (currentScore !== null) {
-    push();
-    fill(240);
-    noStroke();
-    
-    // Hauteur totale : 50px pour le score + 20px par score historique (max 100)
-    const maxHistory = 100;
-    const displayCount = min(scoreHistory.length, maxHistory);
-    const historyHeight = displayCount * 20;
-    const totalHeight = 50 + historyHeight + 10;
-    
-    rect(20, height - totalHeight, 250, totalHeight, 8);
-    
-    fill(0);
-    textSize(20);
-    textAlign(LEFT, TOP);
-    
-    // Score actuel
-    text(`Score: ${floor(currentScore)}%`, 30, height - totalHeight + 10);
-    
-    // Historique (derniers 100 scores)
-    textSize(14);
-    textAlign(LEFT, TOP);
-    const startY = height - totalHeight + 40;
-    for (let i = 0; i < displayCount; i++) {
-      const idx = scoreHistory.length - 1 - i;
-      text(`#${i+1}: ${floor(scoreHistory[idx])}%`, 30, startY + i * 18);
-    }
-    
-    pop();
-  }
 }
 
 function mouseReleased() {
@@ -72,11 +39,32 @@ function mouseReleased() {
     const score = calculateScore();
     currentScore = score;
     scoreHistory.push(score);
-    // Garder seulement les 100 derniers scores
     if (scoreHistory.length > 100) {
       scoreHistory.shift();
     }
+    updateScoreDisplay();
     redraw();
+  }
+}
+
+// Mettre à jour l'affichage du score dans le DOM
+function updateScoreDisplay() {
+  const scoreEl = document.getElementById('score-display');
+  if (scoreEl) {
+    let html = `<div style="font-size: 20px; margin-bottom: 5px;">Score: ${floor(currentScore)}%</div>`;
+    
+    // Historique
+    const maxHistory = 100;
+    const displayCount = min(scoreHistory.length, maxHistory);
+    if (displayCount > 0) {
+      html += '<div style="font-size: 14px;">';
+      for (let i = 0; i < displayCount; i++) {
+        const idx = scoreHistory.length - 1 - i;
+        html += `<div>#${i+1}: ${floor(scoreHistory[idx])}%</div>`;
+      }
+      html += '</div>';
+    }
+    scoreEl.innerHTML = html;
   }
 }
 
@@ -87,11 +75,14 @@ function setShape(shape) {
   userPoints = [];
   currentScore = null;
   drawGuideShape();
+  updateScoreDisplay();
 }
 
 // Réinitialiser l'historique
 function resetHistory() {
   scoreHistory = [];
+  currentScore = null;
+  updateScoreDisplay();
   redraw();
 }
 
