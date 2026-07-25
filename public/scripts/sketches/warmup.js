@@ -4,6 +4,7 @@
 let drawing = false;
 let selectedShape = 'circle';
 let userPoints = []; // Stocke les points du dessin utilisateur
+let scoreHistory = []; // Historique des scores de la session
 
 function setup() {
   let canvas = createCanvas(600, 400);
@@ -31,16 +32,34 @@ function draw() {
     line(pmouseX, pmouseY, mouseX, mouseY);
   }
   
-  // Afficher le score en bas à gauche
+  // Afficher le score et l'historique en bas à gauche
   if (currentScore !== null) {
     push();
     fill(240);
     noStroke();
-    rect(20, height - 60, 200, 50, 8);
+    
+    // Hauteur totale : 50px pour le score + 30px par score historique (max 5)
+    const historyHeight = min(scoreHistory.length, 5) * 30;
+    const totalHeight = 50 + historyHeight + 10;
+    
+    rect(20, height - totalHeight, 200, totalHeight, 8);
+    
     fill(0);
-    textSize(28);
-    textAlign(LEFT, CENTER);
-    text(`Score: ${floor(currentScore)}%`, 35, height - 35);
+    textSize(20);
+    textAlign(LEFT, TOP);
+    
+    // Score actuel
+    text(`Score: ${floor(currentScore)}%`, 30, height - totalHeight + 10);
+    
+    // Historique (derniers 5 scores)
+    textSize(16);
+    textAlign(LEFT, TOP);
+    const startY = height - totalHeight + 50;
+    for (let i = 0; i < min(scoreHistory.length, 5); i++) {
+      const idx = scoreHistory.length - 1 - i;
+      text(`#${i+1}: ${floor(scoreHistory[idx])}%`, 30, startY + i * 25);
+    }
+    
     pop();
   }
 }
@@ -50,6 +69,7 @@ function mouseReleased() {
     drawing = false;
     const score = calculateScore();
     currentScore = score;
+    scoreHistory.push(score); // Ajouter à l'historique
     redraw();
   }
 }
@@ -61,6 +81,12 @@ function setShape(shape) {
   userPoints = [];
   currentScore = null;
   drawGuideShape();
+}
+
+// Réinitialiser l'historique
+function resetHistory() {
+  scoreHistory = [];
+  redraw();
 }
 
 // Dessiner la forme guide en gris clair
