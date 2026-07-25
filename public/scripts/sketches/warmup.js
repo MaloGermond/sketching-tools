@@ -2,7 +2,7 @@
 // Recopier les formes affichées et obtenir un score
 
 // ============================================
-// 1. GLOBAL VARIABLES
+// 1. GLOBAL VARIABLES (State)
 // ============================================
 
 let drawing = false;
@@ -16,13 +16,23 @@ let guideVisible = true; // La forme guide est-elle visible ?
 let currentScore = null;
 let scoreTimeout = null;
 
-// Paramètres des formes disponibles (toutes activées par défaut)
+// Configuration des formes disponibles (toutes activées par défaut)
+// @note: Cette variable est modifiée par setShapeSettings() - fonction impure
 let shapeSettings = {
   circle: true,
   square: true,
   triangle: true,
   line: true
 };
+
+// ============================================
+// RULE: All new functions should be pure by default.
+// A pure function:
+//   - Has no side effects (doesn't modify external state)
+//   - Returns the same output for the same inputs
+//   - Only depends on its parameters
+// Impure functions must be clearly documented with @impure
+// ============================================
 
 
 // ============================================
@@ -46,6 +56,7 @@ function setup() {
 // 3. MAIN LOOP
 // ============================================
 
+/** @impure - Modifies global state and uses p5.js APIs */
 function draw() {
   // Étape 1 : Sélectionner une forme si aucune n'est active
   ensureActiveShape();
@@ -63,7 +74,32 @@ function draw() {
   renderActiveShape();
 }
 
-// --- Étape 1 : Garantir qu'une forme est active ---
+// ============================================
+// PURE FUNCTIONS (No side effects, same input -> same output)
+// ============================================
+
+/**
+ * Retourne la liste des formes activées selon les settings
+ * @pure
+ * @param {Object} settings - Objet avec les formes comme clés et boolean comme valeur
+ * @returns {Array} Tableau des noms de formes activées
+ */
+function getAvailableShapes(settings) {
+  const availableShapes = Object.keys(settings).filter(shape => settings[shape]);
+  
+  // Si aucune forme n'est activée, retourner toutes les formes par défaut
+  if (availableShapes.length === 0) {
+    return ['circle', 'square', 'triangle', 'line'];
+  }
+  
+  return availableShapes;
+}
+
+// ============================================
+// IMPURE FUNCTIONS (Documented with @impure)
+// ============================================
+
+/** @impure - Modifies currentShape, guideVisible */
 function ensureActiveShape() {
   if (currentShape == null) {
     currentShape = generateNewShape();
@@ -71,7 +107,7 @@ function ensureActiveShape() {
   }
 }
 
-// --- Étape 2-4 : Gérer le dessin utilisateur ---
+/** @impure - Modifies drawing, guideVisible, userPoints. Uses mouseIsPressed, mouseX, mouseY */
 function handleUserDrawing() {
   // Début du dessin
   if (!drawing) {
@@ -84,7 +120,7 @@ function handleUserDrawing() {
   userPoints.push({x: mouseX, y: mouseY});
 }
 
-// --- Étape 5 : Traiter le dessin terminé ---
+/** @impure - Modifies drawing, currentScore, scoreHistory. Uses setTimeout, clear, redraw */
 function processCompletedDrawing() {
   if (drawing && userPoints.length > 0) {
     drawing = false;
@@ -108,14 +144,14 @@ function processCompletedDrawing() {
   }
 }
 
-// --- Affichage : Forme active (guide) ---
+/** @impure - Uses p5.js drawing functions */
 function renderActiveShape() {
   if (guideVisible && !drawing && currentShape != null) {
     drawGuideShape();
   }
 }
 
-// --- Affichage : Tracé en cours ---
+/** @impure - Uses p5.js drawing functions */
 function renderCurrentStroke() {
   if (drawing && userPoints.length >= 2) {
     noFill();
@@ -129,27 +165,26 @@ function renderCurrentStroke() {
   }
 }
 
-// Générer une nouvelle forme aléatoire en tenant compte des settings et du niveau
-// @param {number} level - Niveau de difficulté (1-10), utilise currentLevel si non fourni
-// @param {Object} settings - Paramètres des formes (ex: {circle: true, square: false}), utilise shapeSettings si non fourni
+/**
+ * Génère une nouvelle forme aléatoire en tenant compte des settings et du niveau
+ * @impure - Modifies selectedShape, currentLevel, shapeParams. Uses random()
+ * @param {number} level - Niveau de difficulté (1-10), utilise currentLevel si non fourni
+ * @param {Object} settings - Paramètres des formes, utilise shapeSettings si non fourni
+ * @returns {string} Le nom de la forme sélectionnée
+ */
 function generateNewShape(level = currentLevel, settings = shapeSettings) {
-  // Filtrer les formes activées dans les settings
-  const availableShapes = Object.keys(settings).filter(shape => settings[shape]);
-  
-  // Si aucune forme n'est activée, activer toutes par défaut
-  if (availableShapes.length === 0) {
-    availableShapes.push('circle', 'square', 'triangle', 'line');
-  }
-  
-  // Choisir une forme aléatoire parmi celles disponibles
+  const availableShapes = getAvailableShapes(settings);
   selectedShape = random(availableShapes);
   currentLevel = level;
   generateShapeParams();
   return selectedShape;
 }
 
-// Configurer quelles formes sont disponibles
-// @param {Object} settings - Objet avec les formes comme clés et boolean comme valeur
+/**
+ * Configurer quelles formes sont disponibles
+ * @impure - Modifies shapeSettings
+ * @param {Object} settings - Objet avec les formes comme clés et boolean comme valeur
+ */
 function setShapeSettings(settings) {
   shapeSettings = { ...shapeSettings, ...settings };
 }
@@ -166,12 +201,16 @@ function setShapeSettings(settings) {
 // 5. SHAPE GENERATION
 // ============================================
 
-// Générer les paramètres de la forme actuelle
+/** @impure - Modifies shapeParams, uses global selectedShape and currentLevel */
 function generateShapeParams() {
   shapeParams = getShapeParams();
 }
 
-// Générer les paramètres de la forme selon le niveau
+/**
+ * Génère les paramètres de la forme selon le niveau
+ * @impure - Uses random(), depends on global selectedShape and currentLevel
+ * @returns {Object} Paramètres de la forme
+ */
 function getShapeParams() {
   const baseSize = min(width, height) * 0.6;
   
@@ -237,7 +276,7 @@ function getShapeParams() {
 // 6. DISPLAY
 // ============================================
 
-// Dessiner la forme guide en gris clair
+/** @impure - Uses p5.js drawing functions, depends on global shapeParams and selectedShape */
 function drawGuideShape() {
   // Utiliser les paramètres déjà générés
   const params = shapeParams;
@@ -300,7 +339,11 @@ function drawGuideShape() {
 // 7. SCORING
 // ============================================
 
-// Calculer le score (0-100) avec tolérance selon le niveau
+/**
+ * Calculer le score (0-100) avec tolérance selon le niveau
+ * @pure - Does not modify state, but depends on global userPoints, shapeParams, currentLevel
+ * @returns {number} Score entre 0 et 100
+ */
 function calculateScore() {
   if (userPoints.length === 0) return 0;
   
@@ -391,7 +434,14 @@ function calculateScore() {
   return 0;
 }
 
-// Distance d'un point à une ligne (segment)
+/**
+ * Calcule la distance d'un point à une ligne (segment)
+ * @pure - No side effects, only depends on parameters
+ * @param {Object} point - Point avec x, y
+ * @param {Object} lineStart - Point de début de la ligne
+ * @param {Object} lineEnd - Point de fin de la ligne
+ * @returns {number} Distance
+ */
 function pointToLineDistance(point, lineStart, lineEnd) {
   const x = point.x, y = point.y;
   const x1 = lineStart.x, y1 = lineStart.y;
@@ -429,7 +479,7 @@ function pointToLineDistance(point, lineStart, lineEnd) {
 // 8. USER INTERACTIONS
 // ============================================
 
-// Changer la forme
+/** @impure - Modifies multiple global state variables, uses p5.js clear() and redraw() */
 function setShape(shape) {
   selectedShape = shape;
   currentShape = shape;
@@ -443,7 +493,7 @@ function setShape(shape) {
   redraw();
 }
 
-// Changer le niveau de difficulté (1-10)
+/** @impure - Modifies multiple global state variables, uses p5.js clear() and redraw() */
 function setLevel(level) {
   currentLevel = parseInt(level);
   clear();
@@ -456,7 +506,7 @@ function setLevel(level) {
   redraw();
 }
 
-// Mettre à jour l'affichage du score dans le DOM
+/** @impure - Modifies DOM, depends on global scoreHistory and currentScore */
 function updateScoreDisplay() {
   const scoreEl = document.getElementById('score-display');
   if (scoreEl) {
@@ -482,6 +532,7 @@ function updateScoreDisplay() {
   }
 }
 
+/** @impure - Modifies DOM, uses setTimeout */
 // Afficher le score temporairement au centre
 function showTemporaryScore() {
   const popupEl = document.getElementById('score-popup');
