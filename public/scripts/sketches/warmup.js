@@ -586,7 +586,12 @@ function drawGuideShape() {
 /**
  * Minimum number of points required for a valid score calculation
  */
-const MIN_POINTS_FOR_SCORE = 15;
+const MIN_POINTS_FOR_SCORE = 30;
+
+/**
+ * Minimum total length of the trace (in pixels) for a valid score calculation
+ */
+const MIN_TRACE_LENGTH = 200;
 
 /**
  * Normalization factor for score calculation (same for all shapes and levels)
@@ -602,6 +607,15 @@ const SCORE_NORMALIZATION_FACTOR = 0.045;
 function calculateScore() {
   // Validation précoce: besoin d'un minimum de points pour évaluer
   if (userPoints.length < MIN_POINTS_FOR_SCORE) {
+    return 0;
+  }
+  
+  // Validation précoce: besoin d'une longueur minimale de tracé
+  let traceLength = 0;
+  for (let i = 1; i < userPoints.length; i++) {
+    traceLength += dist(userPoints[i].x, userPoints[i].y, userPoints[i-1].x, userPoints[i-1].y);
+  }
+  if (traceLength < MIN_TRACE_LENGTH) {
     return 0;
   }
   
