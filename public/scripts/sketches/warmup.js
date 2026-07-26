@@ -15,6 +15,8 @@ let shapeParams = {}; // Paramètres de la forme actuelle (pour recalcul)
 let guideVisible = true; // La forme guide est-elle visible ?
 let currentScore = null;
 let scoreTimeout = null;
+let canvasWidth = 600;
+let canvasHeight = 400;
 
 // Configuration des formes disponibles (toutes activées par défaut)
 // @note: Cette variable est modifiée par setShapeSettings() - fonction impure
@@ -43,6 +45,8 @@ let shapeSettings = {
 function setup() {
   let canvas = createCanvas(600, 400);
   canvas.parent('sketch-container');
+  canvasWidth = 600;
+  canvasHeight = 400;
   background(255);
   stroke(0);
   strokeWeight(3);
@@ -485,17 +489,17 @@ function getTriangleParams(level, w, h) {
 function getShapeParams() {
   // Validation précoce
   if (!selectedShape || !currentLevel) {
-    return { type: 'circle', cx: width/2, cy: height/2, size: min(width, height) * 0.6 };
+    return { type: 'circle', cx: canvasWidth/2, cy: canvasHeight/2, size: min(canvasWidth, canvasHeight) * 0.6 };
   }
   
   // Dispatch vers les fonctions spécifiques
   switch(selectedShape) {
-    case 'horizontal-line': return getHorizontalLineParams(currentLevel, width, height);
-    case 'vertical-line': return getVerticalLineParams(currentLevel, width, height);
-    case 'circle': return getCircleParams(currentLevel, width, height);
-    case 'square': return getSquareParams(currentLevel, width, height);
-    case 'triangle': return getTriangleParams(currentLevel, width, height);
-    default: return getCircleParams(1, width, height);
+    case 'horizontal-line': return getHorizontalLineParams(currentLevel, canvasWidth, canvasHeight);
+    case 'vertical-line': return getVerticalLineParams(currentLevel, canvasWidth, canvasHeight);
+    case 'circle': return getCircleParams(currentLevel, canvasWidth, canvasHeight);
+    case 'square': return getSquareParams(currentLevel, canvasWidth, canvasHeight);
+    case 'triangle': return getTriangleParams(currentLevel, canvasWidth, canvasHeight);
+    default: return getCircleParams(1, canvasWidth, canvasHeight);
   }
 }
 
@@ -591,7 +595,7 @@ const SCORE_NORMALIZATION_FACTOR = 0.045;
 
 /**
  * Calculer le score (0-100) - Système unique pour toutes les formes
- * @pure - Does not modify state, but depends on global userPoints, shapeParams, width, height
+ * @pure - Does not modify state, but depends on global userPoints, shapeParams, canvasWidth, canvasHeight
  * @returns {number} Score entre 0 et 100
  */
 function calculateScore() {
@@ -601,7 +605,7 @@ function calculateScore() {
   }
   
   const params = shapeParams;
-  const canvasSize = min(width, height);
+  const canvasSize = min(canvasWidth, canvasHeight);
   
   let totalDistance = 0;
   let scoringAvgError = 0;
