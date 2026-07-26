@@ -201,11 +201,12 @@ function setShapeSettings(settings) {
  */
 function toggleShape(shape) {
   shapeSettings[shape] = !shapeSettings[shape];
-  // Réinitialiser la forme active pour forcer la génération d'une nouvelle forme
+  // Réinitialiser et générer une nouvelle forme immédiatement
   currentShape = null;
   clear();
   userPoints = [];
   guideVisible = true;
+  currentShape = generateNewShape();
   redraw();
 }
 
@@ -586,7 +587,7 @@ const MIN_POINTS_FOR_SCORE = 15;
  * Normalization factor for score calculation (same for all shapes and levels)
  * Smaller value = stricter scoring
  */
-const SCORE_NORMALIZATION_FACTOR = 0.02;
+const SCORE_NORMALIZATION_FACTOR = 0.045;
 
 /**
  * Calculer le score (0-100) - Système unique pour toutes les formes
