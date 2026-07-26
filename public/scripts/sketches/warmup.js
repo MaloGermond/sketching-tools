@@ -586,7 +586,7 @@ const MIN_POINTS_FOR_SCORE = 15;
  * Normalization factor for score calculation (same for all shapes and levels)
  * Smaller value = stricter scoring
  */
-const SCORE_NORMALIZATION_FACTOR = 0.05;
+const SCORE_NORMALIZATION_FACTOR = 0.02;
 
 /**
  * Calculer le score (0-100) - Système unique pour toutes les formes
@@ -694,10 +694,6 @@ function calculateScore() {
   // Système de scoring unique: normaliser par rapport à la taille du canvas
   const normalizedError = scoringAvgError / (canvasSize * SCORE_NORMALIZATION_FACTOR);
   return max(0, 100 - normalizedError * 100);
-}
-  }
-  
-  return 0;
 }
 
 /**
