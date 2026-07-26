@@ -206,6 +206,7 @@ function setShapeSettings(settings) {
 function toggleShape(shape) {
   shapeSettings[shape] = !shapeSettings[shape];
   // Réinitialiser et générer une nouvelle forme immédiatement
+  drawing = false;
   currentShape = null;
   clear();
   userPoints = [];
