@@ -191,7 +191,8 @@ function renderActiveShape() {
 
 /** @impure - Uses p5.js drawing functions */
 function renderCurrentStroke() {
-  if (drawing && userPoints.length >= 2) {
+  // Dessiner le tracé tant qu'il y a des points (même après avoir relâché la souris)
+  if (userPoints.length >= 2) {
     noFill();
     beginShape();
     // Pour les splines avec curveVertex, il faut répéter le premier et dernier point
