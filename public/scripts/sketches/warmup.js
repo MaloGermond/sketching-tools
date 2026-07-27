@@ -130,13 +130,13 @@ function handleUserDrawing() {
 function processCompletedDrawing() {
   if (drawing && userPoints.length > 0) {
     drawing = false;
+    guideVisible = true;
     
     // Vérifier si le tracé est valide (assez de points et assez long)
     if (userPoints.length < MIN_POINTS_FOR_SCORE) {
       // Pas assez de points, réinitialiser sans scorer
       userPoints = [];
       clear();
-      guideVisible = true;
       redraw();
       return;
     }
@@ -150,7 +150,6 @@ function processCompletedDrawing() {
       // Tracé trop court, réinitialiser sans scorer
       userPoints = [];
       clear();
-      guideVisible = true;
       redraw();
       return;
     }
@@ -168,7 +167,6 @@ function processCompletedDrawing() {
     setTimeout(() => {
       userPoints = [];
       clear();
-      guideVisible = true;
       currentShape = generateNewShape();
       redraw();
     }, 100);
