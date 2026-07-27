@@ -616,7 +616,7 @@ const MIN_POINTS_FOR_SCORE = 30;
 /**
  * Minimum total length of the trace (in pixels) for a valid score calculation
  */
-const MIN_TRACE_LENGTH = 30;
+const MIN_TRACE_LENGTH = 10;
 
 /**
  * Normalization factor for score calculation (same for all shapes and levels)
