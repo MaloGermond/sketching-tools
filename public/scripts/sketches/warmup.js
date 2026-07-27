@@ -75,9 +75,9 @@ function draw() {
     processCompletedDrawing();
   }
   
-  // Affichage
-  renderCurrentStroke();
+  // Affichage - dessiner la forme guide d'abord, puis le tracé utilisateur par-dessus
   renderActiveShape();
+  renderCurrentStroke();
 }
 
 // ============================================
