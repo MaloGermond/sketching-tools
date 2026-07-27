@@ -455,6 +455,7 @@ function getVerticalLineParams(level, w, h) {
  * @returns {Object} Shape parameters
  */
 function getCircleParams(level, w, h) {
+  const MARGIN = 10;
   const baseSize = calculateBaseSize(w, h);
   
   if (level === 1) {
@@ -462,12 +463,32 @@ function getCircleParams(level, w, h) {
     return { type: 'circle', cx: w/2, cy: h/2, size: baseSize, angle: 0 };
   }
   if (level === 2) {
-    // Déplacement
-    return { type: 'circle', cx: random(w * 0.2, w * 0.8), cy: random(h * 0.2, h * 0.8), size: baseSize, angle: 0 };
+    // Déplacement - cercle toujours dans le canvas avec marge de 10px
+    const size = baseSize;
+    const minPos = size/2 + MARGIN;
+    const maxPosX = w - size/2 - MARGIN;
+    const maxPosY = h - size/2 - MARGIN;
+    return { 
+      type: 'circle', 
+      cx: random(minPos, maxPosX), 
+      cy: random(minPos, maxPosY), 
+      size: size, 
+      angle: 0 
+    };
   }
   if (level === 3) {
     // Déplacement + taille variable
-    return { type: 'circle', cx: random(w * 0.2, w * 0.8), cy: random(h * 0.2, h * 0.8), size: random(0.4, 0.8) * baseSize, angle: 0 };
+    const size = random(0.4, 0.8) * baseSize;
+    const minPos = size/2 + MARGIN;
+    const maxPosX = w - size/2 - MARGIN;
+    const maxPosY = h - size/2 - MARGIN;
+    return { 
+      type: 'circle', 
+      cx: random(minPos, maxPosX), 
+      cy: random(minPos, maxPosY), 
+      size: size, 
+      angle: 0 
+    };
   }
   // Niveau 4: Déplacement + taille + rotation
   const angle = random(0, 180);
@@ -485,6 +506,7 @@ function getCircleParams(level, w, h) {
  * @returns {Object} Shape parameters
  */
 function getSquareParams(level, w, h) {
+  const MARGIN = 10;
   const baseSize = calculateBaseSize(w, h);
   
   if (level === 1) {
@@ -492,12 +514,34 @@ function getSquareParams(level, w, h) {
     return { type: 'square', cx: w/2, cy: h/2, size: baseSize, angle: 0 };
   }
   if (level === 2) {
-    // Déplacement
-    return { type: 'square', cx: random(w * 0.2, w * 0.8), cy: random(h * 0.2, h * 0.8), size: baseSize, angle: 0 };
+    // Déplacement - carré toujours dans le canvas avec marge de 10px
+    const size = baseSize;
+    const halfSize = size / 2;
+    const minPos = halfSize + MARGIN;
+    const maxPosX = w - halfSize - MARGIN;
+    const maxPosY = h - halfSize - MARGIN;
+    return { 
+      type: 'square', 
+      cx: random(minPos, maxPosX), 
+      cy: random(minPos, maxPosY), 
+      size: size, 
+      angle: 0 
+    };
   }
   if (level === 3) {
     // Déplacement + taille variable
-    return { type: 'square', cx: random(w * 0.2, w * 0.8), cy: random(h * 0.2, h * 0.8), size: random(0.4, 0.8) * baseSize, angle: 0 };
+    const size = random(0.4, 0.8) * baseSize;
+    const halfSize = size / 2;
+    const minPos = halfSize + MARGIN;
+    const maxPosX = w - halfSize - MARGIN;
+    const maxPosY = h - halfSize - MARGIN;
+    return { 
+      type: 'square', 
+      cx: random(minPos, maxPosX), 
+      cy: random(minPos, maxPosY), 
+      size: size, 
+      angle: 0 
+    };
   }
   // Niveau 4: Déplacement + taille + rotation
   const angle = random(0, 180);
@@ -515,6 +559,7 @@ function getSquareParams(level, w, h) {
  * @returns {Object} Shape parameters
  */
 function getTriangleParams(level, w, h) {
+  const MARGIN = 10;
   const baseSize = calculateBaseSize(w, h);
   
   if (level === 1) {
@@ -522,12 +567,37 @@ function getTriangleParams(level, w, h) {
     return { type: 'equilateral', cx: w/2, cy: h/2, size: baseSize, angle: 0 };
   }
   if (level === 2) {
-    // Déplacement
-    return { type: 'equilateral', cx: random(w * 0.3, w * 0.7), cy: random(h * 0.3, h * 0.7), size: baseSize, angle: 0 };
+    // Déplacement - triangle toujours dans le canvas avec marge de 10px
+    const size = baseSize;
+    // Pour un triangle équilatéral, le bounding box est environ size x (size * sqrt(3)/2)
+    const triangleHeight = size * sqrt(3) / 2;
+    const minPosX = size/2 + MARGIN;
+    const maxPosX = w - size/2 - MARGIN;
+    const minPosY = triangleHeight/2 + MARGIN;
+    const maxPosY = h - triangleHeight/2 - MARGIN;
+    return { 
+      type: 'equilateral', 
+      cx: random(minPosX, maxPosX), 
+      cy: random(minPosY, maxPosY), 
+      size: size, 
+      angle: 0 
+    };
   }
   if (level === 3) {
     // Déplacement + taille variable
-    return { type: 'equilateral', cx: random(w * 0.3, w * 0.7), cy: random(h * 0.3, h * 0.7), size: random(0.4, 0.8) * baseSize, angle: 0 };
+    const size = random(0.4, 0.8) * baseSize;
+    const triangleHeight = size * sqrt(3) / 2;
+    const minPosX = size/2 + MARGIN;
+    const maxPosX = w - size/2 - MARGIN;
+    const minPosY = triangleHeight/2 + MARGIN;
+    const maxPosY = h - triangleHeight/2 - MARGIN;
+    return { 
+      type: 'equilateral', 
+      cx: random(minPosX, maxPosX), 
+      cy: random(minPosY, maxPosY), 
+      size: size, 
+      angle: 0 
+    };
   }
   // Niveau 4: Déplacement + taille + rotation
   const angle = random(0, 180);
@@ -545,6 +615,7 @@ function getTriangleParams(level, w, h) {
  * @returns {Object} Shape parameters
  */
 function getEllipseParams(level, w, h) {
+  const MARGIN = 10;
   const baseSize = calculateBaseSize(w, h);
   
   if (level === 1) {
@@ -552,12 +623,38 @@ function getEllipseParams(level, w, h) {
     return { type: 'ellipse', cx: w/2, cy: h/2, w: baseSize, h: baseSize * 0.6, angle: 0 };
   }
   if (level === 2) {
-    // Déplacement
-    return { type: 'ellipse', cx: random(w * 0.2, w * 0.8), cy: random(h * 0.2, h * 0.8), w: baseSize, h: baseSize * 0.6, angle: 0 };
+    // Déplacement - ellipse toujours dans le canvas avec marge de 10px
+    const ellipseW = baseSize;
+    const ellipseH = baseSize * 0.6;
+    const minPosX = ellipseW/2 + MARGIN;
+    const maxPosX = w - ellipseW/2 - MARGIN;
+    const minPosY = ellipseH/2 + MARGIN;
+    const maxPosY = h - ellipseH/2 - MARGIN;
+    return { 
+      type: 'ellipse', 
+      cx: random(minPosX, maxPosX), 
+      cy: random(minPosY, maxPosY), 
+      w: ellipseW, 
+      h: ellipseH, 
+      angle: 0 
+    };
   }
   if (level === 3) {
     // Déplacement + taille variable
-    return { type: 'ellipse', cx: random(w * 0.2, w * 0.8), cy: random(h * 0.2, h * 0.8), w: random(0.4, 0.8) * baseSize, h: random(0.4, 0.8) * baseSize * 0.6, angle: 0 };
+    const ellipseW = random(0.4, 0.8) * baseSize;
+    const ellipseH = random(0.4, 0.8) * baseSize * 0.6;
+    const minPosX = ellipseW/2 + MARGIN;
+    const maxPosX = w - ellipseW/2 - MARGIN;
+    const minPosY = ellipseH/2 + MARGIN;
+    const maxPosY = h - ellipseH/2 - MARGIN;
+    return { 
+      type: 'ellipse', 
+      cx: random(minPosX, maxPosX), 
+      cy: random(minPosY, maxPosY), 
+      w: ellipseW, 
+      h: ellipseH, 
+      angle: 0 
+    };
   }
   // Niveau 4: Déplacement + taille + rotation
   const angle = random(0, 180);
