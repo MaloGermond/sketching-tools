@@ -15,7 +15,7 @@ let shapeParams = {}; // Paramètres de la forme actuelle (pour recalcul)
 let guideVisible = true; // La forme guide est-elle visible ?
 let currentScore = null;
 let scoreTimeout = null;
-let canvasWidth, canvasHeight;
+let canvasElement;
 
 // Configuration des formes disponibles (cercle sélectionné par défaut)
 // @note: Cette variable est modifiée par setShapeSettings() - fonction impure
@@ -43,10 +43,8 @@ let shapeSettings = {
 // ============================================
 
 function setup() {
-  let canvas = createCanvas(windowWidth, windowHeight);
-  canvas.parent('sketch-container');
-  canvasWidth = windowWidth;
-  canvasHeight = windowHeight;
+  canvasElement = createCanvas(windowWidth, windowHeight);
+  canvasElement.parent('sketch-container');
   background(255);
   stroke(0);
   strokeWeight(3);
@@ -58,8 +56,6 @@ function setup() {
 
 function windowResized() {
   resizeCanvas(windowWidth, windowHeight);
-  canvasWidth = windowWidth;
-  canvasHeight = windowHeight;
   if (currentShape !== null) {
     // Régénérer les paramètres de la forme avec les nouvelles dimensions
     generateShapeParams();
@@ -682,18 +678,18 @@ function getEllipseParams(level, w, h) {
 function getShapeParams() {
   // Validation précoce
   if (!selectedShape || !currentLevel) {
-    return { type: 'circle', cx: canvasWidth/2, cy: canvasHeight/2, size: min(canvasWidth, canvasHeight) * 0.6 };
+    return { type: 'circle', cx: canvasElement.width/2, cy: canvasElement.height/2, size: min(canvasElement.width, canvasElement.height) * 0.6 };
   }
   
   // Dispatch vers les fonctions spécifiques
   switch(selectedShape) {
-    case 'horizontal-line': return getHorizontalLineParams(currentLevel, canvasWidth, canvasHeight);
-    case 'vertical-line': return getVerticalLineParams(currentLevel, canvasWidth, canvasHeight);
-    case 'circle': return getCircleParams(currentLevel, canvasWidth, canvasHeight);
-    case 'ellipse': return getEllipseParams(currentLevel, canvasWidth, canvasHeight);
-    case 'square': return getSquareParams(currentLevel, canvasWidth, canvasHeight);
-    case 'triangle': return getTriangleParams(currentLevel, canvasWidth, canvasHeight);
-    default: return getCircleParams(1, canvasWidth, canvasHeight);
+    case 'horizontal-line': return getHorizontalLineParams(currentLevel, canvasElement.width, canvasElement.height);
+    case 'vertical-line': return getVerticalLineParams(currentLevel, canvasElement.width, canvasElement.height);
+    case 'circle': return getCircleParams(currentLevel, canvasElement.width, canvasElement.height);
+    case 'ellipse': return getEllipseParams(currentLevel, canvasElement.width, canvasElement.height);
+    case 'square': return getSquareParams(currentLevel, canvasElement.width, canvasElement.height);
+    case 'triangle': return getTriangleParams(currentLevel, canvasElement.width, canvasElement.height);
+    default: return getCircleParams(1, canvasElement.width, canvasElement.height);
   }
 }
 
@@ -794,7 +790,7 @@ const SCORE_NORMALIZATION_FACTOR = 0.045;
 
 /**
  * Calculer le score (0-100) - Système unique pour toutes les formes
- * @pure - Does not modify state, but depends on global userPoints, shapeParams, canvasWidth, canvasHeight
+ * @pure - Does not modify state, but depends on global userPoints, shapeParams, canvasElement.width, canvasElement.height
  * @returns {number} Score entre 0 et 100
  */
 function calculateScore() {
@@ -804,7 +800,7 @@ function calculateScore() {
   }
   
   const params = shapeParams;
-  const canvasSize = min(canvasWidth, canvasHeight);
+  const canvasSize = min(canvasElement.width, canvasElement.height);
   
   let totalDistance = 0;
   let scoringAvgError = 0;
