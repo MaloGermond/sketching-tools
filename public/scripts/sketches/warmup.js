@@ -22,6 +22,7 @@ let canvasHeight = 400;
 // @note: Cette variable est modifiée par setShapeSettings() - fonction impure
 let shapeSettings = {
   circle: true,
+  ellipse: false,
   square: false,
   triangle: false,
   'horizontal-line': false,
@@ -511,6 +512,51 @@ function getTriangleParams(level, w, h) {
 }
 
 /**
+ * Get ellipse parameters
+ * @impure - Uses random()
+ * @param {number} level - Difficulty level (1-7)
+ * @param {number} w - Canvas width
+ * @param {number} h - Canvas height
+ * @returns {Object} Shape parameters
+ */
+function getEllipseParams(level, w, h) {
+  const baseSize = calculateBaseSize(w, h);
+  
+  if (level === 1) return { type: 'ellipse', cx: w/2, cy: h/2, w: baseSize, h: baseSize * 0.6, angle: 0 };
+  if (level === 2) return { type: 'ellipse', cx: w/2, cy: h/2, w: random(0.4, 0.8) * baseSize, h: random(0.4, 0.8) * baseSize * 0.6, angle: 0 };
+  if (level === 3) return { type: 'ellipse', cx: random(w * 0.3, w * 0.7), cy: random(h * 0.3, h * 0.7), w: baseSize, h: baseSize * 0.6, angle: 0 };
+  if (level === 4) return { type: 'ellipse', cx: random(w * 0.3, w * 0.7), cy: random(h * 0.3, h * 0.7), w: random(0.4, 0.8) * baseSize, h: random(0.4, 0.8) * baseSize * 0.6, angle: 0 };
+  if (level === 5) return { 
+    type: 'ellipse', 
+    cx: random(w * 0.3, w * 0.7), 
+    cy: random(h * 0.3, h * 0.7), 
+    w: baseSize, 
+    h: baseSize * 0.6, 
+    angle: random([0, 45, 90])
+  };
+  if (level === 6) return { 
+    type: 'ellipse', 
+    cx: random(w * 0.3, w * 0.7), 
+    cy: random(h * 0.3, h * 0.7), 
+    w: random(0.4, 0.8) * baseSize, 
+    h: random(0.4, 0.8) * baseSize * 0.6, 
+    angle: random([0, 45, 90])
+  };
+  if (level === 7) {
+    const angle = random(0, 180);
+    const safeSize = calculateSafeSize(w, h, angle);
+    const range = getSafePositionRange(w, h, safeSize, angle);
+    return { type: 'ellipse', cx: random(range.minX, range.maxX), cy: random(range.minY, range.maxY), w: safeSize, h: safeSize * 0.6, angle: angle };
+  }
+  
+  // For levels > 7, use highest difficulty (level 7) with random rotation
+  const angle = random(0, 180);
+  const safeSize = calculateSafeSize(w, h, angle);
+  const range = getSafePositionRange(w, h, safeSize, angle);
+  return { type: 'ellipse', cx: random(range.minX, range.maxX), cy: random(range.minY, range.maxY), w: safeSize, h: safeSize * 0.6, angle: angle };
+}
+
+/**
  * Génère les paramètres de la forme selon le niveau
  * @impure - Uses random(), depends on global selectedShape and currentLevel
  * @returns {Object} Paramètres de la forme
@@ -526,6 +572,7 @@ function getShapeParams() {
     case 'horizontal-line': return getHorizontalLineParams(currentLevel, canvasWidth, canvasHeight);
     case 'vertical-line': return getVerticalLineParams(currentLevel, canvasWidth, canvasHeight);
     case 'circle': return getCircleParams(currentLevel, canvasWidth, canvasHeight);
+    case 'ellipse': return getEllipseParams(currentLevel, canvasWidth, canvasHeight);
     case 'square': return getSquareParams(currentLevel, canvasWidth, canvasHeight);
     case 'triangle': return getTriangleParams(currentLevel, canvasWidth, canvasHeight);
     default: return getCircleParams(1, canvasWidth, canvasHeight);
