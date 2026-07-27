@@ -44,10 +44,10 @@ let shapeSettings = {
 // ============================================
 
 function setup() {
-  let canvas = createCanvas(600, 400);
+  let canvas = createCanvas(windowWidth, windowHeight);
   canvas.parent('sketch-container');
-  canvasWidth = 600;
-  canvasHeight = 400;
+  canvasWidth = windowWidth;
+  canvasHeight = windowHeight;
   background(255);
   stroke(0);
   strokeWeight(3);
@@ -55,6 +55,17 @@ function setup() {
   strokeJoin(ROUND);
   currentShape = null; // Pas de forme active au démarrage
   // La première forme sera générée dans ensureActiveShape() lors du premier draw()
+}
+
+function windowResized() {
+  resizeCanvas(windowWidth, windowHeight);
+  canvasWidth = windowWidth;
+  canvasHeight = windowHeight;
+  if (currentShape !== null) {
+    // Régénérer les paramètres de la forme avec les nouvelles dimensions
+    generateShapeParams();
+    redraw();
+  }
 }
 
 
