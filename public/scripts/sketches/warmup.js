@@ -611,7 +611,7 @@ function drawGuideShape() {
 /**
  * Minimum number of points required for a valid score calculation
  */
-const MIN_POINTS_FOR_SCORE = 30;
+const MIN_POINTS_FOR_SCORE = 10;
 
 /**
  * Minimum total length of the trace (in pixels) for a valid score calculation
