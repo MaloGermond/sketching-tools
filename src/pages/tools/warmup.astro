@@ -6,8 +6,7 @@ const description = "Échauffez-vous avant de commencer à dessiner";
 ---
 
 <MainLayout title={title}>
-  <div style="position: relative; width: 100%; height: 100vh;">
-    <div style="position: absolute; top: 1rem; left: 1rem; z-index: 10; background: rgba(255,255,255,0.9); padding: 1rem; border-radius: 8px;">
+    <div style="padding: 1rem; border-radius: 8px;">
       <h1 style="margin: 0 0 0.5rem 0;">{title}</h1>
       <p style="margin: 0 0 1rem 0;">{description}</p>
       <div style="margin-bottom: 1rem;">
@@ -46,10 +45,8 @@ const description = "Échauffez-vous avant de commencer à dessiner";
           <option value="4">4 - Déplacement + taille + rotation</option>
         </select>
       </div>
-    </div>
-    
     <div id="sketch-container" style="width: 100%; height: 100%;"></div>
-    <div id="score-display" style="position: absolute; bottom: 1rem; left: 1rem; z-index: 10; padding: 1rem; background: rgba(255,255,255,0.9); border-radius: 8px; min-width: 200px;"></div>
+    <div id="score-display" style="position: absolute; top: 1rem; right: 1rem; z-index: 10; padding: 1rem; background: var(--bg-card); border-radius: 8px; min-width: 200px;"></div>
     <div id="score-popup" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 10; font-size: 48px; font-weight: bold; pointer-events: none;"></div>
   </div>
   

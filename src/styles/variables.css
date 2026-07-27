@@ -6,7 +6,7 @@
   /* Colors */
   --color-white: #ffffff;
   --color-black: #000000;
-  --color-gray-50: #f9fafb;
+  --color-gray-50: #F6F6F6;
   --color-gray-100: #f2f4f6;
   --color-gray-200: #e4e7eb;
   --color-gray-400: #9ca3af;
@@ -17,7 +17,7 @@
   --color-accent: #8b5cf6;
   
   /* Backgrounds */
-  --bg-body: var(--color-white);
+  --bg-body: var(--color-gray-100);
   --bg-card: var(--color-white);
   
   /* Borders */
