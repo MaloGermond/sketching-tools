@@ -129,6 +129,31 @@ function handleUserDrawing() {
 function processCompletedDrawing() {
   if (drawing && userPoints.length > 0) {
     drawing = false;
+    
+    // Vérifier si le tracé est valide (assez de points et assez long)
+    if (userPoints.length < MIN_POINTS_FOR_SCORE) {
+      // Pas assez de points, réinitialiser sans scorer
+      userPoints = [];
+      clear();
+      guideVisible = true;
+      redraw();
+      return;
+    }
+    
+    // Vérifier la longueur du tracé
+    let traceLength = 0;
+    for (let i = 1; i < userPoints.length; i++) {
+      traceLength += dist(userPoints[i].x, userPoints[i].y, userPoints[i-1].x, userPoints[i-1].y);
+    }
+    if (traceLength < MIN_TRACE_LENGTH) {
+      // Tracé trop court, réinitialiser sans scorer
+      userPoints = [];
+      clear();
+      guideVisible = true;
+      redraw();
+      return;
+    }
+    
     const score = calculateScore();
     currentScore = score;
     scoreHistory.push(score);
