@@ -157,7 +157,7 @@ function processCompletedDrawing() {
     const score = calculateScore();
     currentScore = score;
     scoreHistory.push(score);
-    if (scoreHistory.length > 100) {
+    if (scoreHistory.length > 20) {
       scoreHistory.shift();
     }
     updateScoreDisplay();
