@@ -236,7 +236,10 @@ function toggleShape(shape) {
   clear();
   userPoints = [];
   guideVisible = true;
+  currentScore = null;
+  scoreHistory = [];
   currentShape = generateNewShape();
+  updateScoreDisplay();
   redraw();
 }
 
