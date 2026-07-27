@@ -185,11 +185,9 @@ function renderCurrentStroke() {
   if (drawing && userPoints.length >= 2) {
     noFill();
     beginShape();
-    curveVertex(userPoints[0].x, userPoints[0].y);
     for (let i = 0; i < userPoints.length; i++) {
-      curveVertex(userPoints[i].x, userPoints[i].y);
+      vertex(userPoints[i].x, userPoints[i].y);
     }
-    curveVertex(userPoints[userPoints.length - 1].x, userPoints[userPoints.length - 1].y);
     endShape();
   }
 }
