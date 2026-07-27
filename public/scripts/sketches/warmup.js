@@ -113,6 +113,11 @@ function ensureActiveShape() {
   }
 }
 
+/**
+ * Minimum distance between consecutive points to avoid loops in splines
+ */
+const MIN_POINT_DISTANCE = 3;
+
 /** @impure - Modifies drawing, guideVisible, userPoints. Uses mouseIsPressed, mouseX, mouseY */
 function handleUserDrawing() {
   // Début du dessin
@@ -123,7 +128,11 @@ function handleUserDrawing() {
   }
   
   // Collecte des points (Étape 3)
-  userPoints.push({x: mouseX, y: mouseY});
+  // Filtrer les points trop proches pour éviter les boucles avec curveVertex
+  if (userPoints.length === 0 || 
+      dist(mouseX, mouseY, userPoints[userPoints.length - 1].x, userPoints[userPoints.length - 1].y) >= MIN_POINT_DISTANCE) {
+    userPoints.push({x: mouseX, y: mouseY});
+  }
 }
 
 /** @impure - Modifies drawing, currentScore, scoreHistory. Uses setTimeout, clear, redraw */
