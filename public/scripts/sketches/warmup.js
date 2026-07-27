@@ -15,8 +15,8 @@ let shapeParams = {}; // Paramètres de la forme actuelle (pour recalcul)
 let guideVisible = true; // La forme guide est-elle visible ?
 let currentScore = null;
 let scoreTimeout = null;
-let canvasWidth = 600;
-let canvasHeight = 400;
+let canvasWidth = 0;
+let canvasHeight = 0;
 
 // Configuration des formes disponibles (cercle sélectionné par défaut)
 // @note: Cette variable est modifiée par setShapeSettings() - fonction impure
