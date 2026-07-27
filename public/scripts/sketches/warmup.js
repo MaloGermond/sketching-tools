@@ -606,7 +606,7 @@ function drawGuideShape() {
     case 'ellipse':
       push();
       translate(params.cx, params.cy);
-      if (params.angle) {
+      if (params.angle !== undefined) {
         rotate(radians(params.angle));
       }
       ellipseMode(CENTER);
@@ -621,7 +621,7 @@ function drawGuideShape() {
     case 'square':
       push();
       translate(params.cx, params.cy);
-      if (params.angle) {
+      if (params.angle !== undefined) {
         rotate(radians(params.angle));
       }
       rectMode(CENTER);
@@ -633,7 +633,7 @@ function drawGuideShape() {
       const size = params.size;
       push();
       translate(params.cx, params.cy);
-      if (params.angle) {
+      if (params.angle !== undefined) {
         rotate(radians(params.angle));
       }
       if (params.type === 'equilateral') {
