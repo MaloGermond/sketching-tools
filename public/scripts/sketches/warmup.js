@@ -18,14 +18,14 @@ let scoreTimeout = null;
 let canvasWidth = 600;
 let canvasHeight = 400;
 
-// Configuration des formes disponibles (toutes activées par défaut)
+// Configuration des formes disponibles (cercle sélectionné par défaut)
 // @note: Cette variable est modifiée par setShapeSettings() - fonction impure
 let shapeSettings = {
   circle: true,
-  square: true,
-  triangle: true,
-  'horizontal-line': true,
-  'vertical-line': true
+  square: false,
+  triangle: false,
+  'horizontal-line': false,
+  'vertical-line': false
 };
 
 // ============================================
