@@ -182,13 +182,16 @@ function renderActiveShape() {
 
 /** @impure - Uses p5.js drawing functions */
 function renderCurrentStroke() {
-  if (drawing && userPoints.length >= 2) {
+  if (drawing && userPoints.length >= 4) {
     noFill();
-    beginShape();
-    for (let i = 0; i < userPoints.length; i++) {
-      vertex(userPoints[i].x, userPoints[i].y);
+    for (let i = 0; i < userPoints.length - 3; i++) {
+      spline(
+        userPoints[i].x, userPoints[i].y,
+        userPoints[i+1].x, userPoints[i+1].y,
+        userPoints[i+2].x, userPoints[i+2].y,
+        userPoints[i+3].x, userPoints[i+3].y
+      );
     }
-    endShape();
   }
 }
 
