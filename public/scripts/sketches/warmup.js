@@ -43,13 +43,17 @@ let shapeSettings = {
 // ============================================
 
 function setup() {
-  // Calculer la hauteur disponible (100vh - hauteur du header)
-  const header = document.querySelector('header');
-  const headerHeight = header ? header.offsetHeight : 0;
-  const canvasHeight = windowHeight - headerHeight;
-  
-  canvasElement = createCanvas(windowWidth, canvasHeight);
+  canvasElement = createCanvas(0, 0);
   canvasElement.parent('sketch-container');
+  
+  // Attendre que le conteneur soit rendu pour obtenir ses dimensions
+  const container = document.getElementById('sketch-container');
+  if (container) {
+    const w = container.clientWidth;
+    const h = container.clientHeight;
+    resizeCanvas(w, h);
+  }
+  
   background(255);
   stroke(0);
   strokeWeight(3);
@@ -60,15 +64,16 @@ function setup() {
 }
 
 function windowResized() {
-  const header = document.querySelector('header');
-  const headerHeight = header ? header.offsetHeight : 0;
-  const canvasHeight = windowHeight - headerHeight;
-  
-  resizeCanvas(windowWidth, canvasHeight);
-  if (currentShape !== null) {
-    // Régénérer les paramètres de la forme avec les nouvelles dimensions
-    generateShapeParams();
-    redraw();
+  const container = document.getElementById('sketch-container');
+  if (container) {
+    const w = container.clientWidth;
+    const h = container.clientHeight;
+    resizeCanvas(w, h);
+    if (currentShape !== null) {
+      // Régénérer les paramètres de la forme avec les nouvelles dimensions
+      generateShapeParams();
+      redraw();
+    }
   }
 }
 
