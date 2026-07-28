@@ -3,7 +3,6 @@
 interface Props {
   title?: string;
   style?: string;
-  children?: any;
 }
 
 const { title, style, children } = Astro.props;
@@ -21,5 +20,5 @@ const { title, style, children } = Astro.props;
 
 <div style={defaultStyle}>
   {title && <h2 style="margin: 0 0 0.5rem 0; font-size: 1rem;">{title}</h2>}
-  {children}
+  <slot/>
 </div>
