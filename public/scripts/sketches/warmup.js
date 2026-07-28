@@ -71,14 +71,18 @@ function initCanvas() {
   if (!canvasElement) {
     canvasElement = createCanvas(size.width, size.height);
     canvasElement.parent('sketch-container');
+    // Première création du canvas, générer une forme si aucune n'existe
+    if (currentShape === null) {
+      currentShape = generateNewShape();
+    } else {
+      generateShapeParams();
+    }
   } else {
     resizeCanvas(size.width, size.height);
+    generateShapeParams();
   }
   
-  if (currentShape !== null) {
-    generateShapeParams();
-    redraw();
-  }
+  redraw();
 }
 
 /** @impure - Modifies global state and uses p5.js APIs */
@@ -89,8 +93,7 @@ function setup() {
   strokeWeight(3);
   strokeCap(ROUND);
   strokeJoin(ROUND);
-  currentShape = null; // Pas de forme active au démarrage
-  // La première forme sera générée dans ensureActiveShape() lors du premier draw()
+  // currentShape = null; // Déjà initialisé à null, la première forme sera générée dans initCanvas()
 }
 
 function windowResized() {
