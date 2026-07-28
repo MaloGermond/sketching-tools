@@ -42,62 +42,24 @@ let shapeSettings = {
 // 2. INITIALISATION
 // ============================================
 
-/**
- * Get container dimensions - Pure function
- * @pure
- * @returns {Object} {width, height} or null if container not found
- */
-function getContainerSize() {
-  const container = document.getElementById('sketch-container');
-  if (!container) return null;
-  return {
-    width: container.clientWidth,
-    height: container.clientHeight
-  };
-}
 
-/**
- * Initialize/Resize canvas to fit container - Impure function
- * @impure - Uses p5.js APIs, may retry if container not ready
- */
-function initCanvas() {
-  const size = getContainerSize();
-  if (!size) {
-    // Container not ready yet, retry after a short delay
-    setTimeout(initCanvas, 50);
-    return;
-  }
-  
-  if (!canvasElement) {
-    canvasElement = createCanvas(size.width, size.height);
-    canvasElement.parent('sketch-container');
-    // Première création du canvas, générer une forme si aucune n'existe
-    if (currentShape === null) {
-      currentShape = generateNewShape();
-    } else {
-      generateShapeParams();
-    }
-  } else {
-    resizeCanvas(size.width, size.height);
-    generateShapeParams();
-  }
-  
-  redraw();
-}
 
 /** @impure - Modifies global state and uses p5.js APIs */
 function setup() {
-  initCanvas();
+  canvasElement = createCanvas(windowWidth, windowHeight);
   background(255);
   stroke(0);
   strokeWeight(3);
   strokeCap(ROUND);
   strokeJoin(ROUND);
-  // currentShape = null; // Déjà initialisé à null, la première forme sera générée dans initCanvas()
 }
 
 function windowResized() {
-  initCanvas();
+  resizeCanvas(windowWidth, windowHeight);
+  if (currentShape !== null) {
+    generateShapeParams();
+    redraw();
+  }
 }
 
 
