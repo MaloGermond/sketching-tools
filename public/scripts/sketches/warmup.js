@@ -12,7 +12,6 @@ let selectedShape = 'circle';
 let currentLevel = 1;
 let scoreHistory = [];
 let shapeParams = {};
-let guideVisible = true;
 let currentScore = null;
 let scoreTimeout = null;
 let canvasElement;
@@ -87,8 +86,8 @@ function draw() {
     processCompletedDrawing();
   }
   
-  image(drawingBuffer, 0, 0);
   renderActiveShape();
+  image(drawingBuffer, 0, 0);
 }
 
 
@@ -247,7 +246,6 @@ function getSafePositionRange(w, h, size, angle) {
 function ensureActiveShape() {
   if (currentShape == null) {
     currentShape = generateNewShape();
-    guideVisible = true;
   }
 }
 
@@ -256,7 +254,6 @@ function handleUserDrawing() {
     drawingBuffer.clear();
     drawingBuffer.background(255);
     drawing = true;
-    guideVisible = false;
     prevX = mouseX;
     prevY = mouseY;
     return;
@@ -282,7 +279,6 @@ function handleUserDrawing() {
 function processCompletedDrawing() {
   if (drawing) {
     drawing = false;
-    guideVisible = true;
     
     const score = calculateScoreFromBuffer();
     currentScore = score;
@@ -323,7 +319,7 @@ function calculateScoreFromBuffer() {
 }
 
 function renderActiveShape() {
-  if (guideVisible && !drawing && currentShape != null) {
+  if (currentShape != null) {
     drawGuideShape();
   }
 }
@@ -645,7 +641,6 @@ function toggleShape(shape) {
   drawing = false;
   currentShape = null;
   clear();
-  guideVisible = true;
   currentScore = null;
   scoreHistory = [];
   currentShape = generateNewShape();
