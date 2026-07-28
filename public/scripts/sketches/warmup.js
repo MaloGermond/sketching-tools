@@ -27,7 +27,7 @@ let prevX = null;
 let prevY = null;
 
 // Configuration du pinceau
-const BRUSH_SIZE = 3;
+const BRUSH_SIZE = 6;
 const BRUSH_SPACING = 2;
 
 // Configuration des formes disponibles
@@ -207,8 +207,8 @@ function calculateScoreFromBuffer() {
     for (let x = 0; x < width; x++) {
       const idx = (y * width + x) * 4;
       
-      // Si le pixel du dessin est noir (dessin présent)
-      if (drawingBuffer.pixels[idx] < 128) {
+      // Si le pixel a été dessiné (alpha > 128)
+      if (drawingBuffer.pixels[idx + 3] > 128) {
         // Si le masque est blanc (sur la forme)
         if (guideMask.pixels[idx] > 128) {
           onShape++;
