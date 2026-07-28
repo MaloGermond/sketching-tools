@@ -42,18 +42,48 @@ let shapeSettings = {
 // 2. INITIALISATION
 // ============================================
 
-function setup() {
-  canvasElement = createCanvas(100, 100);
-  canvasElement.parent('sketch-container');
-  
-  // Attendre que le conteneur soit rendu pour obtenir ses dimensions
+/**
+ * Get container dimensions - Pure function
+ * @pure
+ * @returns {Object} {width, height} or null if container not found
+ */
+function getContainerSize() {
   const container = document.getElementById('sketch-container');
-  if (container) {
-    const w = container.clientWidth;
-    const h = container.clientHeight;
-    resizeCanvas(w, h);
+  if (!container) return null;
+  return {
+    width: container.clientWidth,
+    height: container.clientHeight
+  };
+}
+
+/**
+ * Initialize/Resize canvas to fit container - Impure function
+ * @impure - Uses p5.js APIs, may retry if container not ready
+ */
+function initCanvas() {
+  const size = getContainerSize();
+  if (!size) {
+    // Container not ready yet, retry after a short delay
+    setTimeout(initCanvas, 50);
+    return;
   }
   
+  if (!canvasElement) {
+    canvasElement = createCanvas(size.width, size.height);
+    canvasElement.parent('sketch-container');
+  } else {
+    resizeCanvas(size.width, size.height);
+  }
+  
+  if (currentShape !== null) {
+    generateShapeParams();
+    redraw();
+  }
+}
+
+/** @impure - Modifies global state and uses p5.js APIs */
+function setup() {
+  initCanvas();
   background(255);
   stroke(0);
   strokeWeight(3);
@@ -64,17 +94,7 @@ function setup() {
 }
 
 function windowResized() {
-  const container = document.getElementById('sketch-container');
-  if (container) {
-    const w = container.clientWidth;
-    const h = container.clientHeight;
-    resizeCanvas(w, h);
-    if (currentShape !== null) {
-      // Régénérer les paramètres de la forme avec les nouvelles dimensions
-      generateShapeParams();
-      redraw();
-    }
-  }
+  initCanvas();
 }
 
 
