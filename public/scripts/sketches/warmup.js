@@ -48,7 +48,6 @@ function setup() {
   
   drawingBuffer = createGraphics(width, height);
   drawingBuffer.noSmooth();
-  drawingBuffer.background(255);
   
   background(255);
   stroke(0);
@@ -63,7 +62,6 @@ function windowResized() {
   resizeCanvas(windowWidth, windowHeight);
   drawingBuffer = createGraphics(width, height);
   drawingBuffer.noSmooth();
-  drawingBuffer.background(255);
   if (currentShape !== null) {
     generateShapeParams();
     redraw();
@@ -252,7 +250,6 @@ function ensureActiveShape() {
 function handleUserDrawing() {
   if (!drawing) {
     drawingBuffer.clear();
-    drawingBuffer.background(255);
     drawing = true;
     prevX = mouseX;
     prevY = mouseY;
@@ -291,7 +288,6 @@ function processCompletedDrawing() {
     
     setTimeout(() => {
       drawingBuffer.clear();
-      drawingBuffer.background(255);
       currentShape = generateNewShape();
       redraw();
     }, 100);
