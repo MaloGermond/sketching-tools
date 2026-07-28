@@ -19,6 +19,9 @@ let canvasElement;
 // Buffer de dessin bitmap
 let drawingBuffer;
 
+// Masque de la forme guide pour le scoring
+let guideMask;
+
 // Position précédente pour le dessin continu
 let prevX = null;
 let prevY = null;
@@ -101,116 +104,6 @@ function getAvailableShapes(settings) {
   return availableShapes;
 }
 
-function getShapeSamples() {
-  const params = shapeParams;
-  const count = 100;
-  const samples = [];
-  
-  if (!params) return samples;
-  
-  switch(selectedShape) {
-    case 'circle':
-    case 'ellipse': {
-      const cx = params.cx;
-      const cy = params.cy;
-      const w = params.type === 'circle' ? params.size : params.w;
-      const h = params.type === 'circle' ? params.size : params.h;
-      const radiusX = w / 2;
-      const radiusY = h / 2;
-      
-      for (let i = 0; i < count; i++) {
-        const angle = TWO_PI * i / count;
-        samples.push({
-          x: cx + radiusX * cos(angle),
-          y: cy + radiusY * sin(angle)
-        });
-      }
-      break;
-    }
-    
-    case 'horizontal-line':
-    case 'vertical-line': {
-      const x1 = params.x1, y1 = params.y1;
-      const x2 = params.x2, y2 = params.y2;
-      for (let i = 0; i < count; i++) {
-        const t = i / (count - 1);
-        samples.push({
-          x: lerp(x1, x2, t),
-          y: lerp(y1, y2, t)
-        });
-      }
-      break;
-    }
-    
-    case 'square': {
-      const cx = params.cx;
-      const cy = params.cy;
-      const size = params.size;
-      const half = size / 2;
-      const left = cx - half;
-      const right = cx + half;
-      const top = cy - half;
-      const bottom = cy + half;
-      
-      const perSide = floor(count / 4);
-      for (let i = 0; i < count; i++) {
-        const side = floor(i / perSide);
-        const t = (i % perSide) / max(perSide - 1, 1);
-        
-        switch(side % 4) {
-          case 0: samples.push({x: lerp(left, right, t), y: top}); break;
-          case 1: samples.push({x: right, y: lerp(top, bottom, t)}); break;
-          case 2: samples.push({x: lerp(right, left, t), y: bottom}); break;
-          case 3: samples.push({x: left, y: lerp(bottom, top, t)}); break;
-        }
-      }
-      break;
-    }
-    
-    case 'triangle': {
-      const cx = params.cx;
-      const cy = params.cy;
-      const size = params.size;
-      let v1, v2, v3;
-      
-      if (params.type === 'equilateral') {
-        const h = size * sqrt(3) / 2;
-        v1 = {x: cx, y: cy - h/2};
-        v2 = {x: cx - size/2, y: cy + h/2};
-        v3 = {x: cx + size/2, y: cy + h/2};
-      } else if (params.type === 'isosceles') {
-        const base = size;
-        const h = size * (params.baseRatio || 0.7);
-        v1 = {x: cx, y: cy - h/2};
-        v2 = {x: cx - base/2, y: cy + h/2};
-        v3 = {x: cx + base/2, y: cy + h/2};
-      } else {
-        const a = size * 0.6;
-        const b = size * 0.7;
-        const c = size * 0.8;
-        v1 = {x: cx, y: cy - c/2};
-        v2 = {x: cx - a/2, y: cy + c/2};
-        v3 = {x: cx + a/2, y: cy + c/2};
-      }
-      
-      const perSide = floor(count / 3);
-      for (let i = 0; i < count; i++) {
-        const side = floor(i / perSide);
-        const t = (i % perSide) / max(perSide - 1, 1);
-        
-        switch(side % 3) {
-          case 0: samples.push({x: lerp(v1.x, v2.x, t), y: lerp(v1.y, v2.y, t)}); break;
-          case 1: samples.push({x: lerp(v2.x, v3.x, t), y: lerp(v2.y, v3.y, t)}); break;
-          case 2: samples.push({x: lerp(v3.x, v1.x, t), y: lerp(v3.y, v1.y, t)}); break;
-        }
-      }
-      break;
-    }
-  }
-  
-  return samples;
-}
-
 function calculateBaseSize(w, h) {
   return min(w, h) * 0.6;
 }
@@ -277,7 +170,13 @@ function processCompletedDrawing() {
   if (drawing) {
     drawing = false;
     
-    const score = calculateScoreFromBuffer();
+    const { onShape, offShape } = calculateScoreFromBuffer();
+    const totalDrawn = onShape + offShape;
+    let score = 0;
+    if (totalDrawn > 0) {
+      score = floor((onShape / totalDrawn) * 100);
+    }
+    
     currentScore = score;
     scoreHistory.push(score);
     if (scoreHistory.length > 20) {
@@ -295,23 +194,32 @@ function processCompletedDrawing() {
 }
 
 function calculateScoreFromBuffer() {
-  const samples = getShapeSamples();
-  if (samples.length === 0) return 0;
-  
   drawingBuffer.loadPixels();
-  let hits = 0;
+  guideMask.loadPixels();
   
-  for (const sample of samples) {
-    const x = floor(constrain(sample.x, 0, drawingBuffer.width - 1));
-    const y = floor(constrain(sample.y, 0, drawingBuffer.height - 1));
-    const idx = (y * drawingBuffer.width + x) * 4;
-    
-    if (drawingBuffer.pixels[idx] < 200) {
-      hits++;
+  let onShape = 0;
+  let offShape = 0;
+  
+  const width = drawingBuffer.width;
+  const height = drawingBuffer.height;
+  
+  for (let y = 0; y < height; y++) {
+    for (let x = 0; x < width; x++) {
+      const idx = (y * width + x) * 4;
+      
+      // Si le pixel du dessin est noir (dessin présent)
+      if (drawingBuffer.pixels[idx] < 128) {
+        // Si le masque est blanc (sur la forme)
+        if (guideMask.pixels[idx] > 128) {
+          onShape++;
+        } else {
+          offShape++;
+        }
+      }
     }
   }
   
-  return floor((hits / samples.length) * 100);
+  return { onShape, offShape };
 }
 
 function renderActiveShape() {
@@ -394,6 +302,95 @@ function drawGuideShape() {
 
 function generateShapeParams() {
   shapeParams = getShapeParams();
+  createGuideMask();
+}
+
+/**
+ * Crée un masque de la forme guide pour le scoring pixel-perfect
+ * Fond noir (0), forme remplie en blanc (255)
+ * @impure - Uses guideMask, depends on global shapeParams and selectedShape
+ */
+function createGuideMask() {
+  if (!guideMask) {
+    guideMask = createGraphics(width, height);
+  } else {
+    guideMask.resizeCanvas(width, height);
+  }
+  
+  guideMask.clear();
+  guideMask.background(0);
+  guideMask.noSmooth();
+  
+  const params = shapeParams;
+  
+  switch(selectedShape) {
+    case 'horizontal-line':
+    case 'vertical-line': {
+      guideMask.stroke(255);
+      guideMask.strokeWeight(8);
+      guideMask.noFill();
+      guideMask.line(params.x1, params.y1, params.x2, params.y2);
+      break;
+    }
+    
+    case 'circle':
+    case 'ellipse': {
+      guideMask.fill(255);
+      guideMask.noStroke();
+      guideMask.ellipseMode(CENTER);
+      guideMask.push();
+      guideMask.translate(params.cx, params.cy);
+      if (params.angle !== undefined) {
+        guideMask.rotate(radians(params.angle));
+      }
+      if (params.type === 'circle') {
+        guideMask.ellipse(0, 0, params.size, params.size);
+      } else {
+        guideMask.ellipse(0, 0, params.w, params.h);
+      }
+      guideMask.pop();
+      break;
+    }
+    
+    case 'square': {
+      guideMask.fill(255);
+      guideMask.noStroke();
+      guideMask.rectMode(CENTER);
+      guideMask.push();
+      guideMask.translate(params.cx, params.cy);
+      if (params.angle !== undefined) {
+        guideMask.rotate(radians(params.angle));
+      }
+      guideMask.rect(0, 0, params.size, params.size);
+      guideMask.pop();
+      break;
+    }
+    
+    case 'triangle': {
+      guideMask.fill(255);
+      guideMask.noStroke();
+      const size = params.size;
+      guideMask.push();
+      guideMask.translate(params.cx, params.cy);
+      if (params.angle !== undefined) {
+        guideMask.rotate(radians(params.angle));
+      }
+      if (params.type === 'equilateral') {
+        const h = size * sqrt(3) / 2;
+        guideMask.triangle(0, -h/2, -size/2, h/2, size/2, h/2);
+      } else if (params.type === 'isosceles') {
+        const base = size;
+        const h = size * (params.baseRatio || 0.7);
+        guideMask.triangle(0, -h/2, -base/2, h/2, base/2, h/2);
+      } else {
+        const a = size * 0.6;
+        const c = size * 0.8;
+        guideMask.triangle(0, -c/2, -a/2, c/2, a/2, c/2);
+      }
+      guideMask.pop();
+      break;
+    }
+  }
 }
 
 function getHorizontalLineParams(level, w, h) {
