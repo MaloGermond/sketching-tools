@@ -1,5 +1,6 @@
 ---
 import MainLayout from "../../layouts/MainLayout.astro";
+import Card from "../../components/Card.astro";
 
 const title = "Échauffement";
 const description = "Échauffez-vous avant de commencer à dessiner";
@@ -46,7 +47,10 @@ const description = "Échauffez-vous avant de commencer à dessiner";
         </select>
       </div>
     <div id="sketch-container" style="width: 100%; height: 100%;"></div>
-    <div id="score-display" style="position: absolute; top: 1rem; right: 1rem; z-index: 10; padding: 1rem; background: var(--bg-card); border-radius: 8px; min-width: 200px;"></div>
+    <Card id="score-card" style="position: absolute; top: 1rem; right: 1rem; z-index: 10; min-width: 200px;">
+      <h3>Échauffement</h3>
+      <div id="score-display"></div>
+    </Card>
     <div id="score-popup" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 10; font-size: 48px; font-weight: bold; pointer-events: none;"></div>
   </div>
   
