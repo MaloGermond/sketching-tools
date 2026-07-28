@@ -43,7 +43,7 @@ let shapeSettings = {
 // ============================================
 
 function setup() {
-  canvasElement = createCanvas(0, 0);
+  canvasElement = createCanvas(100, 100);
   canvasElement.parent('sketch-container');
   
   // Attendre que le conteneur soit rendu pour obtenir ses dimensions

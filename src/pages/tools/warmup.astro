@@ -9,72 +9,109 @@ const description = "Échauffez-vous avant de commencer à dessiner";
 <MainLayout title={title}>
   <div style="position: relative; width: 100%; height: 100%;">
     <div id="sketch-container" style="width: 100%; height: 100%;"></div>
-
-    <div
-      id="score-popup"
-      style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 20; font-size: 48px; font-weight: bold; pointer-events: none;"
-    ></div>
-
-    <Card style="position: absolute; top:0 ">
-      <h1 style="margin: 0 0 0.5rem 0;">{title}</h1>
-      <p style="margin: 0 0 1rem 0;">{description}</p>
-    </Card>
-
-    <Card style="position: absolute; bottom: 1rem; left: 1rem;">
-      <div style="margin-bottom: 1rem;">
-        <span style="margin-right: 1rem;">Formes disponibles:</span>
-        <label style="margin-right: 1rem; display: inline-flex; align-items: center; gap: 0.5rem;">
-          <input type="checkbox" id="shape-circle" onchange="toggleShape('circle')">
-          <span>Cercle</span>
-        </label>
-        <label style="margin-right: 1rem; display: inline-flex; align-items: center; gap: 0.5rem;">
-          <input type="checkbox" id="shape-ellipse" onchange="toggleShape('ellipse')">
-          <span>Ellipse</span>
-        </label>
-        <label style="margin-right: 1rem; display: inline-flex; align-items: center; gap: 0.5rem;">
-          <input type="checkbox" id="shape-square" onchange="toggleShape('square')">
-          <span>Carré</span>
-        </label>
-        <label style="margin-right: 1rem; display: inline-flex; align-items: center; gap: 0.5rem;">
-          <input type="checkbox" id="shape-triangle" onchange="toggleShape('triangle')">
-          <span>Triangle</span>
-        </label>
-        <label style="margin-right: 1rem; display: inline-flex; align-items: center; gap: 0.5rem;">
-          <input type="checkbox" id="shape-horizontal-line" onchange="toggleShape('horizontal-line')">
-          <span>Ligne horizontale</span>
-        </label>
-        <label style="display: inline-flex; align-items: center; gap: 0.5rem;">
-          <input type="checkbox" id="shape-vertical-line" onchange="toggleShape('vertical-line')">
-          <span>Ligne verticale</span>
-        </label>
-      </div>
-      <div>
-        <span style="margin-right: 1rem;">Niveau:</span>
-        <select onchange="setLevel(this.value)" style="padding: 0.5rem;">
-          <option value="1">1 - Centre, taille fixe</option>
-          <option value="2">2 - Déplacement</option>
-          <option value="3">3 - Déplacement + taille variable</option>
-          <option value="4">4 - Déplacement + taille + rotation</option>
-        </select>
-      </div>
-    </Card>
-
-    <Card id="score-card" style="position: absolute; top: 1rem; right: 1rem; min-width: 200px;">
-      <h3>Échauffement</h3>
-      <div id="score-display"></div>
-    </Card>
-    
-    
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js"></script>
-    <script src="/scripts/sketches/warmup.js" client:load></script>
-    <script>
-      // Initialiser les checkboxes une fois le DOM chargé
-      document.addEventListener("DOMContentLoaded", () => {
-        if (typeof initShapeCheckboxes === "function") {
-          initShapeCheckboxes();
-        }
-      });
-    </script>
   </div>
+
+  <div
+    id="score-popup"
+    style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 20; font-size: 48px; font-weight: bold; pointer-events: none;"
+  >
+  </div>
+
+  <Card style="position: absolute; top:0; left:0; ">
+    <h1 style="margin: 0 0 0.5rem 0;">{title}</h1>
+    <p style="margin: 0 0 1rem 0;">{description}</p>
+  </Card>
+
+  <Card style="position: absolute; bottom: 1rem; left: 1rem;">
+    <div style="margin-bottom: 1rem;">
+      <span style="margin-right: 1rem;">Formes disponibles:</span>
+      <label
+        style="margin-right: 1rem; display: inline-flex; align-items: center; gap: 0.5rem;"
+      >
+        <input
+          type="checkbox"
+          id="shape-circle"
+          onchange="toggleShape('circle')"
+        />
+        <span>Cercle</span>
+      </label>
+      <label
+        style="margin-right: 1rem; display: inline-flex; align-items: center; gap: 0.5rem;"
+      >
+        <input
+          type="checkbox"
+          id="shape-ellipse"
+          onchange="toggleShape('ellipse')"
+        />
+        <span>Ellipse</span>
+      </label>
+      <label
+        style="margin-right: 1rem; display: inline-flex; align-items: center; gap: 0.5rem;"
+      >
+        <input
+          type="checkbox"
+          id="shape-square"
+          onchange="toggleShape('square')"
+        />
+        <span>Carré</span>
+      </label>
+      <label
+        style="margin-right: 1rem; display: inline-flex; align-items: center; gap: 0.5rem;"
+      >
+        <input
+          type="checkbox"
+          id="shape-triangle"
+          onchange="toggleShape('triangle')"
+        />
+        <span>Triangle</span>
+      </label>
+      <label
+        style="margin-right: 1rem; display: inline-flex; align-items: center; gap: 0.5rem;"
+      >
+        <input
+          type="checkbox"
+          id="shape-horizontal-line"
+          onchange="toggleShape('horizontal-line')"
+        />
+        <span>Ligne horizontale</span>
+      </label>
+      <label style="display: inline-flex; align-items: center; gap: 0.5rem;">
+        <input
+          type="checkbox"
+          id="shape-vertical-line"
+          onchange="toggleShape('vertical-line')"
+        />
+        <span>Ligne verticale</span>
+      </label>
+    </div>
+    <div>
+      <span style="margin-right: 1rem;">Niveau:</span>
+      <select onchange="setLevel(this.value)" style="padding: 0.5rem;">
+        <option value="1">1 - Centre, taille fixe</option>
+        <option value="2">2 - Déplacement</option>
+        <option value="3">3 - Déplacement + taille variable</option>
+        <option value="4">4 - Déplacement + taille + rotation</option>
+      </select>
+    </div>
+  </Card>
+
+  <Card
+    id="score-card"
+    style="position: absolute; top: 1rem; right: 1rem; min-width: 200px;"
+  >
+    <h3>Échauffement</h3>
+    <div id="score-display"></div>
+  </Card>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js"
+  ></script>
+  <script src="/scripts/sketches/warmup.js" client:load></script>
+  <script>
+    // Initialiser les checkboxes une fois le DOM chargé
+    document.addEventListener("DOMContentLoaded", () => {
+      if (typeof initShapeCheckboxes === "function") {
+        initShapeCheckboxes();
+      }
+    });
+  </script>
 </MainLayout>
