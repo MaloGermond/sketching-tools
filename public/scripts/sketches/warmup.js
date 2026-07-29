@@ -200,7 +200,7 @@ function processCompletedDrawing() {
     if (scoreHistory.length > 20) {
       scoreHistory.shift();
     }
-    updateScoreDisplay();
+    updateScoreState();
     showTemporaryScore();
     
     setTimeout(() => {
@@ -622,7 +622,7 @@ function setShape(shape) {
   scoreHistory = [];
   guideVisible = true;
   generateShapeParams();
-  updateScoreDisplay();
+  updateScoreState();
   redraw();
 }
 
@@ -633,7 +633,7 @@ function setLevel(level) {
   scoreHistory = [];
   guideVisible = true;
   currentShape = generateNewShape();
-  updateScoreDisplay();
+  updateScoreState();
   redraw();
 }
 
@@ -649,7 +649,7 @@ function toggleShape(shape) {
   currentScore = null;
   scoreHistory = [];
   currentShape = generateNewShape();
-  updateScoreDisplay();
+  updateScoreState();
   redraw();
 }
 
@@ -668,26 +668,24 @@ function initShapeCheckboxes() {
 // DISPLAY UPDATE FUNCTIONS
 // ============================================
 
-function updateScoreDisplay() {
-  const scoreEl = document.getElementById('score-display');
-  if (scoreEl) {
-    let html = '';
+/**
+ * Met à jour l'état global du score pour le composant Astro Scoreboard
+ * @impure - Modifies window.scoreState and dispatches event
+ */
+function updateScoreState() {
+  const average = scoreHistory.length > 0
+    ? scoreHistory.reduce((sum, s) => sum + s, 0) / scoreHistory.length
+    : 0;
+  
+  if (typeof window !== 'undefined') {
+    window.scoreState = {
+      average: floor(average),
+      history: scoreHistory.map(s => floor(s)),
+      current: currentScore !== null ? floor(currentScore) : null
+    };
     
-    if (scoreHistory.length > 0) {
-      const average = scoreHistory.reduce((sum, s) => sum + s, 0) / scoreHistory.length;
-      html += `<div style="font-size: 20px; margin-bottom: 10px;">Moyenne: ${floor(average)}%</div>`;
-    }
-    
-    if (scoreHistory.length > 0) {
-      html += '<div style="font-size: 14px;">';
-      for (let i = 0; i < scoreHistory.length; i++) {
-        const idx = scoreHistory.length - 1 - i;
-        html += `<div>#${i+1}: ${floor(scoreHistory[idx])}%</div>`;
-      }
-      html += '</div>';
-    }
-    
-    scoreEl.innerHTML = html;
+    // Déclencher un événement pour que Scoreboard.astro se mette à jour
+    document.dispatchEvent(new CustomEvent('scoreUpdated'));
   }
 }
 

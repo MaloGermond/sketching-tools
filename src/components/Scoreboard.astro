@@ -1,0 +1,75 @@
+---
+// Composant Scoreboard - Affiche la moyenne et l'historique des scores
+---
+
+<div id="scoreboard" class="scoreboard">
+  <div class="scoreboard-average">
+    Moyenne: <span id="score-average">0%</span>
+  </div>
+  <div class="scoreboard-history" id="score-history"></div>
+</div>
+
+<script>
+  // Fonction pour rendre le scoreboard à partir de window.scoreState
+  function renderScoreboard() {
+    const state = window.scoreState || { average: 0, history: [], current: null };
+    
+    const averageEl = document.getElementById('score-average');
+    const historyEl = document.getElementById('score-history');
+    
+    if (averageEl) {
+      averageEl.textContent = `${state.average}%`;
+    }
+    
+    if (historyEl) {
+      if (state.history.length > 0) {
+        historyEl.innerHTML = state.history
+          .slice()
+          .reverse()
+          .map((score, i) => `<div class="score-item">#${i+1}: ${score}%</div>`)
+          .join('');
+      } else {
+        historyEl.innerHTML = '<div class="score-empty">Aucun score encore</div>';
+      }
+    }
+  }
+  
+  // Initialiser le scoreboard
+  if (typeof window !== 'undefined') {
+    // Initialiser avec des valeurs par défaut
+    window.scoreState = window.scoreState || { average: 0, history: [], current: null };
+    renderScoreboard();
+    
+    // Écouter les mises à jour
+    document.addEventListener('scoreUpdated', renderScoreboard);
+  }
+</script>
+
+<style>
+  .scoreboard {
+    font-family: var(--font-family, 'Inter', sans-serif);
+  }
+  
+  .scoreboard-average {
+    font-size: var(--font-size-xl);
+    font-weight: var(--font-weight-semibold);
+    line-height: 1.5;
+    margin-bottom: 0.5rem;
+    color: var(--color-gray-900);
+  }
+  
+  .scoreboard-history {
+    font-size: var(--font-size-sm);
+    line-height: 1.5;
+    color: var(--color-gray-700);
+  }
+  
+  .score-item {
+    margin: 0.25rem 0;
+  }
+  
+  .score-empty {
+    color: var(--color-gray-500);
+    font-style: italic;
+  }
+</style>
