@@ -1,7 +1,7 @@
 ---
 import MainLayout from "../../layouts/MainLayout.astro";
 import Card from "../../components/Card.astro";
-
+import Scoreboard from "../../components/Scoreboard.astro";
 const title = "Échauffement";
 ---
 
@@ -89,13 +89,10 @@ const title = "Échauffement";
     </div>
   </Card>
 
-  <Card
-    id="score-card"
+  <Scoreboard 
+    client:load 
     style="position: absolute; top: 1rem; right: 1rem; min-width: 200px;"
-  >
-    <h3 class="text-lg">Échauffement</h3>
-    <Scoreboard client:load />
-  </Card>
+  />
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js"
   ></script>

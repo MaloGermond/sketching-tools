@@ -1,13 +1,24 @@
 ---
 // Composant Scoreboard - Affiche la moyenne et l'historique des scores
+// Inclut la Card et le titre
+import Card from "./Card.astro";
+
+interface Props {
+  style?: string;
+}
+
+const { style = "" } = Astro.props;
 ---
 
-<div id="scoreboard" class="scoreboard">
-  <div class="scoreboard-average">
-    Moyenne: <span id="score-average">0%</span>
+<Card style={style}>
+  <h3 class="text-lg">Échauffement</h3>
+  <div id="scoreboard" class="scoreboard">
+    <div class="scoreboard-average">
+      Moyenne: <span id="score-average">0%</span>
+    </div>
+    <div class="scoreboard-history" id="score-history"></div>
   </div>
-  <div class="scoreboard-history" id="score-history"></div>
-</div>
+</Card>
 
 <script>
   // Fonction pour rendre le scoreboard à partir de window.scoreState
