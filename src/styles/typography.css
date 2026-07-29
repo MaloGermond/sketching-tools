@@ -1,0 +1,216 @@
+/* Typography Stylesheet */
+/* Utilise les variables définies dans variables.css */
+
+/* ============================================
+   FONT FAMILY
+   ============================================ */
+:root {
+  --font-family: 'Inter', sans-serif;
+}
+
+/* ============================================
+   FONT SIZES
+   ============================================ */
+:root {
+  --font-size-xs: 0.75rem;    /* 12px */
+  --font-size-sm: 0.875rem;   /* 14px */
+  --font-size-base: 1rem;     /* 16px */
+  --font-size-lg: 1.125rem;   /* 18px */
+  --font-size-xl: 1.25rem;    /* 20px */
+  --font-size-2xl: 1.5rem;    /* 24px */
+  --font-size-3xl: 2rem;      /* 32px */
+  --font-size-4xl: 2.5rem;    /* 40px */
+}
+
+/* Utility classes for font sizes */
+.text-xs { font-size: var(--font-size-xs); line-height: 1rem; }
+.text-sm { font-size: var(--font-size-sm); line-height: 1.25rem; }
+.text-base { font-size: var(--font-size-base); line-height: 1.5rem; }
+.text-lg { font-size: var(--font-size-lg); line-height: 1.75rem; }
+.text-xl { font-size: var(--font-size-xl); line-height: 1.75rem; }
+.text-2xl { font-size: var(--font-size-2xl); line-height: 2rem; }
+.text-3xl { font-size: var(--font-size-3xl); line-height: 2.25rem; }
+.text-4xl { font-size: var(--font-size-4xl); line-height: 2.5rem; }
+
+/* ============================================
+   FONT WEIGHTS
+   ============================================ */
+:root {
+  --font-weight-light: 300;
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+}
+
+.font-light { font-weight: var(--font-weight-light); }
+.font-normal { font-weight: var(--font-weight-normal); }
+.font-medium { font-weight: var(--font-weight-medium); }
+.font-semibold { font-weight: var(--font-weight-semibold); }
+.font-bold { font-weight: var(--font-weight-bold); }
+
+/* ============================================
+   LINE HEIGHT
+   ============================================ */
+:root {
+  --leading-tight: 1.1;
+  --leading-normal: 1.5;
+  --leading-relaxed: 1.75;
+  --leading-loose: 2;
+}
+
+.leading-tight { line-height: var(--leading-tight); }
+.leading-normal { line-height: var(--leading-normal); }
+.leading-relaxed { line-height: var(--leading-relaxed); }
+.leading-loose { line-height: var(--leading-loose); }
+
+/* ============================================
+   TEXT ALIGNMENT
+   ============================================ */
+.text-left { text-align: left; }
+.text-center { text-align: center; }
+.text-right { text-align: right; }
+.text-justify { text-align: justify; }
+
+/* ============================================
+   TEXT COLORS
+   ============================================ */
+.text-white { color: var(--color-white); }
+.text-black { color: var(--color-black); }
+.text-gray-100 { color: var(--color-gray-100); }
+.text-gray-200 { color: var(--color-gray-200); }
+.text-gray-400 { color: var(--color-gray-400); }
+.text-gray-500 { color: var(--color-gray-500, #6b7280); }
+.text-gray-700 { color: var(--color-gray-700); }
+.text-gray-900 { color: var(--color-gray-900); }
+.text-accent { color: var(--color-accent); }
+
+/* ============================================
+   TEXT TRANSFORM & DECORATION
+   ============================================ */
+.uppercase { text-transform: uppercase; }
+.lowercase { text-transform: lowercase; }
+.capitalize { text-transform: capitalize; }
+.normal-case { text-transform: none; }
+
+.underline { text-decoration: underline; }
+.no-underline { text-decoration: none; }
+.line-through { text-decoration: line-through; }
+
+/* ============================================
+   WHITE SPACE & WRAPPING
+   ============================================ */
+.truncate {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.pre { white-space: pre; }
+.pre-wrap { white-space: pre-wrap; }
+.pre-line { white-space: pre-line; }
+.break-words { overflow-wrap: break-word; }
+
+/* ============================================
+   TYPOGRAPHY PRESET CLASSES
+   ============================================ */
+
+/* Headings */
+.h1, .title-xl {
+  font-size: var(--font-size-3xl);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--leading-tight);
+  color: var(--color-gray-900);
+}
+
+.h2, .title-lg {
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--leading-normal);
+  color: var(--color-gray-900);
+}
+
+.h3, .title-md {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--leading-normal);
+  color: var(--color-gray-900);
+}
+
+.h4, .title-sm {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-medium);
+  line-height: var(--leading-normal);
+  color: var(--color-gray-700);
+}
+
+/* Body text */
+.body-text {
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-normal);
+  line-height: var(--leading-relaxed);
+  color: var(--color-gray-700);
+}
+
+.body-text-sm {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-normal);
+  line-height: var(--leading-normal);
+  color: var(--color-gray-600, #4b5563);
+}
+
+/* Labels & Captions */
+.label {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  line-height: var(--leading-normal);
+  color: var(--color-gray-700);
+}
+
+.caption {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-normal);
+  line-height: var(--leading-normal);
+  color: var(--color-gray-500);
+}
+
+/* ============================================
+   SPECIAL TYPOGRAPHY UTILITIES
+   ============================================ */
+
+/* Monospace for code */
+.font-mono { font-family: 'SF Mono', Monaco, 'Courier New', monospace; }
+
+/* All caps for labels */
+.text-label {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-gray-500);
+}
+
+/* Score display */
+.score-text {
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-bold);
+  line-height: 1;
+  color: var(--color-gray-900);
+}
+
+.score-text-lg {
+  font-size: var(--font-size-3xl);
+  font-weight: var(--font-weight-bold);
+  line-height: 1;
+}
+
+/* ============================================
+   APPLY TO BODY
+   ============================================ */
+body {
+  font-family: var(--font-family, 'Inter', sans-serif);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-normal);
+  line-height: var(--leading-normal);
+  color: var(--color-gray-900);
+}
