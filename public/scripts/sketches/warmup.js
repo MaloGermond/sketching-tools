@@ -37,7 +37,7 @@ const BRUSH_SPACING = 2;
 // Style pour le masque de scoring (épais pour marge d'erreur)
 const GUIDE_MASK_STYLE = {
   strokeColor: 255,
-  strokeWeight: 20,
+  strokeWeight: 40,
   noSmooth: true
 };
 
