@@ -34,9 +34,8 @@ const BRUSH_SPACING = 2;
 // GUIDE MASK STYLE CONFIGURATION
 // ============================================
 const GUIDE_MASK_STYLE = {
-  background: 100,
-  strokeColor: 2,
-  strokeWeight: 27,
+  strokeColor: 200,
+  strokeWeight: 2,
   noSmooth: true
 };
 
@@ -98,7 +97,7 @@ function draw() {
     processCompletedDrawing();
   }
   
-  renderActiveShape();
+  image(guideMask, 0, 0);
   image(drawingBuffer, 0, 0);
 }
 
@@ -233,79 +232,6 @@ function calculateScoreFromBuffer() {
   return { onShape, offShape };
 }
 
-function renderActiveShape() {
-  if (currentShape != null) {
-    drawGuideShape();
-  }
-}
-
-function drawGuideShape() {
-  const params = shapeParams;
-  
-  push();
-  stroke(200);
-  noFill();
-  strokeWeight(2);
-  
-  switch(selectedShape) {
-    case 'horizontal-line':
-    case 'vertical-line':
-      line(params.x1, params.y1, params.x2, params.y2);
-      break;
-      
-    case 'circle':
-    case 'ellipse':
-      push();
-      translate(params.cx, params.cy);
-      if (params.angle !== undefined) {
-        rotate(radians(params.angle));
-      }
-      ellipseMode(CENTER);
-      if (params.type === 'circle') {
-        ellipse(0, 0, params.size, params.size);
-      } else {
-        ellipse(0, 0, params.w, params.h);
-      }
-      pop();
-      break;
-      
-    case 'square':
-      push();
-      translate(params.cx, params.cy);
-      if (params.angle !== undefined) {
-        rotate(radians(params.angle));
-      }
-      rectMode(CENTER);
-      rect(0, 0, params.size, params.size);
-      pop();
-      break;
-      
-    case 'triangle':
-      const size = params.size;
-      push();
-      translate(params.cx, params.cy);
-      if (params.angle !== undefined) {
-        rotate(radians(params.angle));
-      }
-      if (params.type === 'equilateral') {
-        const h = size * sqrt(3) / 2;
-        triangle(0, -h/2, -size/2, h/2, size/2, h/2);
-      } else if (params.type === 'isosceles') {
-        const base = size;
-        const h = size * (params.baseRatio || 0.7);
-        triangle(0, -h/2, -base/2, h/2, base/2, h/2);
-      } else {
-        const a = size * 0.6;
-        const b = size * 0.7;
-        const c = size * 0.8;
-        triangle(0, -c/2, -a/2, c/2, a/2, c/2);
-      }
-      pop();
-      break;
-  }
-  pop();
-}
-
 
 // ============================================
 // SHAPE GENERATION
@@ -329,7 +255,6 @@ function createGuideMask() {
   }
   
   guideMask.clear();
-  guideMask.background(GUIDE_MASK_STYLE.background);
   if (GUIDE_MASK_STYLE.noSmooth) guideMask.noSmooth();
   
   guideMask.stroke(GUIDE_MASK_STYLE.strokeColor);
