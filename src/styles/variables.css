@@ -8,7 +8,7 @@
   --color-black: #000000;
   --color-gray-50: #F6F6F6;
   --color-gray-100: #f2f4f6;
-  --color-gray-200: #e4e7eb;
+  --color-gray-200: #E6E6E6;
   --color-gray-400: #9ca3af;
   --color-gray-700: #374151;
   --color-gray-900: #111827;
@@ -21,13 +21,14 @@
   --bg-card: var(--color-white);
   
   /* Borders */
-  --border-light: 1px solid var(--color-gray-200);
-  --border-subtle: 1px solid var(--color-gray-100);
+  --border-light: 1px solid var(--color-gray-300);
+  --border-subtle: 1px solid var(--color-gray-200);
   
   /* Shadows */
   --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  --shadow-md: 0px 0px 24px rgba(0, 0, 0, 0.11);
 }
+
 
 /* Typography */
 :root {
@@ -57,8 +58,8 @@
 :root {
   --radius-sm: 0.375rem;
   --radius-md: 0.5rem;
-  --radius-lg: 0.75rem;
-  --radius-xl: 1rem;
+  --radius-lg: 1rem;
+  --radius-xl: 1.5rem;
 }
 
 /* Transitions */
