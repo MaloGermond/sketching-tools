@@ -37,7 +37,7 @@ const GUIDE_MASK_STYLE = {
   background: 0,
   fillColor: 255,
   strokeColor: 255,
-  strokeWeight: 8,
+  strokeWeight: 2,
   noSmooth: true,
 
   applyTo: function(graphics) {
@@ -50,14 +50,14 @@ const GUIDE_MASK_STYLE = {
   drawFilled: function(graphics, drawFn) {
     graphics.fill(this.fillColor);
     graphics.noStroke();
-    drawFn();
+    drawFn(graphics);
   },
 
   drawStroke: function(graphics, drawFn) {
     graphics.stroke(this.strokeColor);
     graphics.strokeWeight(this.strokeWeight);
     graphics.noFill();
-    drawFn();
+    drawFn(graphics);
   }
 };
 
@@ -350,68 +350,69 @@ function createGuideMask() {
   
   GUIDE_MASK_STYLE.applyTo(guideMask);
   
+  const g = guideMask;
   const params = shapeParams;
   
   switch(selectedShape) {
     case 'horizontal-line':
     case 'vertical-line':
-      GUIDE_MASK_STYLE.drawStroke(guideMask, () => {
-        guideMask.line(params.x1, params.y1, params.x2, params.y2);
+      GUIDE_MASK_STYLE.drawStroke(g, (g) => {
+        g.line(params.x1, params.y1, params.x2, params.y2);
       });
       break;
     
     case 'circle':
     case 'ellipse':
-      GUIDE_MASK_STYLE.drawFilled(guideMask, () => {
-        guideMask.ellipseMode(CENTER);
-        guideMask.push();
-        guideMask.translate(params.cx, params.cy);
+      GUIDE_MASK_STYLE.drawFilled(g, (g) => {
+        g.ellipseMode(CENTER);
+        g.push();
+        g.translate(params.cx, params.cy);
         if (params.angle !== undefined) {
-          guideMask.rotate(radians(params.angle));
+          g.rotate(radians(params.angle));
         }
         if (params.type === 'circle') {
-          guideMask.ellipse(0, 0, params.size, params.size);
+          g.ellipse(0, 0, params.size, params.size);
         } else {
-          guideMask.ellipse(0, 0, params.w, params.h);
+          g.ellipse(0, 0, params.w, params.h);
         }
-        guideMask.pop();
+        g.pop();
       });
       break;
     
     case 'square':
-      GUIDE_MASK_STYLE.drawFilled(guideMask, () => {
-        guideMask.rectMode(CENTER);
-        guideMask.push();
-        guideMask.translate(params.cx, params.cy);
+      GUIDE_MASK_STYLE.drawFilled(g, (g) => {
+        g.rectMode(CENTER);
+        g.push();
+        g.translate(params.cx, params.cy);
         if (params.angle !== undefined) {
-          guideMask.rotate(radians(params.angle));
+          g.rotate(radians(params.angle));
         }
-        guideMask.rect(0, 0, params.size, params.size);
-        guideMask.pop();
+        g.rect(0, 0, params.size, params.size);
+        g.pop();
       });
       break;
     
     case 'triangle':
-      GUIDE_MASK_STYLE.drawFilled(guideMask, () => {
+      GUIDE_MASK_STYLE.drawFilled(g, (g) => {
         const size = params.size;
-        guideMask.push();
-        guideMask.translate(params.cx, params.cy);
+        g.push();
+        g.translate(params.cx, params.cy);
         if (params.angle !== undefined) {
-          guideMask.rotate(radians(params.angle));
+          g.rotate(radians(params.angle));
         }
         if (params.type === 'equilateral') {
           const h = size * sqrt(3) / 2;
-          guideMask.triangle(0, -h/2, -size/2, h/2, size/2, h/2);
+          g.triangle(0, -h/2, -size/2, h/2, size/2, h/2);
         } else if (params.type === 'isosceles') {
           const base = size;
           const h = size * (params.baseRatio || 0.7);
-          guideMask.triangle(0, -h/2, -base/2, h/2, base/2, h/2);
+          g.triangle(0, -h/2, -base/2, h/2, base/2, h/2);
         } else {
           const a = size * 0.6;
           const c = size * 0.8;
-          guideMask.triangle(0, -c/2, -a/2, c/2, a/2, c/2);
+          g.triangle(0, -c/2, -a/2, c/2, a/2, c/2);
         }
-        guideMask.pop();
+        g.pop();
       });
       break;
   }
