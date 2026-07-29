@@ -34,9 +34,9 @@ const BRUSH_SPACING = 2;
 // GUIDE MASK STYLE CONFIGURATION
 // ============================================
 const GUIDE_MASK_STYLE = {
-  background: 0,
-  strokeColor: 255,
-  strokeWeight: 8,
+  background: 100,
+  strokeColor: 2,
+  strokeWeight: 27,
   noSmooth: true
 };
 
@@ -90,6 +90,7 @@ function draw() {
   background(255);
   
   ensureActiveShape();
+  createGuideMask();
   
   if (mouseIsPressed) {
     handleUserDrawing();
