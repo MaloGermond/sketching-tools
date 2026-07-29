@@ -31,12 +31,21 @@ const BRUSH_SIZE = 6;
 const BRUSH_SPACING = 2;
 
 // ============================================
-// GUIDE MASK STYLE CONFIGURATION
+// GUIDE STYLES CONFIGURATION
 // ============================================
+
+// Style pour le masque de scoring (épais pour marge d'erreur)
 const GUIDE_MASK_STYLE = {
+  strokeColor: 255,
+  strokeWeight: 20,
+  noSmooth: true
+};
+
+// Style pour l'affichage vectoriel du guide (fin pour précision)
+const GUIDE_DISPLAY_STYLE = {
   strokeColor: 200,
   strokeWeight: 2,
-  noSmooth: true
+  noFill: true
 };
 
 // Configuration des formes disponibles
@@ -89,7 +98,6 @@ function draw() {
   background(255);
   
   ensureActiveShape();
-  createGuideMask();
   
   if (mouseIsPressed) {
     handleUserDrawing();
@@ -97,7 +105,7 @@ function draw() {
     processCompletedDrawing();
   }
   
-  image(guideMask, 0, 0);
+  drawGuideShape();
   image(drawingBuffer, 0, 0);
 }
 
@@ -204,6 +212,9 @@ function processCompletedDrawing() {
 }
 
 function calculateScoreFromBuffer() {
+  // Créer le masque de scoring avec une épaisseur généreuse pour la marge d'erreur
+  createGuideMask();
+  
   drawingBuffer.loadPixels();
   guideMask.loadPixels();
   
@@ -234,12 +245,86 @@ function calculateScoreFromBuffer() {
 
 
 // ============================================
+// GUIDE DISPLAY (Vectoriel)
+// ============================================
+
+/**
+ * Dessine la forme guide sur le canvas principal (affichage vectoriel)
+ * @impure - Uses p5.js drawing functions
+ */
+function drawGuideShape() {
+  if (currentShape === null) return;
+  
+  const params = shapeParams;
+  
+  stroke(GUIDE_DISPLAY_STYLE.strokeColor);
+  strokeWeight(GUIDE_DISPLAY_STYLE.strokeWeight);
+  if (GUIDE_DISPLAY_STYLE.noFill) noFill();
+  
+  switch(selectedShape) {
+    case 'horizontal-line':
+    case 'vertical-line':
+      line(params.x1, params.y1, params.x2, params.y2);
+      break;
+    
+    case 'circle':
+    case 'ellipse':
+      ellipseMode(CENTER);
+      push();
+      translate(params.cx, params.cy);
+      if (params.angle !== undefined) {
+        rotate(radians(params.angle));
+      }
+      if (params.type === 'circle') {
+        ellipse(0, 0, params.size, params.size);
+      } else {
+        ellipse(0, 0, params.w, params.h);
+      }
+      pop();
+      break;
+    
+    case 'square':
+      rectMode(CENTER);
+      push();
+      translate(params.cx, params.cy);
+      if (params.angle !== undefined) {
+        rotate(radians(params.angle));
+      }
+      rect(0, 0, params.size, params.size);
+      pop();
+      break;
+    
+    case 'triangle':
+      const size = params.size;
+      push();
+      translate(params.cx, params.cy);
+      if (params.angle !== undefined) {
+        rotate(radians(params.angle));
+      }
+      if (params.type === 'equilateral') {
+        const h = size * sqrt(3) / 2;
+        triangle(0, -h/2, -size/2, h/2, size/2, h/2);
+      } else if (params.type === 'isosceles') {
+        const base = size;
+        const h = size * (params.baseRatio || 0.7);
+        triangle(0, -h/2, -base/2, h/2, base/2, h/2);
+      } else {
+        const a = size * 0.6;
+        const c = size * 0.8;
+        triangle(0, -c/2, -a/2, c/2, a/2, c/2);
+      }
+      pop();
+      break;
+  }
+}
+
+
+// ============================================
 // SHAPE GENERATION
 // ============================================
 
 function generateShapeParams() {
   shapeParams = getShapeParams();
-  createGuideMask();
 }
 
 /**
