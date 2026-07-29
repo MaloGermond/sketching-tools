@@ -1,5 +1,5 @@
-/* Typography Stylesheet */
-/* Utilise les variables définies dans variables.css */
+/* Typography Stylesheet - Global */
+/* Contient uniquement les styles de typographie globaux au projet */
 
 /* ============================================
    FONT FAMILY
@@ -12,14 +12,14 @@
    FONT SIZES
    ============================================ */
 :root {
-  --font-size-xs: 0.75rem;    /* 12px */
-  --font-size-sm: 0.875rem;   /* 14px */
-  --font-size-base: 1rem;     /* 16px */
-  --font-size-lg: 1.125rem;   /* 18px */
-  --font-size-xl: 1.25rem;    /* 20px */
-  --font-size-2xl: 1.5rem;    /* 24px */
-  --font-size-3xl: 2rem;      /* 32px */
-  --font-size-4xl: 2.5rem;    /* 40px */
+  --font-size-xs: 0.75rem;
+  --font-size-sm: 0.875rem;
+  --font-size-base: 1rem;
+  --font-size-lg: 1.125rem;
+  --font-size-xl: 1.25rem;
+  --font-size-2xl: 1.5rem;
+  --font-size-3xl: 2rem;
+  --font-size-4xl: 2.5rem;
 }
 
 /* Utility classes for font sizes */
@@ -112,39 +112,37 @@
 .break-words { overflow-wrap: break-word; }
 
 /* ============================================
-   TYPOGRAPHY PRESET CLASSES
+   TYPOGRAPHY PRESET CLASSES (Global)
    ============================================ */
 
-/* Headings */
-.h1, .title-xl {
+.h1 {
   font-size: var(--font-size-3xl);
   font-weight: var(--font-weight-bold);
   line-height: var(--leading-tight);
   color: var(--color-gray-900);
 }
 
-.h2, .title-lg {
+.h2 {
   font-size: var(--font-size-2xl);
   font-weight: var(--font-weight-semibold);
   line-height: var(--leading-normal);
   color: var(--color-gray-900);
 }
 
-.h3, .title-md {
+.h3 {
   font-size: var(--font-size-xl);
   font-weight: var(--font-weight-semibold);
   line-height: var(--leading-normal);
   color: var(--color-gray-900);
 }
 
-.h4, .title-sm {
+.h4 {
   font-size: var(--font-size-lg);
   font-weight: var(--font-weight-medium);
   line-height: var(--leading-normal);
   color: var(--color-gray-700);
 }
 
-/* Body text */
 .body-text {
   font-size: var(--font-size-base);
   font-weight: var(--font-weight-normal);
@@ -152,14 +150,6 @@
   color: var(--color-gray-700);
 }
 
-.body-text-sm {
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-normal);
-  line-height: var(--leading-normal);
-  color: var(--color-gray-600, #4b5563);
-}
-
-/* Labels & Captions */
 .label {
   font-size: var(--font-size-sm);
   font-weight: var(--font-weight-medium);
@@ -175,34 +165,9 @@
 }
 
 /* ============================================
-   SPECIAL TYPOGRAPHY UTILITIES
+   FONT FAMILIES
    ============================================ */
-
-/* Monospace for code */
 .font-mono { font-family: 'SF Mono', Monaco, 'Courier New', monospace; }
-
-/* All caps for labels */
-.text-label {
-  font-size: var(--font-size-xs);
-  font-weight: var(--font-weight-medium);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: var(--color-gray-500);
-}
-
-/* Score display */
-.score-text {
-  font-size: var(--font-size-2xl);
-  font-weight: var(--font-weight-bold);
-  line-height: 1;
-  color: var(--color-gray-900);
-}
-
-.score-text-lg {
-  font-size: var(--font-size-3xl);
-  font-weight: var(--font-weight-bold);
-  line-height: 1;
-}
 
 /* ============================================
    APPLY TO BODY
