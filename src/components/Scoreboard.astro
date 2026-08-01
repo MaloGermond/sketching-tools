@@ -11,12 +11,12 @@ const { style = "" } = Astro.props;
 ---
 
 <Card style={style}>
-  <h3 class="text-lg">Échauffement</h3>
+  <h3 class="text-lg">Journal</h3>
   <div id="scoreboard" class="scoreboard">
-    <div class="scoreboard-average">
-      Moyenne: <span id="score-average">0%</span>
+    <div class="scoreboard-average text-sm">
+      Score: <span id="score-average" class="text-lg">0%</span>
     </div>
-    <div class="scoreboard-history" id="score-history"></div>
+    <!-- <div class="scoreboard-history" id="score-history"></div> -->
   </div>
 </Card>
 
@@ -56,31 +56,3 @@ const { style = "" } = Astro.props;
   }
 </script>
 
-<style>
-  .scoreboard {
-    font-family: var(--font-family, 'Inter', sans-serif);
-  }
-  
-  .scoreboard-average {
-    font-size: var(--font-size-xl);
-    font-weight: var(--font-weight-semibold);
-    line-height: 1.5;
-    margin-bottom: 0.5rem;
-    color: var(--color-gray-900);
-  }
-  
-  .scoreboard-history {
-    font-size: var(--font-size-sm);
-    line-height: 1.5;
-    color: var(--color-gray-700);
-  }
-  
-  .score-item {
-    margin: 0.25rem 0;
-  }
-  
-  .score-empty {
-    color: var(--color-gray-500);
-    font-style: italic;
-  }
-</style>
