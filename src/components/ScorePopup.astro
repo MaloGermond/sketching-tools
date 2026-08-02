@@ -1,8 +1,7 @@
 ---
-// ScorePopup.astro - Composant d'affichage du score temporaire avec image du tracé
-// Utilisation :
-//   <ScorePopup client:load />
-// Le score est contrôlé via JavaScript global (window.showTemporaryScore)
+// ScorePopup.astro - Composant d'affichage du score temporaire
+// Affiche uniquement le score (l'image est maintenant dans Scoreboard)
+// Utilisation : <ScorePopup client:load />
 ---
 
 <div
@@ -10,28 +9,16 @@
   class="score-popup"
   style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 20; pointer-events: none; opacity: 0; transition: opacity 0.3s ease;"
 >
-  <div id="score-content" class="score-content"></div>
+  <span id="score-value" class="score-text score-text-lg"></span>
 </div>
 
 <style>
-  /* Styles spécifiques au popup de score */
   .score-popup {
     display: flex;
     align-items: center;
     justify-content: center;
-    transition-property: opacity;
-    transition-duration: 0.3s;
-    transition-timing-function: ease;
   }
   
-  .score-content {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 1rem;
-  }
-  
-  /* Style pour le texte du score */
   .score-text {
     font-weight: var(--font-weight-bold);
     line-height: 1;
@@ -40,45 +27,15 @@
   .score-text-lg {
     font-size: 3rem;
   }
-  
-  /* Style pour l'image du tracé */
-  .trace-image {
-    max-width: 200px;
-    max-height: 200px;
-    border-radius: var(--radius-md);
-    box-shadow: var(--shadow-md);
-    background: var(--color-white);
-  }
-  
-  /* Placeholder quand pas d'image */
-  .trace-placeholder {
-    width: 200px;
-    height: 200px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: var(--color-gray-100);
-    border-radius: var(--radius-md);
-    border: 2px dashed var(--color-gray-300);
-  }
-  
-  .placeholder-icon {
-    width: 48px;
-    height: 48px;
-    color: var(--color-gray-400);
-    opacity: 0.6;
-  }
 </style>
 
 <script>
-  // Fonction globale pour afficher le score avec ou sans image
-  // @param {number} score - Le score à afficher (0-100)
-  // @param {string|null} imageUrl - URL de l'image du tracé (optionnel)
-  window.showTemporaryScore = function(score, imageUrl = null) {
+  // Fonction globale pour afficher le score (sans image)
+  window.showTemporaryScore = function(score) {
     const popupEl = document.getElementById('score-popup');
-    const contentEl = document.getElementById('score-content');
+    const valueEl = document.getElementById('score-value');
     
-    if (!popupEl || !contentEl) return;
+    if (!popupEl || !valueEl) return;
     
     // Effacer le timeout précédent
     if (window.scoreTimeout) {
@@ -92,29 +49,8 @@
         ? '#f59e0b' 
         : '#ef4444';
     
-    // Construire le contenu
-    let htmlContent = '';
-    
-    if (imageUrl) {
-      htmlContent = `
-        <img class="trace-image" src="${imageUrl}" alt="Votre tracé" />
-        <span class="score-text score-text-lg" style="color: ${color}">${Math.floor(score)}%</span>
-      `;
-    } else {
-      // Afficher un placeholder + le score
-      htmlContent = `
-        <div class="trace-placeholder">
-          <svg class="placeholder-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M12 2L2 7L12 12L22 7L12 2Z"/>
-            <path d="M2 17L12 22L22 17" stroke-linecap="round" stroke-linejoin="round"/>
-            <path d="M2 12L12 17L22 12" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-        </div>
-        <span class="score-text score-text-lg" style="color: ${color}">${Math.floor(score)}%</span>
-      `;
-    }
-    
-    contentEl.innerHTML = htmlContent;
+    valueEl.textContent = `${Math.floor(score)}%`;
+    valueEl.style.color = color;
     popupEl.style.opacity = '1';
     
     // Cacher après 2 secondes

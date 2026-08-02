@@ -1,5 +1,5 @@
 ---
-// Composant Scoreboard - Affiche la moyenne et l'historique des scores
+// Composant Scoreboard - Affiche la moyenne et l'historique des scores avec images
 // Inclut la Card et le titre
 import Card from "./Card.astro";
 
@@ -11,51 +11,125 @@ const { style = "" } = Astro.props;
 ---
 
 <Card style={style}>
-  <h3 class="text-lg">Journal</h3>
-  <div id="scoreboard" class="scoreboard">
-    <div class="flex">
-    <p class="scoreboard-average text-sm">
-      Score:
-    </p>
-    <p id="score-average" class="text-lg">0%</p>
+  <h3 class="text-lg font-semibold">Journal</h3>
+  <div class="scoreboard">
+    <div class="scoreboard-average">
+      <span class="text-sm">Moyenne:</span>
+      <span id="score-average" class="text-xl font-bold ml-2">0%</span>
     </div>
-    <!-- <div class="scoreboard-history" id="score-history"></div> -->
+    
+    <div id="trace-history" class="trace-history"></div>
   </div>
 </Card>
 
+<style>
+  .scoreboard {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    min-width: 200px;
+  }
+  
+  .scoreboard-average {
+    display: flex;
+    align-items: baseline;
+    gap: 0.5rem;
+  }
+  
+  .trace-history {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    max-height: 400px;
+    overflow-y: auto;
+  }
+  
+  .trace-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.5rem;
+    background: var(--color-white);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-sm);
+  }
+  
+  .trace-image {
+    width: 50px;
+    height: 50px;
+    object-fit: contain;
+    background: var(--color-gray-50);
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--color-gray-200);
+  }
+  
+  .trace-score {
+    font-weight: var(--font-weight-semibold);
+    font-size: var(--font-size-sm);
+  }
+  
+  .trace-score.high { color: var(--color-accent); }
+  .trace-score.medium { color: #f59e0b; }
+  .trace-score.low { color: #ef4444; }
+  
+  .trace-empty {
+    color: var(--color-gray-400);
+    font-size: var(--font-size-sm);
+    text-align: center;
+    padding: 1rem;
+  }
+</style>
+
 <script>
-  // Fonction pour rendre le scoreboard à partir de window.scoreState
+  // Fonction pour rendre le scoreboard avec les images
   function renderScoreboard() {
-    const state = window.scoreState || { average: 0, history: [], current: null };
+    const state = window.scoreState || { 
+      average: 0, 
+      history: [], 
+      current: null,
+      traces: []
+    };
     
     const averageEl = document.getElementById('score-average');
-    const historyEl = document.getElementById('score-history');
+    const historyEl = document.getElementById('trace-history');
     
     if (averageEl) {
       averageEl.textContent = `${state.average}%`;
     }
     
     if (historyEl) {
-      if (state.history.length > 0) {
-        historyEl.innerHTML = state.history
-          .slice()
-          .reverse()
-          .map((score, i) => `<div class="score-item">#${i+1}: ${score}%</div>`)
+      if (state.traces && state.traces.length > 0) {
+        // Afficher les traces avec leurs images et scores
+        historyEl.innerHTML = state.traces
+          .slice(0, 20)
+          .map((trace, i) => {
+            const score = Math.floor(trace.score);
+            const scoreClass = score >= 80 ? 'high' : score >= 50 ? 'medium' : 'low';
+            return `
+              <div class="trace-item">
+                <img class="trace-image" src="${trace.image}" alt="Tracé ${i + 1}" />
+                <span class="trace-score ${scoreClass}">${score}%</span>
+              </div>
+            `;
+          })
           .join('');
       } else {
-        historyEl.innerHTML = '<div class="score-empty">Aucun score encore</div>';
+        historyEl.innerHTML = '<div class="trace-empty">Aucun tracé encore</div>';
       }
     }
   }
   
   // Initialiser le scoreboard
   if (typeof window !== 'undefined') {
-    // Initialiser avec des valeurs par défaut
-    window.scoreState = window.scoreState || { average: 0, history: [], current: null };
+    window.scoreState = window.scoreState || { 
+      average: 0, 
+      history: [], 
+      current: null,
+      traces: []
+    };
     renderScoreboard();
     
     // Écouter les mises à jour
     document.addEventListener('scoreUpdated', renderScoreboard);
   }
 </script>
-

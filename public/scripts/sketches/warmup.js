@@ -26,8 +26,8 @@ let guideMask;
 let prevX = null;
 let prevY = null;
 
-// Stockage de l'image du tracé pour affichage dans le popup
-let traceImageDataUrl = null;
+// Historique des tracés avec leurs scores (max 20)
+let traceHistory: Array<{image: string; score: number}> = [];
 
 // Configuration du pinceau
 const BRUSH_SIZE = 6;
@@ -205,19 +205,24 @@ function processCompletedDrawing() {
     }
     updateScoreState();
     
-    // Capturer l'image du buffer AVANT de l'effacer
+    // Capturer l'image du buffer et ajouter à l'historique
     if (drawingBuffer && drawingBuffer.canvas) {
-      traceImageDataUrl = drawingBuffer.canvas.toDataURL('image/png');
+      const imageDataUrl = drawingBuffer.canvas.toDataURL('image/png');
+      traceHistory.unshift({ image: imageDataUrl, score: score });
+      if (traceHistory.length > 20) {
+        traceHistory.pop();
+      }
+      // Rendre l'historique disponible globalement
+      window.traceHistory = traceHistory;
     }
     
-    // Afficher le score via le composant ScorePopup
+    // Afficher le score via le composant ScorePopup (sans image)
     if (typeof window.showTemporaryScore === 'function') {
-      window.showTemporaryScore(currentScore, traceImageDataUrl);
+      window.showTemporaryScore(currentScore);
     }
     
     setTimeout(() => {
       drawingBuffer.clear();
-      traceImageDataUrl = null;
       currentShape = generateNewShape();
       redraw();
     }, 100);
@@ -694,7 +699,8 @@ function updateScoreState() {
     window.scoreState = {
       average: floor(average),
       history: scoreHistory.map(s => floor(s)),
-      current: currentScore !== null ? floor(currentScore) : null
+      current: currentScore !== null ? floor(currentScore) : null,
+      traces: traceHistory
     };
     
     // Déclencher un événement pour que Scoreboard.astro se mette à jour
