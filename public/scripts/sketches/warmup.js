@@ -27,7 +27,7 @@ let prevX = null;
 let prevY = null;
 
 // Historique des tracés avec leurs scores (max 20)
-let traceHistory: Array<{image: string; score: number}> = [];
+let traceHistory = [];
 
 // Configuration du pinceau
 const BRUSH_SIZE = 6;
