@@ -1,0 +1,38 @@
+/* Component-specific global styles */
+/* These styles are applied globally for dynamically generated HTML elements */
+
+/* Trace item styles for Scoreboard */
+.trace-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.5rem;
+  background: var(--color-white);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+}
+
+.trace-image {
+  width: 50px;
+  height: 50px;
+  object-fit: contain;
+  background: var(--color-gray-50);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--color-gray-200);
+}
+
+.trace-score {
+  font-weight: var(--font-weight-semibold);
+  font-size: var(--font-size-sm);
+}
+
+.trace-score.high { color: var(--color-accent); }
+.trace-score.medium { color: #f59e0b; }
+.trace-score.low { color: #ef4444; }
+
+.trace-empty {
+  color: var(--color-gray-400);
+  font-size: var(--font-size-sm);
+  text-align: center;
+  padding: 1rem;
+}
