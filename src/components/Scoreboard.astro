@@ -45,6 +45,8 @@ const { style = "" } = Astro.props;
   }
   
   .trace-item {
+    max-width: 64px;
+    flex-direction: row;
     display: flex;
     align-items: center;
     gap: 0.75rem;
@@ -106,10 +108,10 @@ const { style = "" } = Astro.props;
             const score = Math.floor(trace.score);
             const scoreClass = score >= 80 ? 'high' : score >= 50 ? 'medium' : 'low';
             return `
-              <div class="trace-item">
+              <article class="trace-item">
                 <img class="trace-image" src="${trace.image}" alt="Tracé ${i + 1}" />
                 <span class="trace-score ${scoreClass}">${score}%</span>
-              </div>
+              </article>
             `;
           })
           .join('');
