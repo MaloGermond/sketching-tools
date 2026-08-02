@@ -1,0 +1,68 @@
+---
+// ScorePopup.astro - Composant d'affichage du score temporaire
+// Utilisation :
+//   <ScorePopup client:load />
+// Le score est contrôlé via JavaScript global (showTemporaryScore)
+---
+
+<div
+  id="score-popup"
+  class="score-popup"
+  style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 20; pointer-events: none; opacity: 0; transition: opacity 0.3s ease;"
+>
+  <span id="score-value" class="score-text score-text-lg"></span>
+</div>
+
+<style>
+  /* Styles spécifiques au popup de score */
+  .score-popup {
+    /* Transition pour l'animation de disparition */
+    transition-property: opacity;
+    transition-duration: 0.3s;
+    transition-timing-function: ease;
+  }
+  
+  /* Style pour le texte du score */
+  .score-text {
+    font-weight: var(--font-weight-bold);
+    line-height: 1;
+  }
+  
+  .score-text-lg {
+    font-size: 3rem; /* 48px - taille visible au centre */
+  }
+</style>
+
+<script>
+  // Fonction globale pour afficher le score (utilisable depuis warmup.js)
+  window.showTemporaryScore = function(score) {
+    const popupEl = document.getElementById('score-popup');
+    const valueEl = document.getElementById('score-value');
+    
+    if (!popupEl || !valueEl) return;
+    
+    // Effacer le timeout précédent
+    if (window.scoreTimeout) {
+      clearTimeout(window.scoreTimeout);
+    }
+    
+    // Mettre à jour le score
+    valueEl.textContent = `${Math.floor(score)}%`;
+    
+    // Déterminer la couleur selon le score
+    const color = score >= 80 
+      ? 'var(--color-accent)' 
+      : score >= 50 
+        ? '#f59e0b' 
+        : '#ef4444';
+    valueEl.style.color = color;
+    
+    // Afficher le popup
+    popupEl.style.opacity = '1';
+    
+    // Cacher après 2 secondes
+    window.scoreTimeout = setTimeout(() => {
+      popupEl.style.opacity = '0';
+    }, 2000);
+  };
+</script>

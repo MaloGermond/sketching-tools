@@ -22,9 +22,6 @@ let drawingBuffer;
 // Masque de la forme guide pour le scoring
 let guideMask;
 
-// URL de l'image du tracé pour l'affichage dans la popup
-let traceImageUrl = null;
-
 // Position précédente pour le dessin continu
 let prevX = null;
 let prevY = null;
@@ -205,15 +202,13 @@ function processCompletedDrawing() {
     }
     updateScoreState();
     
-    // Capturer l'image du buffer AVANT de l'effacer
-    if (drawingBuffer && drawingBuffer.canvas) {
-      traceImageUrl = drawingBuffer.canvas.toDataURL('image/png');
+    // Afficher le score via le composant ScorePopup
+    if (typeof window.showTemporaryScore === 'function') {
+      window.showTemporaryScore(currentScore);
     }
-    showTemporaryScore();
     
     setTimeout(() => {
       drawingBuffer.clear();
-      traceImageUrl = null;
       currentShape = generateNewShape();
       redraw();
     }, 100);
@@ -695,42 +690,6 @@ function updateScoreState() {
     
     // Déclencher un événement pour que Scoreboard.astro se mette à jour
     document.dispatchEvent(new CustomEvent('scoreUpdated'));
-  }
-}
-
-function showTemporaryScore() {
-  const popupEl = document.getElementById('score-popup');
-  if (popupEl) {
-    if (scoreTimeout) {
-      clearTimeout(scoreTimeout);
-    }
-    
-    // Construire le contenu avec l'image du tracé + le score
-    let htmlContent = '';
-    
-    if (traceImageUrl) {
-      htmlContent = `
-        <div style="display: flex; flex-direction: column; align-items: center; gap: 1rem;">
-          <img 
-            src="${traceImageUrl}" 
-            style="max-width: 200px; max-height: 200px; border-radius: 0.5rem; box-shadow: 0 4px 6px rgba(0,0,0,0.1);" 
-            alt="Votre tracé"
-          />
-          <span style="font-size: 48px; font-weight: bold;">${floor(currentScore)}%</span>
-        </div>
-      `;
-    } else {
-      htmlContent = `${floor(currentScore)}%`;
-    }
-    
-    popupEl.innerHTML = htmlContent;
-    popupEl.style.opacity = '1';
-    popupEl.style.color = currentScore >= 80 ? '#22c55e' : currentScore >= 50 ? '#f59e0b' : '#ef4444';
-    
-    scoreTimeout = setTimeout(() => {
-      popupEl.style.opacity = '0';
-      popupEl.innerHTML = '';
-    }, 2000);
   }
 }
 
