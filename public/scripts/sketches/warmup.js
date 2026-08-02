@@ -26,6 +26,9 @@ let guideMask;
 let prevX = null;
 let prevY = null;
 
+// Stockage de l'image du tracé pour affichage dans le popup
+let traceImageDataUrl = null;
+
 // Configuration du pinceau
 const BRUSH_SIZE = 6;
 const BRUSH_SPACING = 2;
@@ -202,13 +205,19 @@ function processCompletedDrawing() {
     }
     updateScoreState();
     
+    // Capturer l'image du buffer AVANT de l'effacer
+    if (drawingBuffer && drawingBuffer.canvas) {
+      traceImageDataUrl = drawingBuffer.canvas.toDataURL('image/png');
+    }
+    
     // Afficher le score via le composant ScorePopup
     if (typeof window.showTemporaryScore === 'function') {
-      window.showTemporaryScore(currentScore);
+      window.showTemporaryScore(currentScore, traceImageDataUrl);
     }
     
     setTimeout(() => {
       drawingBuffer.clear();
+      traceImageDataUrl = null;
       currentShape = generateNewShape();
       redraw();
     }, 100);
