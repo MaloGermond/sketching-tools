@@ -69,6 +69,7 @@ let shapeSettings = {
 function setup() {
   pixelDensity(1);
   canvasElement = createCanvas(windowWidth, windowHeight);
+  canvasElement.parent('sketch-container');
   
   drawingBuffer = createGraphics(width, height);
   drawingBuffer.noSmooth();
