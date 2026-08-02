@@ -204,7 +204,6 @@ function processCompletedDrawing() {
     if (scoreHistory.length > 20) {
       scoreHistory.shift();
     }
-    updateScoreState();
     
     // Capturer l'image du buffer et ajouter à l'historique
     if (drawingBuffer && drawingBuffer.canvas) {
@@ -216,6 +215,8 @@ function processCompletedDrawing() {
       // Rendre l'historique disponible globalement
       window.traceHistory = traceHistory;
     }
+    
+    updateScoreState();
     
     // Afficher le score via le composant ScorePopup (sans image)
     if (typeof window.showTemporaryScore === 'function') {
