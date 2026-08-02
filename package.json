@@ -16,8 +16,6 @@
     "p5": "^2.3.0"
   },
   "devDependencies": {
-    "autoprefixer": "^10.5.4",
-    "postcss": "^8.5.25",
     "tailwindcss": "^4.3.3"
   }
 }
