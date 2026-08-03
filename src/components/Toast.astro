@@ -21,7 +21,7 @@ const { id = 'toast', duration = 2000 } = Astro.props;
 </div>
 
 <script is:inline>
-  (function() {
+  document.addEventListener('DOMContentLoaded', function() {
     let isAnimating = false;
     let currentTimeout = null;
     const toastEl = document.getElementById('{id}');
@@ -91,5 +91,5 @@ const { id = 'toast', duration = 2000 } = Astro.props;
         }, 200);
       }, duration);
     }
-  })();
+  });
 </script>
