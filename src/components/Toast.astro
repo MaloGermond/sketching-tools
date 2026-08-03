@@ -3,20 +3,20 @@
 // Affiche un message temporaire avec animation
 
 interface Props {
-  id?: string;
   duration?: number;
 }
 
-const { id = 'toast', duration = 2000 } = Astro.props;
+const { duration = 2000 } = Astro.props;
+const toastId = 'score-toast';
 ---
 
 <div
-  id={id}
+  id={toastId}
   style="position: fixed; top: -100px; left: 50%; transform: translateX(-50%); z-index: 50; pointer-events: none; opacity: 0; transition: top 0.3s ease-out, opacity 0.3s ease-out;"
 >
   <div style="display: flex; flex-direction: column; align-items: center; gap: 0.25rem; background: white; border-radius: 0.5rem; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); border: 1px solid #e5e7eb; padding: 0.75rem 1.5rem; min-width: 200px;">
     <span style="font-size: 0.875rem; font-weight: 500; color: #374151; letter-spacing: 0.05em; text-transform: uppercase;">Ressemblance</span>
-    <span id="{id}-value" style="font-size: 1.5rem; font-weight: 700; line-height: 1; color: #8b5cf6;"></span>
+    <span id={toastId + '-value'} style="font-size: 1.5rem; font-weight: 700; line-height: 1; color: #8b5cf6;"></span>
   </div>
 </div>
 
@@ -24,8 +24,8 @@ const { id = 'toast', duration = 2000 } = Astro.props;
   document.addEventListener('DOMContentLoaded', function() {
     let isAnimating = false;
     let currentTimeout = null;
-    const toastEl = document.getElementById('{id}');
-    const valueEl = document.getElementById('{id}-value');
+    const toastEl = document.getElementById('score-toast');
+    const valueEl = document.getElementById('score-toast-value');
     
     if (!toastEl || !valueEl) return;
 
