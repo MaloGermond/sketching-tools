@@ -1,0 +1,94 @@
+---
+import MainLayout from "../layouts/MainLayout.astro";
+import CanvasP5 from "../components/p5/CanvasP5";
+
+// Métadonnées pour l'affichage
+const title = "Démo p5.js avec React";
+const description = "Démonstration d'intégration de p5.js dans un composant React avec modules";
+
+// Chemins vers les fichiers du sketch
+const sketchPath = "../sketches/example/sketch.js";
+const modulePaths = ["../sketches/example/utils.js"];
+---
+
+<MainLayout title={title}>
+  <div class="max-w-6xl mx-auto">
+    <header class="mb-8">
+      <h1 class="text-3xl font-bold text-gray-900 mb-2">{title}</h1>
+      <p class="text-gray-600">{description}</p>
+    </header>
+
+    <section class="mb-8">
+      <h2 class="text-xl font-semibold text-gray-800 mb-4">À propos</h2>
+      <p class="text-gray-600 mb-4">
+        Cette page démontre comment intégrer p5.js dans un composant React avec Astro.
+        Le composant <code>CanvasP5</code> charge dynamiquement les sketches et leurs modules.
+      </p>
+      <ul class="list-disc list-inside text-gray-600 space-y-2 mb-4">
+        <li>Le sketch utilise le module <code>utils.js</code> pour mixer les couleurs</li>
+        <li>Glissez le cercle rouge pour le déplacer</li>
+        <li>Cliquez n'importe où pour changer les couleurs aléatoirement</li>
+        <li>La couleur verte est le résultat du mixage des deux autres</li>
+      </ul>
+    </section>
+
+    <!-- Composant CanvasP5 avec le sketch -->
+    <div class="bg-white rounded-lg shadow-md p-4 mb-8">
+      <h3 class="text-lg font-medium text-gray-800 mb-4">Sketch p5.js intégré</h3>
+      <div class="border border-gray-200 rounded overflow-hidden">
+        <CanvasP5 
+          client:load 
+          width={800} 
+          height={600} 
+          sketchPath={sketchPath}
+          modulePaths={modulePaths}
+          className="w-full"
+        />
+      </div>
+    </div>
+
+    <section class="mb-8">
+      <h2 class="text-xl font-semibold text-gray-800 mb-4">Structure du projet</h2>
+      <div class="bg-gray-50 rounded-lg p-4 text-sm">
+        <pre class="text-gray-700 overflow-x-auto"><code>src/
+├── components/
+│   └── p5/
+│       └── CanvasP5.tsx      # Composant React principal
+└── sketches/
+    └── example/
+        ├── sketch.js         # Sketch p5.js avec setup/draw
+        └── utils.js          # Module avec mixColors() et randomColor()</code></pre>
+      </div>
+    </section>
+
+    <section class="mb-8">
+      <h2 class="text-xl font-semibold text-gray-800 mb-4">Code du composant CanvasP5</h2>
+      <p class="text-gray-600 mb-4">
+        Le composant accepte les props suivantes :
+      </p>
+      <ul class="list-disc list-inside text-gray-600 space-y-2 mb-4">
+        <li><code>width</code> - Largeur du canvas (optionnel, défaut: 800)</li>
+        <li><code>height</code> - Hauteur du canvas (optionnel, défaut: 600)</li>
+        <li><code>sketchPath</code> - Chemin vers le fichier sketch.js (requis)</li>
+        <li><code>modulePaths</code> - Tableau de chemins vers les modules à charger (optionnel)</li>
+        <li><code>className</code> - Classes CSS supplémentaires (optionnel)</li>
+      </ul>
+    </section>
+
+    <section class="mb-8">
+      <h2 class="text-xl font-semibold text-gray-800 mb-4">Code du sketch</h2>
+      <p class="text-gray-600 mb-4">
+        Le sketch utilise les fonctions du module <code>utils.js</code> :
+      </p>
+      <ul class="list-disc list-inside text-gray-600 space-y-2">
+        <li><code>mixColors(color1, color2, ratio)</code> - Mixe deux couleurs hexadécimales</li>
+        <li><code>randomColor()</code> - Génère une couleur aléatoire</li>
+        <li><code>hexToRgb(hex)</code> - Convertit hex en RGB</li>
+      </ul>
+    </section>
+
+    <div class="text-sm text-gray-500">
+      <p>⚡ Ce composant charge dynamiquement les modules ES et le sketch p5.js.</p>
+    </div>
+  </div>
+</MainLayout>
