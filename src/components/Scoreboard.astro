@@ -49,11 +49,10 @@ const { style = "" } = Astro.props;
     font-size: 0.875rem;
   }
   
-  /* Couleurs de status - correspondent aux variables CSS et classes Tailwind */
-  /* success = #22c55e (green-500), warning = #f59e0b (amber-500), error = #ef4444 (red-500) */
-  :global(.trace-score.success) { color: #22c55e; }
-  :global(.trace-score.warning) { color: #f59e0b; }
-  :global(.trace-score.error) { color: #ef4444; }
+  /* Couleurs de status - utilisent les classes définies dans typography.css */
+  :global(.trace-score.success) { color: var(--color-success); }
+  :global(.trace-score.warning) { color: var(--color-warning); }
+  :global(.trace-score.error) { color: var(--color-error); }
   
   :global(.trace-empty) {
     color: #9ca3af;

@@ -84,6 +84,9 @@
 .text-gray-700 { color: var(--color-gray-700); }
 .text-gray-900 { color: var(--color-gray-900); }
 .text-accent { color: var(--color-accent); }
+.text-success { color: var(--color-success); }
+.text-warning { color: var(--color-warning); }
+.text-error { color: var(--color-error); }
 
 /* ============================================
    TEXT TRANSFORM & DECORATION

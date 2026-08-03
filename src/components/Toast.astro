@@ -21,14 +21,6 @@ const { toastId, label = 'Score' } = Astro.props;
   </div>
 </div>
 
-<style>
-  /* Couleurs de status pour le toast - correspondent aux variables CSS */
-  /* success = #22c55e (green-500), warning = #f59e0b (amber-500), error = #ef4444 (red-500) */
-  :global(.text-success) { color: #22c55e; }
-  :global(.text-warning) { color: #f59e0b; }
-  :global(.text-error) { color: #ef4444; }
-</style>
-
 <script>
   document.addEventListener('DOMContentLoaded', function() {
     const duration = 2000;
@@ -56,12 +48,12 @@ const { toastId, label = 'Score' } = Astro.props;
       }
       
       // Set color based on score: success (>=80), warning (>=50), error (<50)
-      // Classes CSS personnalisées qui utilisent les couleurs des variables
+      // Utilisation des classes définies dans typography.css
       const colorClass = score >= 80 
-        ? 'text-success'   // success: #22c55e
+        ? 'text-success'   // success: var(--color-success)
         : score >= 50 
-          ? 'text-warning'  // warning: #f59e0b
-          : 'text-error';   // error: #ef4444
+          ? 'text-warning'  // warning: var(--color-warning)
+          : 'text-error';   // error: var(--color-error)
       
       valueEl.textContent = `${Math.floor(score)}%`;
       valueEl.className = `text-2xl font-bold leading-none ${colorClass}`;
