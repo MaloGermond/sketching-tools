@@ -1,36 +1,86 @@
 ---
-// ScorePopup.astro - Composant d'affichage du score temporaire
-// Affiche uniquement le score (l'image est maintenant dans Scoreboard)
+// ScorePopup.astro - Composant Toast pour afficher le score
+// Affiche le score sous forme de toast animé
 // Utilisation : <ScorePopup client:load />
+import '../styles/variables.css';
 ---
 
 <div
   id="score-popup"
-  class="score-popup"
-  style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 20; pointer-events: none; opacity: 0; transition: opacity 0.3s ease;"
+  class="score-toast"
+  style="position: fixed; top: -100px; left: 50%; transform: translateX(-50%); z-index: 1000; pointer-events: none; opacity: 0;"
 >
-  <span id="score-value" class="score-text score-text-lg"></span>
+  <div class="toast-content">
+    <span class="toast-label">Ressemblance</span>
+    <span id="score-value" class="toast-score"></span>
+  </div>
 </div>
 
 <style>
-  .score-popup {
+  .score-toast {
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
+    background: var(--color-white);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+    border: var(--border-light);
+    padding: var(--space-md) var(--space-lg);
+    min-width: 200px;
+    transition: 
+      transform 0.3s ease-out,
+      opacity 0.3s ease-out,
+      top 0.3s ease-out;
   }
   
-  .score-text {
+  .toast-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-sm);
+  }
+  
+  .toast-label {
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    color: var(--color-gray-700);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+  
+  .toast-score {
+    font-size: var(--font-size-2xl);
     font-weight: var(--font-weight-bold);
     line-height: 1;
+    color: var(--color-accent);
   }
   
-  .score-text-lg {
-    font-size: 3rem;
+  .score-toast.hide {
+    top: -100px;
+    opacity: 0;
+  }
+  
+  .score-toast.show {
+    top: var(--space-lg);
+    opacity: 1;
+  }
+  
+  .score-toast.exit {
+    top: 100%;
+    opacity: 0;
+    transition: 
+      top 0.2s ease-in,
+      opacity 0.2s ease-in;
   }
 </style>
 
 <script>
-  // Fonction globale pour afficher le score (sans image)
+  // État pour gérer les animations
+  let currentToast = null;
+  let isAnimating = false;
+
+  // Fonction globale pour afficher le score sous forme de toast
   window.showTemporaryScore = function(score) {
     const popupEl = document.getElementById('score-popup');
     const valueEl = document.getElementById('score-value');
@@ -51,11 +101,52 @@
     
     valueEl.textContent = `${Math.floor(score)}%`;
     valueEl.style.color = color;
-    popupEl.style.opacity = '1';
+    
+    // Si une animation est en cours, on la termine rapidement
+    if (isAnimating) {
+      popupEl.classList.remove('show');
+      popupEl.classList.add('exit');
+      
+      // Attendre la fin de l'animation de sortie
+      setTimeout(() => {
+        popupEl.classList.remove('exit', 'hide');
+        popupEl.style.top = '-100px';
+        popupEl.style.opacity = '0';
+        startToastAnimation(popupEl);
+      }, 200);
+    } else {
+      startToastAnimation(popupEl);
+    }
+  };
+
+  function startToastAnimation(element) {
+    isAnimating = true;
+    
+    // Réinitialiser la position
+    element.style.top = '-100px';
+    element.style.opacity = '0';
+    element.classList.remove('exit', 'hide', 'show');
+    
+    // Forcer le reflow
+    void element.offsetHeight;
+    
+    // Démarrer l'animation d'apparition (descend du haut)
+    requestAnimationFrame(() => {
+      element.classList.add('show');
+    });
     
     // Cacher après 2 secondes
     window.scoreTimeout = setTimeout(() => {
-      popupEl.style.opacity = '0';
+      element.classList.remove('show');
+      element.classList.add('exit');
+      
+      // Réinitialiser après la fin de l'animation
+      setTimeout(() => {
+        element.classList.remove('exit');
+        element.style.top = '-100px';
+        element.style.opacity = '0';
+        isAnimating = false;
+      }, 200);
     }, 2000);
-  };
+  }
 </script>
