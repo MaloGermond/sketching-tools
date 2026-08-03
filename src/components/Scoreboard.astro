@@ -18,7 +18,7 @@ const { style = "" } = Astro.props;
       <span id="score-average" class="text-xl font-bold ml-2">0%</span>
     </div>
     
-    <div id="trace-history" class="flex flex-col gap-3 max-h-[400px] overflow-y-auto w-full"></div>
+    <div id="trace-history" class="flex flex-col gap-3 max-h-[400px] overflow-y-auto w-full items-stretch"></div>
   </div>
 </Card>
 
@@ -26,13 +26,14 @@ const { style = "" } = Astro.props;
   /* Styles pour les éléments dynamiques générés par JavaScript */
   :global(.trace-item) {
     display: flex;
-    width: 100%;
     align-items: center;
     gap: 0.5rem;
     padding: 0.5rem;
     background: white;
     border-radius: 0.375rem;
     box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    width: 100%;
+    box-sizing: border-box;
   }
   
   :global(.trace-image) {
