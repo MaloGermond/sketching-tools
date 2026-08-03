@@ -20,7 +20,7 @@ const { id = 'toast', duration = 2000 } = Astro.props;
   </div>
 </div>
 
-<script>
+<script is:inline>
   (function() {
     let isAnimating = false;
     let currentTimeout = null;
