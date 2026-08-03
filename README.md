@@ -1,43 +1,127 @@
-# Astro Starter Kit: Minimal
+# Sketching Tools Hub
 
-```sh
-npm create astro@latest -- --template minimal
+Un hub centralisé pour tous tes outils de sketching et de conception.
+
+## Tech Stack
+- **Astro** - Framework principal
+- **React** - Pour les composants UI (validé)
+- **p5.js** - Pour les outils de dessin et animation (à valider)
+- **Tailwind CSS** - Pour le style (à valider)
+
+## Structure du projet
+
 ```
-
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
-
-## 🚀 Project Structure
-
-Inside of your Astro project, you'll see the following folders and files:
-
-```text
-/
-├── public/
+sketching-tools/
 ├── src/
-│   └── pages/
-│       └── index.astro
-└── package.json
+│   ├── components/          # Composants réutilisables
+│   │   ├── Header.astro      # En-tête du site
+│   │   └── ToolCard.astro    # Carte pour afficher un outil
+│   │
+│   ├── layouts/             # Layouts
+│   │   └── MainLayout.astro  # Layout principal avec header/footer
+│   │
+│   ├── pages/               # Pages du site
+│   │   ├── index.astro       # Page d'accueil (hub principal)
+│   │   └── tools/           # Dossier des outils
+│   │       ├── drawing-canvas.astro  # Exemple: outil de dessin
+│   │       └── ...           # Ajoute tes outils ici
+│   │
+│   └── styles/              # (À créer) Styles globaux
+│       └── global.css       # Fichier Tailwind CSS
+│
+├── public/                  # Assets statiques
+├── package.json
+├── astro.config.mjs
+└── AGENTS.md                # Configuration et besoins du projet
 ```
 
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
+## Ajouter un nouvel outil
 
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
+1. **Créer le fichier** dans `src/pages/tools/` (ex: `mon-outil.astro`)
+2. **Ajouter l'entrée** dans le tableau `tools` dans `src/pages/index.astro`:
+   ```javascript
+   {
+     title: "Mon outil",
+     description: "Description de mon outil",
+     href: "/tools/mon-outil",
+     icon: "🎨",
+     color: "blue", // ou: green, purple, orange, red, pink, indigo, teal
+   }
+   ```
+3. **Utiliser le layout** dans ton outil:
+   ```astro
+   ---
+   import MainLayout from "../../layouts/MainLayout.astro";
+   ---
+   <MainLayout title="Mon outil">
+     <!-- Ton contenu ici -->
+   </MainLayout>
+   ```
 
-Any static assets, like images, can be placed in the `public/` directory.
+## Utiliser p5.js dans un outil
 
-## 🧞 Commands
+1. **Installer p5.js**: `npm install p5`
+2. **Créer un conteneur** dans ton fichier Astro:
+   ```html
+   <div id="sketch-container"></div>
+   ```
+3. **Ajouter le script p5.js**:
+   ```html
+   <script>
+     function setup() {
+       let canvas = createCanvas(800, 600);
+       canvas.parent('sketch-container');
+     }
+     
+     function draw() {
+       // Ton code de dessin ici
+     }
+   </script>
+   ```
 
-All commands are run from the root of the project, from a terminal:
+## Utiliser Tailwind CSS
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
+1. **Installer Tailwind**: `npm install -D tailwindcss postcss autoprefixer`
+2. **Configurer Tailwind**: `npx tailwindcss init -p`
+3. **Mettre à jour astro.config.mjs**:
+   ```javascript
+   import { defineConfig } from 'astro/config';
+   import tailwind from '@astrojs/tailwind';
+   
+   export default defineConfig({
+     integrations: [tailwind()],
+   });
+   ```
+4. **Créer global.css** dans `src/styles/`:
+   ```css
+   @tailwind base;
+   @tailwind components;
+   @tailwind utilities;
+   ```
 
-## 👀 Want to learn more?
+## Dépendances à valider
 
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+- [ ] **p5.js** - Pour les outils de dessin et animation
+- [ ] **Tailwind CSS** - Pour le style du hub et des outils
+- [ ] **@astrojs/tailwind** - Intégration Tailwind pour Astro
+
+## Commandes utiles
+
+| Commande | Description |
+|----------|-------------|
+| `npm run dev` | Démarre le serveur de développement |
+| `npm run build` | Construit le projet pour la production |
+| `npm run preview` | Prévisionne le build |
+| `astro dev --background` | Démarre le serveur en arrière-plan |
+| `astro dev stop` | Arrête le serveur en arrière-plan |
+
+## Couleurs disponibles pour ToolCard
+
+- `blue` (défaut)
+- `green`
+- `purple`
+- `orange`
+- `red`
+- `pink`
+- `indigo`
+- `teal`
