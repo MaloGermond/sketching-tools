@@ -133,6 +133,13 @@ function generateNewShape(level = currentLevel, settings = shapeSettings) {
 - Prefix setters with `set` (e.g., `setShapeSettings`)
 - Use verbs for actions (e.g., `calculateScore`, `renderShape`)
 
+### 5. UI Components & Styling
+- **Use Tailwind CSS for UI components** - Prefer Tailwind utility classes for styling new components
+- **Component-based styling** - Styles should live within their respective components
+- **Global styles only for shared utilities** - Variables (colors, fonts, spacing) go in `src/styles/variables.css`
+- **Use semantic class names** for non-Tailwind styles when necessary
+- Toast/notification components should be reusable with configurable duration and position
+
 ## Directory Structure
 
 ```

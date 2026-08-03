@@ -1,0 +1,93 @@
+---
+// Toast.astro - Composant de notification toast
+// Affiche un message temporaire avec animation
+
+interface Props {
+  id?: string;
+  message?: string;
+  duration?: number;
+}
+
+const { id = 'toast', message = '', duration = 2000 } = Astro.props;
+---
+
+<div
+  id={id}
+  class="fixed top-4 left-1/2 -translate-x-1/2 z-50 pointer-events-none opacity-0 transition-all duration-300 ease-out"
+  style="transition-property: top, opacity;"
+>
+  <div class="flex flex-col items-center gap-1 bg-white rounded-lg shadow-md border border-gray-200 px-6 py-3 min-w-[200px]">
+    <span class="text-sm font-medium text-gray-700 uppercase tracking-wider">Ressemblance</span>
+    <span id="{id}-value" class="text-2xl font-bold leading-none text-purple-600"></span>
+  </div>
+</div>
+
+<script>
+  (function() {
+    let isAnimating = false;
+    let currentTimeout = null;
+
+    window.showTemporaryScore = function(score) {
+      const toastEl = document.getElementById('{id}');
+      const valueEl = document.getElementById('{id}-value');
+      
+      if (!toastEl || !valueEl) return;
+      
+      // Clear previous timeout
+      if (currentTimeout) {
+        clearTimeout(currentTimeout);
+      }
+      
+      // Set color based on score
+      const color = score >= 80 
+        ? 'text-purple-600' 
+        : score >= 50 
+          ? 'text-amber-500' 
+          : 'text-red-500';
+      
+      valueEl.textContent = `${Math.floor(score)}%`;
+      valueEl.className = `text-2xl font-bold leading-none ${color}`;
+      
+      // If already animating, reset quickly
+      if (isAnimating) {
+        toastEl.style.top = '-100px';
+        toastEl.style.opacity = '0';
+        
+        setTimeout(() => {
+          startAnimation(toastEl);
+        }, 100);
+      } else {
+        startAnimation(toastEl);
+      }
+    };
+
+    function startAnimation(element) {
+      isAnimating = true;
+      
+      // Reset position
+      element.style.top = '-100px';
+      element.style.opacity = '0';
+      
+      // Force reflow
+      void element.offsetHeight;
+      
+      // Start animation
+      setTimeout(() => {
+        element.style.top = '1rem';
+        element.style.opacity = '1';
+      }, 10);
+      
+      // Hide after duration
+      currentTimeout = setTimeout(() => {
+        element.style.transition = 'top 0.2s ease-in, opacity 0.2s ease-in';
+        element.style.top = '-100px';
+        element.style.opacity = '0';
+        
+        setTimeout(() => {
+          element.style.transition = 'top 0.3s ease-out, opacity 0.3s ease-out';
+          isAnimating = false;
+        }, 200);
+      }, duration);
+    }
+  })();
+</script>
