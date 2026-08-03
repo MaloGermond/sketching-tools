@@ -1,35 +1,43 @@
 ---
-// Toast.astro - Composant de notification toast
+// Toast.astro - Composant de notification toast réutilisable
 // Affiche un message temporaire avec animation
 
 interface Props {
-  duration?: number;
+  toastId: string;
+  label?: string;
 }
 
-const { duration = 2000 } = Astro.props;
-const toastId = 'score-toast';
+const { toastId, label = 'Score' } = Astro.props;
 ---
 
 <div
   id={toastId}
-  style="position: fixed; top: -100px; left: 50%; transform: translateX(-50%); z-index: 50; pointer-events: none; opacity: 0; transition: top 0.3s ease-out, opacity 0.3s ease-out;"
+  data-toast-id={toastId}
+  class="fixed top-4 left-1/2 -translate-x-1/2 z-50 pointer-events-none opacity-0 transition-all duration-300 ease-out"
 >
-  <div style="display: flex; flex-direction: column; align-items: center; gap: 0.25rem; background: white; border-radius: 0.5rem; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); border: 1px solid #e5e7eb; padding: 0.75rem 1.5rem; min-width: 200px;">
-    <span style="font-size: 0.875rem; font-weight: 500; color: #374151; letter-spacing: 0.05em; text-transform: uppercase;">Ressemblance</span>
-    <span id={toastId + '-value'} style="font-size: 1.5rem; font-weight: 700; line-height: 1; color: #8b5cf6;"></span>
+  <div class="flex flex-col items-center gap-1 bg-white rounded-lg shadow-md border border-gray-200 px-6 py-3 min-w-[200px]">
+    <span class="text-sm font-medium text-gray-700 uppercase tracking-wider">{label}</span>
+    <span id={toastId + '-value'} class="text-2xl font-bold leading-none text-purple-600"></span>
   </div>
 </div>
 
-<script is:inline>
+<script>
   document.addEventListener('DOMContentLoaded', function() {
+    const duration = 2000;
     let isAnimating = false;
     let currentTimeout = null;
-    const toastEl = document.getElementById('score-toast');
-    const valueEl = document.getElementById('score-toast-value');
+    
+    // Trouver le toast via son data attribute
+    const toastContainer = document.querySelector('[data-toast-id]');
+    if (!toastContainer) return;
+    
+    const toastId = toastContainer.dataset.toastId;
+    const toastEl = document.getElementById(toastId);
+    const valueEl = document.getElementById(toastId + '-value');
     
     if (!toastEl || !valueEl) return;
 
-    // Écouter l'événement personnalisé depuis n'importe quel composant
+    // Écouter l'événement personnalisé
     document.addEventListener('showToast', (event) => {
       const score = event.detail?.score;
       if (score === undefined) return;
@@ -39,15 +47,15 @@ const toastId = 'score-toast';
         clearTimeout(currentTimeout);
       }
       
-      // Set color based on score
+      // Set color based on score using Tailwind classes
       const color = score >= 80 
-        ? '#8b5cf6'  // purple-600
+        ? 'text-purple-600' 
         : score >= 50 
-          ? '#f59e0b'  // amber-500
-          : '#ef4444'; // red-500
+          ? 'text-amber-500' 
+          : 'text-red-500';
       
       valueEl.textContent = `${Math.floor(score)}%`;
-      valueEl.style.color = color;
+      valueEl.className = `text-2xl font-bold leading-none ${color}`;
       
       // If already animating, reset quickly
       if (isAnimating) {
@@ -68,18 +76,17 @@ const toastId = 'score-toast';
       // Reset position
       element.style.top = '-100px';
       element.style.opacity = '0';
-      element.style.transition = 'top 0.3s ease-out, opacity 0.3s ease-out';
       
       // Force reflow
       void element.offsetHeight;
       
       // Start animation
       setTimeout(() => {
-        element.style.top = '0.5rem';
+        element.style.top = '1rem';
         element.style.opacity = '1';
       }, 10);
       
-      // Hide after duration
+      // Hide after fixed duration
       currentTimeout = setTimeout(() => {
         element.style.transition = 'top 0.2s ease-in, opacity 0.2s ease-in';
         element.style.top = '-100px';
