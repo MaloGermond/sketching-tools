@@ -19,6 +19,11 @@
   /* Accent */
   --color-accent: #8b5cf6;
   
+  /* Status colors - Tailwind palette */
+  --color-success: #22c55e; /* green-500 */
+  --color-warning: #f59e0b; /* amber-500 */
+  --color-error: #ef4444;   /* red-500 */
+  
   /* Backgrounds */
   --bg-body: var(--color-gray-100);
   --bg-card: var(--color-white);

@@ -24,7 +24,6 @@ const { style = "" } = Astro.props;
 
 <style>
   /* Styles pour les éléments dynamiques générés par JavaScript */
-  /* Équivalents aux classes Tailwind pour éviter les problèmes avec @apply */
   :global(.trace-item) {
     display: flex;
     width: 100%;
@@ -50,9 +49,11 @@ const { style = "" } = Astro.props;
     font-size: 0.875rem;
   }
   
-  :global(.trace-score.high) { color: #8b5cf6; }
-  :global(.trace-score.medium) { color: #f59e0b; }
-  :global(.trace-score.low) { color: #ef4444; }
+  /* Couleurs de status - correspondent aux variables CSS et classes Tailwind */
+  /* success = #22c55e (green-500), warning = #f59e0b (amber-500), error = #ef4444 (red-500) */
+  :global(.trace-score.success) { color: #22c55e; }
+  :global(.trace-score.warning) { color: #f59e0b; }
+  :global(.trace-score.error) { color: #ef4444; }
   
   :global(.trace-empty) {
     color: #9ca3af;
@@ -81,12 +82,12 @@ const { style = "" } = Astro.props;
     
     if (historyEl) {
       if (state.traces && state.traces.length > 0) {
-        // Afficher les traces avec leurs images et scores
+        // Utilisation des classes success/warning/error
         historyEl.innerHTML = state.traces
           .slice(0, 20)
           .map((trace, i) => {
             const score = Math.floor(trace.score);
-            const scoreClass = score >= 80 ? 'high' : score >= 50 ? 'medium' : 'low';
+            const scoreClass = score >= 80 ? 'success' : score >= 50 ? 'warning' : 'error';
             return `
               <article class="trace-item">
                 <img class="trace-image" src="${trace.image}" alt="Tracé ${i + 1}" />

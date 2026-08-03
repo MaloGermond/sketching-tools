@@ -15,15 +15,23 @@ const { toastId, label = 'Score' } = Astro.props;
   data-toast-id={toastId}
   class="fixed top-4 left-1/2 -translate-x-1/2 z-50 pointer-events-none opacity-0 transition-all duration-300 ease-out"
 >
-  <div class="flex flex-col items-center bg-white rounded-full shadow-md border border-gray-300 px-7 pt-2 pb-1 ">
-    <p class="text-xs font-medium text-gray-600">{label}</p>
-    <p id={toastId + '-value'} class="text-xs font-bold leading-none text-purple-600"></p>
+  <div class="flex flex-col items-center gap-1 bg-white rounded-lg shadow-md border border-gray-200 px-6 py-3 min-w-[200px]">
+    <span class="text-sm font-medium text-gray-700 uppercase tracking-wider">{label}</span>
+    <span id={toastId + '-value'} class="text-2xl font-bold leading-none text-purple-600"></span>
   </div>
 </div>
 
+<style>
+  /* Couleurs de status pour le toast - correspondent aux variables CSS */
+  /* success = #22c55e (green-500), warning = #f59e0b (amber-500), error = #ef4444 (red-500) */
+  :global(.text-success) { color: #22c55e; }
+  :global(.text-warning) { color: #f59e0b; }
+  :global(.text-error) { color: #ef4444; }
+</style>
+
 <script>
   document.addEventListener('DOMContentLoaded', function() {
-    const duration = 1500;
+    const duration = 2000;
     let isAnimating = false;
     let currentTimeout = null;
     
@@ -47,15 +55,16 @@ const { toastId, label = 'Score' } = Astro.props;
         clearTimeout(currentTimeout);
       }
       
-      // Set color based on score using Tailwind classes
-      const color = score >= 80 
-        ? 'text-green-600' 
+      // Set color based on score: success (>=80), warning (>=50), error (<50)
+      // Classes CSS personnalisées qui utilisent les couleurs des variables
+      const colorClass = score >= 80 
+        ? 'text-success'   // success: #22c55e
         : score >= 50 
-          ? 'text-amber-500' 
-          : 'text-red-500';
+          ? 'text-warning'  // warning: #f59e0b
+          : 'text-error';   // error: #ef4444
       
       valueEl.textContent = `${Math.floor(score)}%`;
-      valueEl.className = `text-xl font-bold leading-none ${color}`;
+      valueEl.className = `text-2xl font-bold leading-none ${colorClass}`;
       
       // If already animating, reset quickly
       if (isAnimating) {
