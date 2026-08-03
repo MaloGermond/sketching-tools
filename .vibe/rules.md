@@ -53,6 +53,12 @@ function generateNewShape(level = currentLevel, settings = shapeSettings) {
 
 ## Core Rules
 
+### 0. Dependency Management
+- **Always use project dependencies** - Do NOT use CDNs for libraries that are installed via npm
+- **CDN exception** - Only P5.js can use CDN (temporary until proper npm integration)
+- **Tailwind CSS** - Use the installed `tailwindcss` package via `@import "tailwindcss"`, NOT the CDN
+- When adding new dependencies, always check if they're already in package.json
+
 ### 1. Pure Functions
 **Every function must be deterministic (same inputs → same outputs).**
 
