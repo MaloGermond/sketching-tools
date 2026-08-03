@@ -24,12 +24,15 @@ const { id = 'toast', duration = 2000 } = Astro.props;
   (function() {
     let isAnimating = false;
     let currentTimeout = null;
+    const toastEl = document.getElementById('{id}');
+    const valueEl = document.getElementById('{id}-value');
+    
+    if (!toastEl || !valueEl) return;
 
-    window.showTemporaryScore = function(score) {
-      const toastEl = document.getElementById('{id}');
-      const valueEl = document.getElementById('{id}-value');
-      
-      if (!toastEl || !valueEl) return;
+    // Écouter l'événement personnalisé depuis n'importe quel composant
+    document.addEventListener('showToast', (event) => {
+      const score = event.detail?.score;
+      if (score === undefined) return;
       
       // Clear previous timeout
       if (currentTimeout) {
@@ -57,7 +60,7 @@ const { id = 'toast', duration = 2000 } = Astro.props;
       } else {
         startAnimation(toastEl);
       }
-    };
+    });
 
     function startAnimation(element) {
       isAnimating = true;

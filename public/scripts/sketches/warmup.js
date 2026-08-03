@@ -218,10 +218,10 @@ function processCompletedDrawing() {
     
     updateScoreState();
     
-    // Afficher le score via le composant ScorePopup (sans image)
-    if (typeof window.showTemporaryScore === 'function') {
-      window.showTemporaryScore(currentScore);
-    }
+    // Déclencher l'événement pour le toast
+    document.dispatchEvent(new CustomEvent('showToast', {
+      detail: { score: currentScore }
+    }));
     
     setTimeout(() => {
       drawingBuffer.clear();

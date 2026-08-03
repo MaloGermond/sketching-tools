@@ -139,6 +139,24 @@ function generateNewShape(level = currentLevel, settings = shapeSettings) {
 - **No external CSS frameworks without validation** - Do not add Tailwind, Bootstrap, etc. without explicit user approval
 - Toast/notification components should be reusable with configurable duration and position
 
+### 6. Cross-Component Communication
+- **Use Custom Events for decoupled communication** - Components should communicate via `CustomEvent` rather than direct function calls
+- **Event naming convention** - Use kebab-case for event names (e.g., `showToast`, `scoreUpdated`)
+- **Event detail** - Pass data via `event.detail` object
+- **Example:**
+  ```javascript
+  // Dispatch event
+  document.dispatchEvent(new CustomEvent('showToast', {
+    detail: { score: 95 }
+  }));
+  
+  // Listen for event
+  document.addEventListener('showToast', (e) => {
+    const score = e.detail.score;
+  });
+  ```
+- **P5.js integration** - When P5.js needs to communicate with Astro components, use custom events instead of setting `window` properties
+
 ## Directory Structure
 
 ```
