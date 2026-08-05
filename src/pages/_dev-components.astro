@@ -1,0 +1,212 @@
+---
+import MainLayout from "../../layouts/MainLayout.astro";
+import Action from "../../components/Action.astro";
+import Card from "../../components/Card.astro";
+import Toast from "../../components/Toast.astro";
+import Scoreboard from "../../components/Scoreboard.astro";
+import ToolCard from "../../components/ToolCard.astro";
+import Header from "../../components/Header.astro";
+import Icon from "../../components/Icon.astro";
+
+const title = "Dev - All Components";
+---
+
+<MainLayout title={title}>
+  <div class="p-8 max-w-7xl mx-auto">
+    <h1 class="text-3xl font-bold mb-8">All Components - Dev Page</h1>
+    <p class="text-gray-600 mb-8">This page is only available in development mode.</p>
+
+    <!-- ============================================ -->
+    <!-- SECTION: Header -->
+    <!-- ============================================ -->
+    <section class="mb-12">
+      <h2 class="text-2xl font-semibold mb-4">Header</h2>
+      <Card>
+        <Header />
+      </Card>
+    </section>
+
+    <!-- ============================================ -->
+    <!-- SECTION: Action (Button) -->
+    <!-- ============================================ -->
+    <section class="mb-12">
+      <h2 class="text-2xl font-semibold mb-4">Action (Button)</h2>
+      <Card>
+        <p class="text-gray-600 mb-4">Button component with variants and sizes.</p>
+        
+        <div class="space-y-6">
+          <div>
+            <h3 class="text-lg font-medium mb-2">Variants</h3>
+            <div class="flex flex-wrap gap-4">
+              <Action variant="emphasis">Emphasis</Action>
+              <Action variant="primary">Primary</Action>
+              <Action variant="default">Default</Action>
+              <Action variant="facultatif">Facultatif</Action>
+            </div>
+          </div>
+          
+          <div>
+            <h3 class="text-lg font-medium mb-2">Sizes</h3>
+            <div class="flex flex-wrap gap-4">
+              <Action size="sm">Small</Action>
+              <Action size="md">Medium</Action>
+              <Action size="lg">Large</Action>
+            </div>
+          </div>
+          
+          <div>
+            <h3 class="text-lg font-medium mb-2">With Icons</h3>
+            <div class="flex flex-wrap gap-4">
+              <Action icon="🎨" iconPosition="left">Draw</Action>
+              <Action icon="✏️" iconPosition="right">Edit</Action>
+              <Action icon="🗑️">Delete</Action>
+            </div>
+          </div>
+          
+          <div>
+            <h3 class="text-lg font-medium mb-2">States</h3>
+            <div class="flex flex-wrap gap-4">
+              <Action disabled>Disabled</Action>
+              <Action fullWidth variant="emphasis">Full Width</Action>
+            </div>
+          </div>
+          
+          <div>
+            <h3 class="text-lg font-medium mb-2">Types</h3>
+            <div class="flex flex-wrap gap-4">
+              <Action type="button">Button</Action>
+              <Action type="submit">Submit</Action>
+              <Action type="reset">Reset</Action>
+            </div>
+          </div>
+        </div>
+      </Card>
+    </section>
+
+    <!-- ============================================ -->
+    <!-- SECTION: Card -->
+    <!-- ============================================ -->
+    <section class="mb-12">
+      <h2 class="text-2xl font-semibold mb-4">Card</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <Card>
+          <h3 class="text-lg font-semibold mb-2">Default Card</h3>
+          <p class="text-gray-600">This is a default card with some content.</p>
+        </Card>
+        <Card style="background: var(--color-gray-50);">
+          <h3 class="text-lg font-semibold mb-2">Custom Background</h3>
+          <p class="text-gray-600">Card with custom background color.</p>
+        </Card>
+        <Card>
+          <h3 class="text-lg font-semibold mb-2">With Padding</h3>
+          <p class="text-gray-600 p-4">Card with additional padding.</p>
+        </Card>
+      </div>
+    </section>
+
+    <!-- ============================================ -->
+    <!-- SECTION: Toast -->
+    <!-- ============================================ -->
+    <section class="mb-12">
+      <h2 class="text-2xl font-semibold mb-4">Toast</h2>
+      <Card>
+        <p class="text-gray-600 mb-4">Toast notification component.</p>
+        
+        <Toast toastId="dev-toast" label="Dev Toast" />
+        
+        <div class="flex flex-wrap gap-4 mt-6">
+          <button 
+            onclick="document.dispatchEvent(new CustomEvent('showToast', { detail: { score: 95 } }))"
+            class="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 transition-colors"
+          >
+            Success Toast (95%)
+          </button>
+          <button 
+            onclick="document.dispatchEvent(new CustomEvent('showToast', { detail: { score: 65 } }))"
+            class="px-4 py-2 bg-amber-500 text-white rounded hover:bg-amber-600 transition-colors"
+          >
+            Warning Toast (65%)
+          </button>
+          <button 
+            onclick="document.dispatchEvent(new CustomEvent('showToast', { detail: { score: 25 } }))"
+            class="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 transition-colors"
+          >
+            Error Toast (25%)
+          </button>
+        </div>
+      </Card>
+    </section>
+
+    <!-- ============================================ -->
+    <!-- SECTION: Scoreboard -->
+    <!-- ============================================ -->
+    <section class="mb-12">
+      <h2 class="text-2xl font-semibold mb-4">Scoreboard</h2>
+      <Card>
+        <p class="text-gray-600 mb-4">Score history display component.</p>
+        <Scoreboard />
+      </Card>
+    </section>
+
+    <!-- ============================================ -->
+    <!-- SECTION: ToolCard -->
+    <!-- ============================================ -->
+    <section class="mb-12">
+      <h2 class="text-2xl font-semibold mb-4">ToolCard</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <ToolCard title="Drawing Tool" description="A tool for drawing" link="/tools/drawing-canvas" />
+        <ToolCard title="Pattern Generator" description="Generate patterns" link="/tools/pattern-generator" />
+        <ToolCard title="Warmup" description="Warmup exercises" link="/tools/warmup" />
+      </div>
+    </section>
+
+    <!-- ============================================ -->
+    <!-- SECTION: Icon -->
+    <!-- ============================================ -->
+    <section class="mb-12">
+      <h2 class="text-2xl font-semibold mb-4">Icon</h2>
+      <Card>
+        <p class="text-gray-600 mb-4">SVG icon component from public/icons/.</p>
+        
+        <div class="flex flex-wrap gap-6">
+          <div class="flex flex-col items-center gap-2">
+            <Icon name="check" size={32} class="text-green-500" />
+            <span class="text-sm text-gray-600">check</span>
+          </div>
+          <div class="flex flex-col items-center gap-2">
+            <Icon name="close" size={32} class="text-red-500" />
+            <span class="text-sm text-gray-600">close</span>
+          </div>
+          <div class="flex flex-col items-center gap-2">
+            <Icon name="circle" size={32} class="text-purple-500" />
+            <span class="text-sm text-gray-600">circle</span>
+          </div>
+          <div class="flex flex-col items-center gap-2">
+            <Icon name="ellipse" size={32} class="text-purple-500" />
+            <span class="text-sm text-gray-600">ellipse</span>
+          </div>
+          <div class="flex flex-col items-center gap-2">
+            <Icon name="line-horizontal" size={32} class="text-purple-500" />
+            <span class="text-sm text-gray-600">line-horizontal</span>
+          </div>
+          <div class="flex flex-col items-center gap-2">
+            <Icon name="line-vertical" size={32} class="text-purple-500" />
+            <span class="text-sm text-gray-600">line-vertical</span>
+          </div>
+          <div class="flex flex-col items-center gap-2">
+            <Icon name="rectangle" size={32} class="text-purple-500" />
+            <span class="text-sm text-gray-600">rectangle</span>
+          </div>
+          <div class="flex flex-col items-center gap-2">
+            <Icon name="triangle" size={32} class="text-purple-500" />
+            <span class="text-sm text-gray-600">triangle</span>
+          </div>
+        </div>
+        
+        <p class="text-gray-600 mt-6 text-sm">
+          Usage: <code>&lt;Icon name="check" size={32} class="text-color" /&gt;</code>
+        </p>
+      </Card>
+    </section>
+  </div>
+</MainLayout>
