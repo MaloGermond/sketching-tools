@@ -26,12 +26,18 @@ let guideMask;
 let prevX = null;
 let prevY = null;
 
+// Points du tracé actuel pour calculer la longueur
+let currentPathPoints = [];
+
 // Historique des tracés avec leurs scores (max 20)
 let traceHistory = [];
 
 // Configuration du pinceau
 const BRUSH_SIZE = 6;
 const BRUSH_SPACING = 2;
+
+// Longueur minimale pour valider un tracé (en pixels)
+const MIN_TRACE_LENGTH = 20;
 
 // ============================================
 // GUIDE STYLES CONFIGURATION
@@ -103,14 +109,43 @@ function draw() {
   
   ensureActiveShape();
   
-  if (mouseIsPressed) {
+  if (drawing) {
     handleUserDrawing();
-  } else {
-    processCompletedDrawing();
   }
   
   drawGuideShape();
   image(drawingBuffer, 0, 0);
+}
+
+function mousePressed() {
+  // Vérifier que le clic est bien sur le canvas (et non sur un élément superposé)
+  const canvas = document.querySelector('canvas');
+  if (!canvas) return;
+  
+  // Utiliser l'événement natif pour obtenir la cible réelle
+  const event = window.event;
+  if (event && event.target) {
+    // Vérifier que la cible du clic est le canvas ou un de ses enfants
+    const isOverCanvas = canvas === event.target || canvas.contains(event.target);
+    
+    if (!isOverCanvas) {
+      // Clic en dehors du canvas, ignorer
+      return;
+    }
+  }
+  
+  // Clic valide sur le canvas
+  drawingBuffer.clear();
+  drawing = true;
+  prevX = mouseX;
+  prevY = mouseY;
+  currentPathPoints = [{x: mouseX, y: mouseY}];
+}
+
+function mouseReleased() {
+  if (drawing) {
+    processCompletedDrawing();
+  }
 }
 
 
@@ -168,6 +203,7 @@ function handleUserDrawing() {
     drawing = true;
     prevX = mouseX;
     prevY = mouseY;
+    currentPathPoints = [{x: mouseX, y: mouseY}];
     return;
   }
   
@@ -182,15 +218,40 @@ function handleUserDrawing() {
       drawingBuffer.noStroke();
       drawingBuffer.fill(0);
       drawingBuffer.ellipse(x, y, BRUSH_SIZE, BRUSH_SIZE);
+      currentPathPoints.push({x, y});
     }
     prevX = mouseX;
     prevY = mouseY;
   }
 }
 
+function calculateTraceLength() {
+  if (currentPathPoints.length < 2) return 0;
+  
+  let totalLength = 0;
+  for (let i = 1; i < currentPathPoints.length; i++) {
+    const pt1 = currentPathPoints[i - 1];
+    const pt2 = currentPathPoints[i];
+    totalLength += dist(pt1.x, pt1.y, pt2.x, pt2.y);
+  }
+  return totalLength;
+}
+
 function processCompletedDrawing() {
   if (drawing) {
     drawing = false;
+    
+    // Vérifier la longueur minimale du tracé
+    const traceLength = calculateTraceLength();
+    
+    if (traceLength < MIN_TRACE_LENGTH) {
+      // Tracé trop court, ignorer la validation
+      drawingBuffer.clear();
+      currentShape = generateNewShape();
+      redraw();
+      currentPathPoints = [];
+      return;
+    }
     
     const { onShape, offShape } = calculateScoreFromBuffer();
     const totalDrawn = onShape + offShape;
@@ -227,6 +288,7 @@ function processCompletedDrawing() {
       drawingBuffer.clear();
       currentShape = generateNewShape();
       redraw();
+      currentPathPoints = [];
     }, 100);
   }
 }

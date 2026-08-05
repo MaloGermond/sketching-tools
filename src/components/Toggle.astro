@@ -45,7 +45,6 @@ const toggleClick = onClick
     border: 'none',
     borderRadius: 'var(--radius-md)',
     cursor: 'pointer',
-    transition: 'background var(--transition-normal) ease, color var(--transition-normal) ease',
     display: 'inline-flex',
     alignItems: 'center',
     justifyContent: 'center'
@@ -57,16 +56,19 @@ const toggleClick = onClick
 
 <style>
   .toggle-button {
-    --transition-normal: 200ms;
+    --toggle-bg-enable: transparent;
+    --toggle-bg-hover: var(--color-gray-300);
+    --toggle-bg-selected: var(--color-accent);
+    
+    background: var(--toggle-bg-enable);
+    transition: background 400ms ease;
   }
   
-  .toggle-button[data-selected="false"] {
-    background: var(--color-gray-200);
-    color: var(--color-black);
+  .toggle-button:hover:not([data-selected="true"]) {
+    background: var(--toggle-bg-hover);
   }
   
   .toggle-button[data-selected="true"] {
-    background: var(--color-accent);
-    color: var(--color-white);
+    background: var(--toggle-bg-selected);
   }
 </style>
