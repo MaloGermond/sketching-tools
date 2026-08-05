@@ -1,12 +1,17 @@
 ---
 
-import Action from './Action.astro';
+import Toggle from './Toggle.astro';
 import Card from './Card.astro';
 
 ---
 
-<Card class="border-2 border-(--border-light) shadow-(--shadow-sm)">
-	<Action icon="ellipse"></Action>
-	<Action icon="rectangle"></Action>
-	<Action icon="line-diagonal"></Action>
+<Card class="border border-gray-100 shadow-sm absolute bottom-1">
+	<div class="flex gap-2">
+		<Toggle icon="circle"></Toggle>
+		<Toggle icon="ellipse"></Toggle>
+		<Toggle icon="rectangle"></Toggle>
+		<Toggle icon="triangle"></Toggle>
+		<Toggle icon="line-horizontal"></Toggle>
+		<Toggle icon="line-vertical"></Toggle>
+	</div>
 </Card>

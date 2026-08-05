@@ -7,6 +7,7 @@ import Scoreboard from "../components/Scoreboard.astro";
 import ToolCard from "../components/ToolCard.astro";
 import Header from "../components/Header.astro";
 import Icon from "../components/Icon.astro";
+import Toggle from "../components/Toggle.astro";
 import Toolbar from "../components/Toolbar.astro";
 
 import fs from 'fs';
@@ -117,6 +118,35 @@ const iconNames = iconFiles.map(f => f.replace('.svg', ''));
     </section>
 
     <!-- ============================================ -->
+    <!-- SECTION: Toggle -->
+    <!-- ============================================ -->
+    <section class="mb-12">
+      <h2 class="text-2xl font-semibold mb-4">Toggle</h2>
+      <Card>
+        <p class="text-gray-600 mb-4">Toggle button avec icône seule, bascule entre default et primary.</p>
+        
+        <div class="flex flex-wrap gap-4 items-center">
+          <Toggle icon="circle" />
+          <Toggle icon="circle" selected />
+          <Toggle icon="rectangle" size={40} />
+          <Toggle icon="rectangle" size={40} selected />
+          <Toggle icon="triangle" size={56} />
+          <Toggle icon="triangle" size={56} selected />
+        </div>
+        
+        <p class="text-gray-600 mt-6 text-sm">
+          Usage: <code>&lt;Toggle icon="circle" /&gt;</code> (click to toggle)
+        </p>
+        <p class="text-gray-600 mt-2 text-sm">
+          With initial state: <code>&lt;Toggle icon="circle" selected /&gt;</code>
+        </p>
+        <p class="text-gray-600 mt-2 text-sm">
+          With callback: <code>&lt;Toggle icon="circle" onClick="console.log('toggled')" /&gt;</code>
+        </p>
+      </Card>
+    </section>
+
+    <!-- ============================================ -->
     <!-- SECTION: Card -->
     <!-- ============================================ -->
     <section class="mb-12">
@@ -126,7 +156,7 @@ const iconNames = iconFiles.map(f => f.replace('.svg', ''));
           <h3 class="text-lg font-semibold mb-2">Default Card</h3>
           <p class="text-gray-600">This is a default card with some content.</p>
         </Card>
-        <Card style="background: var(--color-gray-50);">
+        <Card class="bg-gray-50">
           <h3 class="text-lg font-semibold mb-2">Custom Background</h3>
           <p class="text-gray-600">Card with custom background color.</p>
         </Card>

@@ -1,0 +1,72 @@
+---
+/**
+ * Composant Toggle - Bouton bascule avec icône
+ * 
+ * @description
+ * Un bouton carré avec icône seule qui bascule entre l'état default et primary.
+ * 
+ * @props
+ * @prop {string} icon - Nom de l'icône SVG à afficher (correspond au fichier dans public/icons/)
+ * @prop {boolean} [selected] - État sélectionné initial (défaut: false)
+ * @prop {number} [size] - Taille du bouton en pixels (défaut: 48)
+ * @prop {string} [onClick] - Callback JavaScript supplémentaire à exécuter au clic
+ */
+
+import Icon from './Icon.astro';
+
+interface Props {
+  icon: string;
+  selected?: boolean;
+  size?: number;
+  onClick?: string;
+}
+
+const {
+  icon,
+  selected = false,
+  size = 48,
+  onClick
+} = Astro.props;
+
+const toggleClick = onClick 
+  ? `this.dataset.selected = this.dataset.selected === 'true' ? 'false' : 'true'; ${onClick}`
+  : "this.dataset.selected = this.dataset.selected === 'true' ? 'false' : 'true'";
+---
+
+<button
+  type="button"
+  class="toggle-button"
+  data-selected={selected}
+  style={{
+    '--toggle-size': `${size}px`,
+    width: 'var(--toggle-size)',
+    height: 'var(--toggle-size)',
+    padding: '0',
+    border: 'none',
+    borderRadius: 'var(--radius-md)',
+    cursor: 'pointer',
+    transition: 'background var(--transition-normal) ease, color var(--transition-normal) ease',
+    display: 'inline-flex',
+    alignItems: 'center',
+    justifyContent: 'center'
+  }}
+  onclick={toggleClick}
+>
+  <Icon name={icon} size={size * 0.5} />
+</button>
+
+<style>
+  .toggle-button {
+    --transition-normal: 200ms;
+  }
+  
+  .toggle-button[data-selected="false"] {
+    background: var(--color-gray-200);
+    color: var(--color-black);
+  }
+  
+  .toggle-button[data-selected="true"] {
+    background: var(--color-accent);
+    color: var(--color-white);
+  }
+</style>

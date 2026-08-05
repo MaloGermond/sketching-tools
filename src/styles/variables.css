@@ -17,7 +17,7 @@
   --color-gray-900: #111827;
   
   /* Accent */
-  --color-accent: #8b5cf6;
+  --color-accent: #3576F9;
   
   /* Status colors - Tailwind palette */
   --color-success: #22c55e; /* green-500 */
@@ -29,8 +29,8 @@
   --bg-card: var(--color-white);
   
   /* Borders */
-  --border-light: 1px solid var(--color-gray-300);
-  --border-subtle: 1px solid var(--color-gray-200);
+  --border-light: 1px solid var(--color-gray-100);
+  --border-medium: 1px solid var(--color-gray-300);
   
   /* Shadows */
   --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);

@@ -2,16 +2,36 @@
 // Définis les props attendues
 interface Props {
   title?: string;
-  style?: string;
+  class?: string;
 }
 
-const { title, style } = Astro.props;
-
-const defaultStyle = "background:var(--bg-card) ; margin: var(--space-sm); padding: var(--space-md); border-radius: var(--radius-xl); z-index: 10;"
-
+const { title, class: className } = Astro.props;
 ---
 
-<div style={defaultStyle + " " + (style || "")}>
-  {title && <h2 style="margin: 0 0 0.5rem 0; font-size: 1rem;">{title}</h2>}
+<div class:list={[
+  className,
+  'card'
+]}>
+  {title && <h2 class="card-title">{title}</h2>}
   <slot/>
 </div>
+
+<style>
+  .card {
+    background: var(--bg-card);
+    margin: var(--space-sm);
+    padding: var(--space-md);
+    border-radius: var(--radius-xl);
+    border-color: transparent;
+    z-index: 10;
+  }
+  
+  .card-title {
+    margin: 0 0 0.5rem 0;
+    font-size: 1rem;
+  }
+  
+  .bg-gray-50 {
+    background: var(--color-gray-50);
+  }
+</style>
