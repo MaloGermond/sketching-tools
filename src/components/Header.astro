@@ -1,19 +1,14 @@
 ---
+import Action from "../components/Action.astro";
+
 ---
 
 <header style="position: absolute; z-index: 100">
-  <a href="/">Sketching Tools</a>
+  <Action icon="arrow-left" variant="facultatif" href="/">Sketching Tools</Action>
   
   <style>
     header {
       padding: var(--space-lg) var(--space-xl);
-    }
-    header a {
-      color: var(--color-black);
-      font-size: var(--font-size-xl);
-      font-weight: var(--font-weight-semibold);
-      text-decoration: none;
-      font-family: var(--font-family);
     }
   </style>
 </header>
