@@ -8,7 +8,15 @@ import ToolCard from "../components/ToolCard.astro";
 import Header from "../components/Header.astro";
 import Icon from "../components/Icon.astro";
 
+import fs from 'fs';
+import path from 'path';
+
 const title = "Dev - All Components";
+
+// Lister tous les fichiers SVG dans public/icons/
+const iconsDir = path.join(process.cwd(), 'public/icons');
+const iconFiles = fs.readdirSync(iconsDir).filter(f => f.endsWith('.svg'));
+const iconNames = iconFiles.map(f => f.replace('.svg', ''));
 ---
 
 <MainLayout title={title}>
@@ -38,8 +46,8 @@ const title = "Dev - All Components";
           <div>
             <h3 class="text-lg font-medium mb-2">Variants</h3>
             <div class="flex flex-wrap gap-4">
-              <Action variant="emphasis">Emphasis</Action>
               <Action variant="primary">Primary</Action>
+              <Action variant="emphasis">Emphasis</Action>
               <Action variant="default">Default</Action>
               <Action variant="facultatif">Facultatif</Action>
             </div>
@@ -57,9 +65,9 @@ const title = "Dev - All Components";
           <div>
             <h3 class="text-lg font-medium mb-2">With Icons</h3>
             <div class="flex flex-wrap gap-4">
-              <Action icon="🎨" iconPosition="left">Draw</Action>
-              <Action icon="✏️" iconPosition="right">Edit</Action>
-              <Action icon="🗑️">Delete</Action>
+              <Action icon="circle" iconPosition="left">Draw</Action>
+              <Action icon="rectangle" iconPosition="right">Edit</Action>
+              <Action icon="triangle">Delete</Action>
             </div>
           </div>
           
@@ -113,26 +121,14 @@ const title = "Dev - All Components";
         <p class="text-gray-600 mb-4">Toast notification component.</p>
         
         <Toast toastId="dev-toast" label="Dev Toast" />
-        
+
+
         <div class="flex flex-wrap gap-4 mt-6">
-          <button 
-            onclick="document.dispatchEvent(new CustomEvent('showToast', { detail: { score: 95 } }))"
-            class="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 transition-colors"
-          >
-            Success Toast (95%)
-          </button>
-          <button 
-            onclick="document.dispatchEvent(new CustomEvent('showToast', { detail: { score: 65 } }))"
-            class="px-4 py-2 bg-amber-500 text-white rounded hover:bg-amber-600 transition-colors"
-          >
-            Warning Toast (65%)
-          </button>
-          <button 
-            onclick="document.dispatchEvent(new CustomEvent('showToast', { detail: { score: 25 } }))"
-            class="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 transition-colors"
-          >
-            Error Toast (25%)
-          </button>
+          <Action onClick="document.dispatchEvent(new CustomEvent('showToast', { detail: { score: 25 } }))">Success Toast (25%) </Action>
+
+        <Action onClick="document.dispatchEvent(new CustomEvent('showToast', { detail: { score: 65 } }))">Success Toast (65%) </Action>
+        
+        <Action onClick="document.dispatchEvent(new CustomEvent('showToast', { detail: { score: 95 } }))">Success Toast (95%) </Action>
         </div>
       </Card>
     </section>
@@ -169,42 +165,16 @@ const title = "Dev - All Components";
         <p class="text-gray-600 mb-4">SVG icon component from public/icons/.</p>
         
         <div class="flex flex-wrap gap-6">
-          <div class="flex flex-col items-center gap-2">
-            <Icon name="check" size={32} class="text-green-500" />
-            <span class="text-sm text-gray-600">check</span>
-          </div>
-          <div class="flex flex-col items-center gap-2">
-            <Icon name="close" size={32} class="text-red-500" />
-            <span class="text-sm text-gray-600">close</span>
-          </div>
-          <div class="flex flex-col items-center gap-2">
-            <Icon name="circle" size={32} class="text-purple-500" />
-            <span class="text-sm text-gray-600">circle</span>
-          </div>
-          <div class="flex flex-col items-center gap-2">
-            <Icon name="ellipse" size={32} class="text-purple-500" />
-            <span class="text-sm text-gray-600">ellipse</span>
-          </div>
-          <div class="flex flex-col items-center gap-2">
-            <Icon name="line-horizontal" size={32} class="text-purple-500" />
-            <span class="text-sm text-gray-600">line-horizontal</span>
-          </div>
-          <div class="flex flex-col items-center gap-2">
-            <Icon name="line-vertical" size={32} class="text-purple-500" />
-            <span class="text-sm text-gray-600">line-vertical</span>
-          </div>
-          <div class="flex flex-col items-center gap-2">
-            <Icon name="rectangle" size={32} class="text-purple-500" />
-            <span class="text-sm text-gray-600">rectangle</span>
-          </div>
-          <div class="flex flex-col items-center gap-2">
-            <Icon name="triangle" size={32} class="text-purple-500" />
-            <span class="text-sm text-gray-600">triangle</span>
-          </div>
+          {iconNames.map(iconName => (
+            <div class="flex flex-col items-center gap-2">
+              <Icon name={iconName} size={32} class="text-purple-500" />
+              <span class="text-sm text-gray-600">{iconName}</span>
+            </div>
+          ))}
         </div>
         
         <p class="text-gray-600 mt-6 text-sm">
-          Usage: <code>&lt;Icon name="check" size={32} class="text-color" /&gt;</code>
+          Usage: <code>&lt;Icon name="{iconNames[0] || 'icon-name'}" size={32} class="text-color" /&gt;</code>
         </p>
       </Card>
     </section>
