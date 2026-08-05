@@ -54,15 +54,6 @@ import Action from '../components/Action.astro';
     <Action type="reset">Reset</Action>
   </div>
 
-  <h2>Test des règles métiers</h2>
-  <p>Seul le premier bouton "emphasis" et "primary" doit rester actif.</p>
-  <div style="display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 2rem;">
-    <Action variant="emphasis">Premier Emphasis</Action>
-    <Action variant="emphasis">Deuxième Emphasis (doit être désactivé)</Action>
-    <Action variant="primary">Premier Primary</Action>
-    <Action variant="primary">Deuxième Primary (doit être désactivé)</Action>
-  </div>
-
   <h2>Combinaisons</h2>
   <div style="display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 2rem;">
     <Action variant="primary" size="lg" icon="🚀">Lancer</Action>

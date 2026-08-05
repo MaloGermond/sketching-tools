@@ -5,10 +5,6 @@
  * @description
  * Un composant de bouton flexible avec plusieurs variantes et tailles.
  * 
- * @rules
- * - Une seule action "emphasis" peut exister dans l'interface à la fois.
- * - Une seule action "primary" peut exister dans l'interface à la fois (de manière ponctuelle).
- * 
  * @variants
  * - emphasis: Action principale à mettre en avant (fond noir, texte blanc)
  * - primary: Action ponctuelle pour focaliser l'attention (fond --color-accent, texte blanc)
@@ -49,42 +45,6 @@ const {
   icon,
   iconPosition = 'left'
 } = Astro.props;
-
-// Gestion des règles métiers : une seule action emphasis/primary à la fois
-const script = `
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      const emphasisButtons = document.querySelectorAll('[data-variant="emphasis"]');
-      const primaryButtons = document.querySelectorAll('[data-variant="primary"]');
-
-      // Désactiver tous les boutons emphasis sauf le premier
-      if (emphasisButtons.length > 1) {
-        emphasisButtons.forEach((button, index) => {
-          if (index > 0) {
-            button.setAttribute('disabled', 'true');
-            button.setAttribute('aria-disabled', 'true');
-            button.style.opacity = '0.5';
-            button.style.cursor = 'not-allowed';
-          }
-        });
-        console.warn('Plusieurs boutons "emphasis" détectés. Seul le premier reste actif.');
-      }
-
-      // Désactiver tous les boutons primary sauf le premier
-      if (primaryButtons.length > 1) {
-        primaryButtons.forEach((button, index) => {
-          if (index > 0) {
-            button.setAttribute('disabled', 'true');
-            button.setAttribute('aria-disabled', 'true');
-            button.style.opacity = '0.5';
-            button.style.cursor = 'not-allowed';
-          }
-        });
-        console.warn('Plusieurs boutons "primary" détectés. Seul le premier reste actif.');
-      }
-    });
-  </script>
-`;
 
 // Styles dynamiques en fonction des props
 const getVariantStyles = () => {
@@ -199,37 +159,6 @@ const sizeStyles = getSizeStyles();
   <slot />
   {icon && iconPosition === 'right' && <span class="icon">{icon}</span>}
 </button>
-
-<script>
-  document.addEventListener('DOMContentLoaded', () => {
-    const emphasisButtons = document.querySelectorAll('[data-variant="emphasis"]');
-    const primaryButtons = document.querySelectorAll('[data-variant="primary"]');
-
-    if (emphasisButtons.length > 1) {
-      emphasisButtons.forEach((button, index) => {
-        if (index > 0) {
-          button.setAttribute('disabled', 'true');
-          button.setAttribute('aria-disabled', 'true');
-          button.style.opacity = '0.5';
-          button.style.cursor = 'not-allowed';
-        }
-      });
-      console.warn('Plusieurs boutons "emphasis" détectés. Seul le premier reste actif.');
-    }
-
-    if (primaryButtons.length > 1) {
-      primaryButtons.forEach((button, index) => {
-        if (index > 0) {
-          button.setAttribute('disabled', 'true');
-          button.setAttribute('aria-disabled', 'true');
-          button.style.opacity = '0.5';
-          button.style.cursor = 'not-allowed';
-        }
-      });
-      console.warn('Plusieurs boutons "primary" détectés. Seul le premier reste actif.');
-    }
-  });
-</script>
 
 <style>
   .action-button {
