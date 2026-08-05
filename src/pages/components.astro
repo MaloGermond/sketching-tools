@@ -34,7 +34,7 @@ const iconNames = iconFiles.map(f => f.replace('.svg', ''));
       <Card>
         <p class="text-gray-600 mb-4">SVG icon component from public/icons/.</p>
         
-        <div class="flex flex-wrap gap-6">
+        <div class="flex flex-wrap gap-4 items-center justify-center bg-gray-50 p-4 rounded-lg mb-4">
           {iconNames.map(iconName => (
             <div class="flex flex-col items-center gap-2">
               <Icon name={iconName} size={32} class="text-purple-500" />
@@ -55,7 +55,9 @@ const iconNames = iconFiles.map(f => f.replace('.svg', ''));
     <section class="mb-12">
       <h2 class="text-2xl font-semibold mb-4">Header</h2>
       <Card>
+        <div class="flex flex-wrap gap-4 items-center justify-center bg-gray-50 p-4 rounded-lg mb-4">
         <Header />
+      </div>
       </Card>
     </section>
 
@@ -70,7 +72,7 @@ const iconNames = iconFiles.map(f => f.replace('.svg', ''));
         <div class="space-y-6">
           <div>
             <h3 class="text-lg font-medium mb-2">Variants</h3>
-            <div class="flex flex-wrap gap-4">
+            <div class="flex flex-wrap gap-4 items-center justify-center bg-gray-50 p-4 rounded-lg mb-4">
               <Action variant="primary">Primary</Action>
               <Action variant="emphasis">Emphasis</Action>
               <Action variant="default">Default</Action>
@@ -80,7 +82,7 @@ const iconNames = iconFiles.map(f => f.replace('.svg', ''));
           
           <div>
             <h3 class="text-lg font-medium mb-2">Sizes</h3>
-            <div class="flex flex-wrap gap-4">
+            <div class="flex flex-wrap gap-4 items-center justify-center bg-gray-50 p-4 rounded-lg mb-4">
               <Action size="sm">Small</Action>
               <Action size="md">Medium</Action>
               <Action size="lg">Large</Action>
@@ -89,7 +91,7 @@ const iconNames = iconFiles.map(f => f.replace('.svg', ''));
           
           <div>
             <h3 class="text-lg font-medium mb-2">With Icons</h3>
-            <div class="flex flex-wrap gap-4">
+            <div class="flex flex-wrap gap-4 items-center justify-center bg-gray-50 p-4 rounded-lg mb-4">
               <Action icon="circle" iconPosition="left">Draw</Action>
               <Action icon="rectangle" iconPosition="right">Edit</Action>
               <Action icon="triangle">Delete</Action>
@@ -98,7 +100,7 @@ const iconNames = iconFiles.map(f => f.replace('.svg', ''));
           
           <div>
             <h3 class="text-lg font-medium mb-2">States</h3>
-            <div class="flex flex-wrap gap-4">
+            <div class="flex flex-wrap gap-4 items-center justify-center bg-gray-50 p-4 rounded-lg mb-4">
               <Action disabled>Disabled</Action>
               <Action fullWidth variant="emphasis">Full Width</Action>
             </div>
@@ -106,7 +108,7 @@ const iconNames = iconFiles.map(f => f.replace('.svg', ''));
           
           <div>
             <h3 class="text-lg font-medium mb-2">With Href (Link)</h3>
-            <div class="flex flex-wrap gap-4">
+            <div class="flex flex-wrap gap-4 items-center justify-center bg-gray-50 p-4 rounded-lg mb-4">
               <Action href="/">Home</Action>
               <Action href="/tools/drawing-canvas" icon="circle">Drawing Tool</Action>
               <Action href="/tools/pattern-generator" icon="rectangle" variant="primary">Pattern Generator</Action>
@@ -125,7 +127,7 @@ const iconNames = iconFiles.map(f => f.replace('.svg', ''));
       <Card>
         <p class="text-gray-600 mb-4">Toggle button avec icône seule, bascule entre default et primary.</p>
         
-        <div class="flex flex-wrap gap-4 items-center">
+        <div class="flex flex-wrap gap-4 items-center justify-center bg-gray-50 p-4 rounded-lg mb-4">
           <Toggle icon="circle" />
           <Toggle icon="circle" selected />
           <Toggle icon="rectangle" size={40} />
@@ -147,11 +149,36 @@ const iconNames = iconFiles.map(f => f.replace('.svg', ''));
     </section>
 
     <!-- ============================================ -->
+    <!-- SECTION: Toolbar -->
+    <!-- ============================================ -->
+    <section class="mb-12">
+      <h2 class="text-2xl font-semibold mb-4">Toolbar</h2>
+      <Card>
+        <p class="text-gray-600 mb-4">Barre d'outils fixe en bas de l'écran avec des boutons toggle pour les outils de dessin.</p>
+        
+        <div class="bg-gray-50 p-4 rounded-lg mb-4 relative h-32">
+          <Toolbar />
+        </div>
+        
+        <p class="text-gray-600 mt-6 text-sm">
+          Positionnée avec <code>fixed bottom-4 left-1/2 -translate-x-1/2 z-10</code>
+        </p>
+        <p class="text-gray-600 mt-2 text-sm">
+          Conteneur: <code>&lt;Card class="fixed ..."&gt;&lt;Toolbar /&gt;&lt;/Card&gt;</code>
+        </p>
+        <p class="text-gray-600 mt-2 text-sm">
+          Contient des &lt;Toggle&gt; pour chaque outil de dessin.
+        </p>
+      </Card>
+    </section>
+
+    <!-- ============================================ -->
     <!-- SECTION: Card -->
     <!-- ============================================ -->
     <section class="mb-12">
       <h2 class="text-2xl font-semibold mb-4">Card</h2>
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <Card>
+          <div class="flex flex-wrap gap-4 items-center justify-center bg-gray-50 p-4 rounded-lg mb-4">
         <Card>
           <h3 class="text-lg font-semibold mb-2">Default Card</h3>
           <p class="text-gray-600">This is a default card with some content.</p>
@@ -165,6 +192,7 @@ const iconNames = iconFiles.map(f => f.replace('.svg', ''));
           <p class="text-gray-600 p-4">Card with additional padding.</p>
         </Card>
       </div>
+      </Card>
     </section>
 
     <!-- ============================================ -->
@@ -203,21 +231,14 @@ const iconNames = iconFiles.map(f => f.replace('.svg', ''));
     <!-- SECTION: ToolCard -->
     <!-- ============================================ -->
     <section class="mb-12">
+      <Card>
       <h2 class="text-2xl font-semibold mb-4">ToolCard</h2>
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div class="flex flex-wrap gap-4 items-center justify-center bg-gray-50 p-4 rounded-lg mb-4">
         <ToolCard title="Drawing Tool" description="A tool for drawing" link="/tools/drawing-canvas" />
         <ToolCard title="Pattern Generator" description="Generate patterns" link="/tools/pattern-generator" />
         <ToolCard title="Warmup" description="Warmup exercises" link="/tools/warmup" />
       </div>
-    </section>
-
-    <!-- ============================================ -->
-    <!-- SECTION: Toolbar -->
-    <!-- ============================================ -->
-
-    <section class="mb-12">
-      <h2 class="text-2xl font-semibold mb-4">Toolbar</h2>
-        <Toolbar/>
+    </Card>
     </section>
     
   </div>

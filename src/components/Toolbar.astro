@@ -1,17 +1,23 @@
 ---
+/**
+ * Composant Toolbar - Barre d'outils fixe en bas de l'écran
+ * 
+ * @description
+ * Une barre d'outils positionnée fixement en bas de l'écran, centrée horizontalement.
+ * Contient des boutons toggle pour sélectionner des outils de dessin.
+ */
 
 import Toggle from './Toggle.astro';
 import Card from './Card.astro';
-
 ---
 
-<Card class="border-1 border-gray-200 fixed bottom-1 left-1/2 -translate-x-1/2">
+<Card class="fixed bottom-4 left-1/2 -translate-x-1/2 z-10 border border-gray-200">
 	<div class="flex gap-2">
-		<Toggle icon="circle"></Toggle>
-		<Toggle icon="ellipse"></Toggle>
-		<Toggle icon="rectangle"></Toggle>
-		<Toggle icon="triangle"></Toggle>
-		<Toggle icon="line-horizontal"></Toggle>
-		<Toggle icon="line-vertical"></Toggle>
+		<Toggle icon="circle" size="44" />
+		<Toggle icon="ellipse" size="44"/>
+		<Toggle icon="rectangle" size="44"/>
+		<Toggle icon="triangle" size="44"/>
+		<Toggle icon="line-horizontal" size="44"/>
+		<Toggle icon="line-vertical" size="44"/>
 	</div>
 </Card>
