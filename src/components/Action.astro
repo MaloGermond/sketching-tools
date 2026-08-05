@@ -192,13 +192,44 @@ const sizeStyles = getSizeStyles();
     textDecoration: 'none'
   }}
   {...(disabled && { 'aria-disabled': 'true' })}
+  data-hover={styles.hover}
+  data-active={styles.active}
 >
   {icon && iconPosition === 'left' && <span class="icon">{icon}</span>}
   <slot />
   {icon && iconPosition === 'right' && <span class="icon">{icon}</span>}
 </button>
 
-{script}
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const emphasisButtons = document.querySelectorAll('[data-variant="emphasis"]');
+    const primaryButtons = document.querySelectorAll('[data-variant="primary"]');
+
+    if (emphasisButtons.length > 1) {
+      emphasisButtons.forEach((button, index) => {
+        if (index > 0) {
+          button.setAttribute('disabled', 'true');
+          button.setAttribute('aria-disabled', 'true');
+          button.style.opacity = '0.5';
+          button.style.cursor = 'not-allowed';
+        }
+      });
+      console.warn('Plusieurs boutons "emphasis" détectés. Seul le premier reste actif.');
+    }
+
+    if (primaryButtons.length > 1) {
+      primaryButtons.forEach((button, index) => {
+        if (index > 0) {
+          button.setAttribute('disabled', 'true');
+          button.setAttribute('aria-disabled', 'true');
+          button.style.opacity = '0.5';
+          button.style.cursor = 'not-allowed';
+        }
+      });
+      console.warn('Plusieurs boutons "primary" détectés. Seul le premier reste actif.');
+    }
+  });
+</script>
 
 <style>
   .action-button {
@@ -206,11 +237,11 @@ const sizeStyles = getSizeStyles();
   }
   
   .action-button:hover:not(:disabled) {
-    background: v-bind(styles.hover);
+    background: var(--hover-bg, var(--color-gray-300));
   }
   
   .action-button:active:not(:disabled) {
-    background: v-bind(styles.active);
+    background: var(--active-bg, var(--color-gray-400));
   }
   
   .action-button:focus {
@@ -231,3 +262,12 @@ const sizeStyles = getSizeStyles();
     font-size: 1.2em;
   }
 </style>
+
+<script is:inline>
+  // Set CSS variables for hover/active states
+  const buttons = document.querySelectorAll('.action-button');
+  buttons.forEach(button => {
+    button.style.setProperty('--hover-bg', button.dataset.hover);
+    button.style.setProperty('--active-bg', button.dataset.active);
+  });
+</script>
