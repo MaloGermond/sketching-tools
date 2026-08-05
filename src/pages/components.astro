@@ -80,11 +80,12 @@ const iconNames = iconFiles.map(f => f.replace('.svg', ''));
           </div>
           
           <div>
-            <h3 class="text-lg font-medium mb-2">Types</h3>
+            <h3 class="text-lg font-medium mb-2">With Href (Link)</h3>
             <div class="flex flex-wrap gap-4">
-              <Action type="button">Button</Action>
-              <Action type="submit">Submit</Action>
-              <Action type="reset">Reset</Action>
+              <Action href="/">Home</Action>
+              <Action href="/tools/drawing-canvas" icon="circle">Drawing Tool</Action>
+              <Action href="/tools/pattern-generator" icon="rectangle" variant="primary">Pattern Generator</Action>
+              <Action href="/tools/warmup" icon="triangle" onClick="console.log('Navigating to warmup')">Warmup</Action>
             </div>
           </div>
         </div>

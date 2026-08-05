@@ -25,6 +25,7 @@
  * @prop {('left' | 'right')} iconPosition - Position de l'icône (défaut: 'left')
  * @prop {number} [iconSize] - Taille de l'icône en pixels (défaut: 20)
  * @prop {string} [onClick] - Callback JavaScript à exécuter au clic (ex: "showToast({ score: 95 })")
+ * @prop {string} [href] - URL pour la redirection (si présent, rend un <a> au lieu d'un <button>)
  */
 
 import Icon from './Icon.astro';
@@ -38,6 +39,7 @@ interface Props {
   iconPosition?: 'left' | 'right';
   iconSize?: number;
   onClick?: string;
+  href?: string;
 }
 
 const {
@@ -48,8 +50,11 @@ const {
   icon,
   iconPosition = 'left',
   iconSize = 20,
-  onClick
+  onClick,
+  href
 } = Astro.props;
+
+const isLink = !!href;
 
 // Styles dynamiques en fonction des props
 const getVariantStyles = () => {
@@ -58,6 +63,7 @@ const getVariantStyles = () => {
       return {
         background: 'var(--color-black)',
         color: 'var(--color-white)',
+        border: 'none',
         hover: 'var(--color-gray-900)',
         active: 'var(--color-gray-700)'
       };
@@ -65,6 +71,7 @@ const getVariantStyles = () => {
       return {
         background: 'var(--color-accent)',
         color: 'var(--color-white)',
+        border: 'none',
         hover: '#7c3aed', // Purple-700
         active: '#6d28d9' // Purple-800
       };
@@ -72,6 +79,7 @@ const getVariantStyles = () => {
       return {
         background: 'var(--color-gray-200)',
         color: 'var(--color-black)',
+        border: 'none',
         hover: 'var(--color-gray-400)',
         active: 'var(--color-gray-700)'
       };
@@ -79,14 +87,15 @@ const getVariantStyles = () => {
       return {
         background: 'transparent',
         color: 'var(--color-black)',
-        border: '1px solid var(--color-gray-300)',
-        hover: 'var(--color-gray-100)',
-        active: 'var(--color-gray-200)'
+        border: '1px solid transparent',
+        hover: 'var(--color-gray-200)',
+        active: 'var(--color-gray-300)'
       };
     default:
       return {
         background: 'var(--color-gray-200)',
         color: 'var(--color-black)',
+        border: 'none',
         hover: 'var(--color-gray-400)',
         active: 'var(--color-gray-700)'
       };
@@ -124,59 +133,104 @@ const getSizeStyles = () => {
 const sizeStyles = getSizeStyles();
 ---
 
-<!-- Composant Bouton -->
-<button
-  type="button"
-  disabled={disabled}
-  aria-disabled={disabled}
-  data-variant={variant}
-  {...(onClick && { onclick: onClick })}
-  class:list={[
-    'action-button',
-    `variant-${variant}`,
-    `size-${size}`,
-    { 'full-width': fullWidth },
-    { 'disabled': disabled }
-  ]}
-  style={{
-    background: styles.background,
-    color: styles.color,
-    padding: sizeStyles.padding,
-    fontSize: sizeStyles.fontSize,
-    width: fullWidth ? '100%' : 'auto',
-    border: variant === 'facultatif' ? styles.border : 'none',
-    cursor: disabled ? 'not-allowed' : 'pointer',
-    opacity: disabled ? 0.5 : 1,
-    transition: 'all var(--transition-fast)',
-    borderRadius: 'var(--radius-md)',
-    fontFamily: 'var(--font-family)',
-    fontWeight: 'var(--font-weight-medium)',
-    display: 'inline-flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 'var(--space-sm)',
-    textDecoration: 'none'
-  }}
-  {...(disabled && { 'aria-disabled': 'true' })}
-  data-hover={styles.hover}
-  data-active={styles.active}
->
-  {icon && iconPosition === 'left' && <Icon name={icon} size={iconSize} />}
-  <slot />
-  {icon && iconPosition === 'right' && <Icon name={icon} size={iconSize} />}
-</button>
+<!-- Composant Bouton/Lien -->
+{isLink ? (
+  <a
+    href={href}
+    aria-disabled={disabled}
+    class:list={[
+      'action-button',
+      `variant-${variant}`,
+      `size-${size}`,
+      { 'full-width': fullWidth },
+      { 'disabled': disabled }
+    ]}
+    style={{
+      '--btn-bg': styles.background,
+      '--btn-color': styles.color,
+      '--btn-border': styles.border,
+      '--btn-hover': styles.hover,
+      '--btn-active': styles.active,
+      padding: sizeStyles.padding,
+      fontSize: sizeStyles.fontSize,
+      width: fullWidth ? '100%' : 'auto',
+      border: 'var(--btn-border)',
+      cursor: disabled ? 'not-allowed' : 'pointer',
+      opacity: disabled ? 0.5 : 1,
+      transition: 'all var(--transition-fast)',
+      borderRadius: 'var(--radius-md)',
+      fontFamily: 'var(--font-family)',
+      fontWeight: 'var(--font-weight-medium)',
+      display: 'inline-flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      gap: 'var(--space-sm)',
+      textDecoration: 'none'
+    }}
+    {...(onClick && { onclick: onClick })}
+    {...(disabled && { onclick: 'return false' })}
+  >
+    {icon && iconPosition === 'left' && <Icon name={icon} size={iconSize} />}
+    <slot />
+    {icon && iconPosition === 'right' && <Icon name={icon} size={iconSize} />}
+  </a>
+) : (
+  <button
+    type="button"
+    disabled={disabled}
+    aria-disabled={disabled}
+    class:list={[
+      'action-button',
+      `variant-${variant}`,
+      `size-${size}`,
+      { 'full-width': fullWidth },
+      { 'disabled': disabled }
+    ]}
+    style={{
+      '--btn-bg': styles.background,
+      '--btn-color': styles.color,
+      '--btn-border': styles.border,
+      '--btn-hover': styles.hover,
+      '--btn-active': styles.active,
+      padding: sizeStyles.padding,
+      fontSize: sizeStyles.fontSize,
+      width: fullWidth ? '100%' : 'auto',
+      border: 'var(--btn-border)',
+      cursor: disabled ? 'not-allowed' : 'pointer',
+      opacity: disabled ? 0.5 : 1,
+      transition: 'all var(--transition-fast)',
+      borderRadius: 'var(--radius-md)',
+      fontFamily: 'var(--font-family)',
+      fontWeight: 'var(--font-weight-medium)',
+      display: 'inline-flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      gap: 'var(--space-sm)',
+      textDecoration: 'none'
+    }}
+    {...(onClick && { onclick: onClick })}
+    {...(disabled && { 'aria-disabled': 'true' })}
+  >
+    {icon && iconPosition === 'left' && <Icon name={icon} size={iconSize} />}
+    <slot />
+    {icon && iconPosition === 'right' && <Icon name={icon} size={iconSize} />}
+  </button>
+)}
 
 <style>
   .action-button {
     --transition-fast: 150ms ease;
+    background: var(--btn-bg);
+    color: var(--btn-color);
+    border: var(--btn-border);
   }
   
-  .action-button:hover:not(:disabled) {
-    background: var(--hover-bg, var(--color-gray-300));
+  .action-button:hover:not(.disabled) {
+    background: var(--btn-hover);
   }
   
-  .action-button:active:not(:disabled) {
-    background: var(--active-bg, var(--color-gray-400));
+  .action-button:active:not(.disabled) {
+    background: var(--btn-active);
   }
   
   .action-button:focus {
@@ -184,9 +238,10 @@ const sizeStyles = getSizeStyles();
     outline-offset: 2px;
   }
   
-  .action-button:disabled {
+  .action-button.disabled {
     cursor: not-allowed;
     opacity: 0.5;
+    pointer-events: none;
   }
   
   .action-button.full-width {
@@ -194,12 +249,3 @@ const sizeStyles = getSizeStyles();
   }
   
 </style>
-
-<script is:inline>
-  // Set CSS variables for hover/active states
-  const buttons = document.querySelectorAll('.action-button');
-  buttons.forEach(button => {
-    button.style.setProperty('--hover-bg', button.dataset.hover);
-    button.style.setProperty('--active-bg', button.dataset.active);
-  });
-</script>
