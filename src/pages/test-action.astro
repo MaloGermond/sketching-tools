@@ -1,16 +1,10 @@
 ---
 // Page de test pour le composant Action
 import Action from '../components/Action.astro';
+import MainLayout from '../layouts/MainLayout.astro';
 ---
 
-<html lang="fr">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Test Composant Action</title>
-  <link rel="stylesheet" href="../styles/variables.css">
-</head>
-<body>
+<MainLayout title="composant Action">
   <h1>Test du composant Action</h1>
   
   <h2>Variantes</h2>
@@ -60,5 +54,4 @@ import Action from '../components/Action.astro';
     <Action variant="emphasis" size="sm" icon="✅">Valider</Action>
     <Action variant="facultatif" fullWidth icon="📌">Épingler</Action>
   </div>
-</body>
-</html>
+</MainLayout>
