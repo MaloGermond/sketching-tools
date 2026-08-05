@@ -7,6 +7,7 @@ import Scoreboard from "../components/Scoreboard.astro";
 import ToolCard from "../components/ToolCard.astro";
 import Header from "../components/Header.astro";
 import Icon from "../components/Icon.astro";
+import Toolbar from "../components/Toolbar.astro";
 
 import fs from 'fs';
 import path from 'path';
@@ -23,6 +24,29 @@ const iconNames = iconFiles.map(f => f.replace('.svg', ''));
   <div class="p-8 max-w-7xl mx-auto">
     <h1 class="text-3xl font-bold mb-8">All Components - Dev Page</h1>
     <p class="text-gray-600 mb-8">This page is only available in development mode.</p>
+
+    <!-- ============================================ -->
+    <!-- SECTION: Icon -->
+    <!-- ============================================ -->
+    <section class="mb-12">
+      <h2 class="text-2xl font-semibold mb-4">Icon</h2>
+      <Card>
+        <p class="text-gray-600 mb-4">SVG icon component from public/icons/.</p>
+        
+        <div class="flex flex-wrap gap-6">
+          {iconNames.map(iconName => (
+            <div class="flex flex-col items-center gap-2">
+              <Icon name={iconName} size={32} class="text-purple-500" />
+              <span class="text-sm text-gray-600">{iconName}</span>
+            </div>
+          ))}
+        </div>
+        
+        <p class="text-gray-600 mt-6 text-sm">
+          Usage: <code>&lt;Icon name="{iconNames[0] || 'icon-name'}" size={32} class="text-color" /&gt;</code>
+        </p>
+      </Card>
+    </section>
 
     <!-- ============================================ -->
     <!-- SECTION: Header -->
@@ -158,26 +182,13 @@ const iconNames = iconFiles.map(f => f.replace('.svg', ''));
     </section>
 
     <!-- ============================================ -->
-    <!-- SECTION: Icon -->
+    <!-- SECTION: Toolbar -->
     <!-- ============================================ -->
+
     <section class="mb-12">
-      <h2 class="text-2xl font-semibold mb-4">Icon</h2>
-      <Card>
-        <p class="text-gray-600 mb-4">SVG icon component from public/icons/.</p>
-        
-        <div class="flex flex-wrap gap-6">
-          {iconNames.map(iconName => (
-            <div class="flex flex-col items-center gap-2">
-              <Icon name={iconName} size={32} class="text-purple-500" />
-              <span class="text-sm text-gray-600">{iconName}</span>
-            </div>
-          ))}
-        </div>
-        
-        <p class="text-gray-600 mt-6 text-sm">
-          Usage: <code>&lt;Icon name="{iconNames[0] || 'icon-name'}" size={32} class="text-color" /&gt;</code>
-        </p>
-      </Card>
+      <h2 class="text-2xl font-semibold mb-4">Toolbar</h2>
+        <Toolbar/>
     </section>
+    
   </div>
 </MainLayout>
