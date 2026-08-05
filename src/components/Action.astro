@@ -20,30 +20,35 @@
  * @prop {('emphasis' | 'primary' | 'default' | 'facultatif')} variant - Variante du bouton (défaut: 'default')
  * @prop {('sm' | 'md' | 'lg')} size - Taille du bouton (défaut: 'md')
  * @prop {boolean} disabled - Désactive le bouton (défaut: false)
- * @prop {('button' | 'submit' | 'reset')} type - Type du bouton (défaut: 'button')
  * @prop {boolean} fullWidth - Bouton en pleine largeur (défaut: false)
- * @prop {string} [icon] - Icône à afficher (optionnel)
+ * @prop {string} [icon] - Nom de l'icône SVG à afficher (optionnel, correspond au fichier dans public/icons/)
  * @prop {('left' | 'right')} iconPosition - Position de l'icône (défaut: 'left')
+ * @prop {number} [iconSize] - Taille de l'icône en pixels (défaut: 20)
+ * @prop {string} [onClick] - Callback JavaScript à exécuter au clic (ex: "showToast({ score: 95 })")
  */
+
+import Icon from './Icon.astro';
 
 interface Props {
   variant?: 'emphasis' | 'primary' | 'default' | 'facultatif';
   size?: 'sm' | 'md' | 'lg';
   disabled?: boolean;
-  type?: 'button' | 'submit' | 'reset';
   fullWidth?: boolean;
   icon?: string;
   iconPosition?: 'left' | 'right';
+  iconSize?: number;
+  onClick?: string;
 }
 
 const {
   variant = 'default',
   size = 'md',
   disabled = false,
-  type = 'button',
   fullWidth = false,
   icon,
-  iconPosition = 'left'
+  iconPosition = 'left',
+  iconSize = 20,
+  onClick
 } = Astro.props;
 
 // Styles dynamiques en fonction des props
@@ -121,10 +126,11 @@ const sizeStyles = getSizeStyles();
 
 <!-- Composant Bouton -->
 <button
-  type={type}
+  type="button"
   disabled={disabled}
   aria-disabled={disabled}
   data-variant={variant}
+  {...(onClick && { onclick: onClick })}
   class:list={[
     'action-button',
     `variant-${variant}`,
@@ -155,9 +161,9 @@ const sizeStyles = getSizeStyles();
   data-hover={styles.hover}
   data-active={styles.active}
 >
-  {icon && iconPosition === 'left' && <span class="icon">{icon}</span>}
+  {icon && iconPosition === 'left' && <Icon name={icon} size={iconSize} />}
   <slot />
-  {icon && iconPosition === 'right' && <span class="icon">{icon}</span>}
+  {icon && iconPosition === 'right' && <Icon name={icon} size={iconSize} />}
 </button>
 
 <style>
@@ -187,9 +193,6 @@ const sizeStyles = getSizeStyles();
     width: 100%;
   }
   
-  .action-button .icon {
-    font-size: 1.2em;
-  }
 </style>
 
 <script is:inline>
