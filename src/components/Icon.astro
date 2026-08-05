@@ -1,0 +1,20 @@
+---
+interface Props {
+  name: string;
+  size?: number;
+  class?: string;
+}
+
+const { name, size = 24, class: className = '' } = Astro.props;
+const iconUrl = `/icons/${name}.svg`;
+---
+
+<img 
+  src={iconUrl}
+  alt={name}
+  width={size}
+  height={size}
+  class={className}
+  style="display: inline-block; vertical-align: middle;"
+/>
+

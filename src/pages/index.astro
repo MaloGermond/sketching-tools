@@ -10,7 +10,13 @@ const tools = [
 ---
 
 <MainLayout title="Hub">
-  <h1>Mes outils</h1>
+  <h1 class="text-2xl">Mes outils</h1>
+  
+  <p style="margin-top: 1rem;">
+    <a href="/components" style="color: var(--color-accent); text-decoration: underline;">
+      → Voir tous les composants
+    </a>
+  </p>
   
   <div style="display: grid; gap: 1rem; margin-top: 2rem;">
     {tools.map((tool) => (
