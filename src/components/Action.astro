@@ -1,0 +1,233 @@
+---
+/**
+ * Composant Action - Bouton réutilisable pour l'application Sketching Tools
+ * 
+ * @description
+ * Un composant de bouton flexible avec plusieurs variantes et tailles.
+ * 
+ * @rules
+ * - Une seule action "emphasis" peut exister dans l'interface à la fois.
+ * - Une seule action "primary" peut exister dans l'interface à la fois (de manière ponctuelle).
+ * 
+ * @variants
+ * - emphasis: Action principale à mettre en avant (fond noir, texte blanc)
+ * - primary: Action ponctuelle pour focaliser l'attention (fond --color-accent, texte blanc)
+ * - default: Action standard (fond gris, texte noir)
+ * - facultatif: Action secondaire ou optionnelle (fond transparent, texte noir)
+ * 
+ * @sizes
+ * - sm: Petit
+ * - md: Moyen (défaut)
+ * - lg: Grand
+ * 
+ * @props
+ * @prop {('emphasis' | 'primary' | 'default' | 'facultatif')} variant - Variante du bouton (défaut: 'default')
+ * @prop {('sm' | 'md' | 'lg')} size - Taille du bouton (défaut: 'md')
+ * @prop {boolean} disabled - Désactive le bouton (défaut: false)
+ * @prop {('button' | 'submit' | 'reset')} type - Type du bouton (défaut: 'button')
+ * @prop {boolean} fullWidth - Bouton en pleine largeur (défaut: false)
+ * @prop {string} [icon] - Icône à afficher (optionnel)
+ * @prop {('left' | 'right')} iconPosition - Position de l'icône (défaut: 'left')
+ */
+
+interface Props {
+  variant?: 'emphasis' | 'primary' | 'default' | 'facultatif';
+  size?: 'sm' | 'md' | 'lg';
+  disabled?: boolean;
+  type?: 'button' | 'submit' | 'reset';
+  fullWidth?: boolean;
+  icon?: string;
+  iconPosition?: 'left' | 'right';
+}
+
+const {
+  variant = 'default',
+  size = 'md',
+  disabled = false,
+  type = 'button',
+  fullWidth = false,
+  icon,
+  iconPosition = 'left'
+} = Astro.props;
+
+// Gestion des règles métiers : une seule action emphasis/primary à la fois
+const script = `
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const emphasisButtons = document.querySelectorAll('[data-variant="emphasis"]');
+      const primaryButtons = document.querySelectorAll('[data-variant="primary"]');
+
+      // Désactiver tous les boutons emphasis sauf le premier
+      if (emphasisButtons.length > 1) {
+        emphasisButtons.forEach((button, index) => {
+          if (index > 0) {
+            button.setAttribute('disabled', 'true');
+            button.setAttribute('aria-disabled', 'true');
+            button.style.opacity = '0.5';
+            button.style.cursor = 'not-allowed';
+          }
+        });
+        console.warn('Plusieurs boutons "emphasis" détectés. Seul le premier reste actif.');
+      }
+
+      // Désactiver tous les boutons primary sauf le premier
+      if (primaryButtons.length > 1) {
+        primaryButtons.forEach((button, index) => {
+          if (index > 0) {
+            button.setAttribute('disabled', 'true');
+            button.setAttribute('aria-disabled', 'true');
+            button.style.opacity = '0.5';
+            button.style.cursor = 'not-allowed';
+          }
+        });
+        console.warn('Plusieurs boutons "primary" détectés. Seul le premier reste actif.');
+      }
+    });
+  </script>
+`;
+
+// Styles dynamiques en fonction des props
+const getVariantStyles = () => {
+  switch (variant) {
+    case 'emphasis':
+      return {
+        background: 'var(--color-black)',
+        color: 'var(--color-white)',
+        hover: 'var(--color-gray-900)',
+        active: 'var(--color-gray-700)'
+      };
+    case 'primary':
+      return {
+        background: 'var(--color-accent)',
+        color: 'var(--color-white)',
+        hover: '#7c3aed', // Purple-700
+        active: '#6d28d9' // Purple-800
+      };
+    case 'default':
+      return {
+        background: 'var(--color-gray-200)',
+        color: 'var(--color-black)',
+        hover: 'var(--color-gray-400)',
+        active: 'var(--color-gray-700)'
+      };
+    case 'facultatif':
+      return {
+        background: 'transparent',
+        color: 'var(--color-black)',
+        border: '1px solid var(--color-gray-300)',
+        hover: 'var(--color-gray-100)',
+        active: 'var(--color-gray-200)'
+      };
+    default:
+      return {
+        background: 'var(--color-gray-200)',
+        color: 'var(--color-black)',
+        hover: 'var(--color-gray-400)',
+        active: 'var(--color-gray-700)'
+      };
+  }
+};
+
+const styles = getVariantStyles();
+
+// Tailles
+const getSizeStyles = () => {
+  switch (size) {
+    case 'sm':
+      return {
+        padding: 'var(--space-xs) var(--space-sm)',
+        fontSize: 'var(--font-size-sm)'
+      };
+    case 'md':
+      return {
+        padding: 'var(--space-sm) var(--space-md)',
+        fontSize: 'var(--font-size-base)'
+      };
+    case 'lg':
+      return {
+        padding: 'var(--space-md) var(--space-lg)',
+        fontSize: 'var(--font-size-lg)'
+      };
+    default:
+      return {
+        padding: 'var(--space-sm) var(--space-md)',
+        fontSize: 'var(--font-size-base)'
+      };
+  }
+};
+
+const sizeStyles = getSizeStyles();
+---
+
+<!-- Composant Bouton -->
+<button
+  type={type}
+  disabled={disabled}
+  aria-disabled={disabled}
+  data-variant={variant}
+  class:list={[
+    'action-button',
+    `variant-${variant}`,
+    `size-${size}`,
+    { 'full-width': fullWidth },
+    { 'disabled': disabled }
+  ]}
+  style={{
+    background: styles.background,
+    color: styles.color,
+    padding: sizeStyles.padding,
+    fontSize: sizeStyles.fontSize,
+    width: fullWidth ? '100%' : 'auto',
+    border: variant === 'facultatif' ? styles.border : 'none',
+    cursor: disabled ? 'not-allowed' : 'pointer',
+    opacity: disabled ? 0.5 : 1,
+    transition: 'all var(--transition-fast)',
+    borderRadius: 'var(--radius-md)',
+    fontFamily: 'var(--font-family)',
+    fontWeight: 'var(--font-weight-medium)',
+    display: 'inline-flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 'var(--space-sm)',
+    textDecoration: 'none'
+  }}
+  {...(disabled && { 'aria-disabled': 'true' })}
+>
+  {icon && iconPosition === 'left' && <span class="icon">{icon}</span>}
+  <slot />
+  {icon && iconPosition === 'right' && <span class="icon">{icon}</span>}
+</button>
+
+{script}
+
+<style>
+  .action-button {
+    --transition-fast: 150ms ease;
+  }
+  
+  .action-button:hover:not(:disabled) {
+    background: v-bind(styles.hover);
+  }
+  
+  .action-button:active:not(:disabled) {
+    background: v-bind(styles.active);
+  }
+  
+  .action-button:focus {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+  
+  .action-button:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
+  
+  .action-button.full-width {
+    width: 100%;
+  }
+  
+  .action-button .icon {
+    font-size: 1.2em;
+  }
+</style>
