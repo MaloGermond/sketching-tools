@@ -10,7 +10,10 @@ const { title, class: className } = Astro.props;
 
 <div class:list={[
   className,
-  'card'
+  'bg-(--bg-card)',
+  'm-(--space-sm)',
+  'p-(--space-sm)',
+  'rounded-(--radius-lg)',
 ]}>
   {title && <h2 class="card-title">{title}</h2>}
   <slot/>
@@ -28,9 +31,5 @@ const { title, class: className } = Astro.props;
   .card-title {
     margin: 0 0 0.5rem 0;
     font-size: 1rem;
-  }
-  
-  .bg-gray-50 {
-    background: var(--color-gray-50);
   }
 </style>

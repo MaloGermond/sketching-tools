@@ -28,15 +28,14 @@ const {
   onClick
 } = Astro.props;
 
-const toggleClick = onClick 
-  ? `this.dataset.selected = this.dataset.selected === 'true' ? 'false' : 'true'; ${onClick}`
-  : "this.dataset.selected = this.dataset.selected === 'true' ? 'false' : 'true'";
+const toggleClick = onClick || "";
 ---
 
 <button
   type="button"
   class="toggle-button"
   data-selected={selected}
+  data-icon={icon}
   style={{
     '--toggle-size': `${size}px`,
     width: 'var(--toggle-size)',

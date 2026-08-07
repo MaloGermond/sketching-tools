@@ -11,8 +11,8 @@ const title = "Échauffement";
 <MainLayout title={title}>
   <Toast toastId="score-toast" label="Ressemblance" />
 
-  <div style="position: relative; width: 100%; height: 100%;">
-    <div id="sketch-container" style="width: 100%; height: 100%;"></div>
+  <div class="relative w-full h-full">
+    <div id="sketch-container" class="w-full h-full"></div>
   </div>
 
   <!-- <Card style="position: absolute; bottom: 1rem; left: 1rem;">
@@ -93,14 +93,76 @@ const title = "Échauffement";
     class="absolute top-1 right-1 min-width-[200px]"
   />
 
+  <script>
+    // État global des formes sélectionnées dans la Toolbar - défini AVANT p5.js
+    window.shapeSettings = {
+      'circle': true,
+      'square': false,
+      'triangle': false,
+      'horizontal-line': false,
+      'vertical-line': false,
+      'ellipse': false
+    };
+  </script>
+
   <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js"></script>
   <script src="/scripts/sketches/warmup.js" is:inline></script>
   <script>
-    // Initialiser les checkboxes une fois le DOM chargé
+    // Initialisation au chargement
     document.addEventListener("DOMContentLoaded", () => {
-      if (typeof initShapeCheckboxes === "function") {
-        initShapeCheckboxes();
+      const toolbar = document.getElementById('drawing-toolbar');
+      if (!toolbar) return;
+
+      // Sélectionner le premier Toggle par défaut (circle)
+      const firstToggle = toolbar.querySelector('.toggle-button');
+      if (firstToggle) {
+        firstToggle.dataset.selected = 'true';
       }
+
+      // Gérer les clics sur les Toggle de la Toolbar
+      toolbar.addEventListener('click', (event) => {
+        const toggle = event.target.closest('.toggle-button');
+        if (!toggle) return;
+
+        const icon = toggle.dataset.icon;
+        if (!icon) return;
+
+        // Basculer l'état
+        const isSelected = toggle.dataset.selected === 'true';
+        toggle.dataset.selected = isSelected ? 'false' : 'true';
+
+        // Mettre à jour window.shapeSettings
+        if (window.shapeSettings) {
+          window.shapeSettings[icon] = !isSelected;
+        }
+
+        // Notifier le script p5.js
+        document.dispatchEvent(new CustomEvent('shapeSettingsUpdated', {
+          detail: { settings: { ...window.shapeSettings } }
+        }));
+      });
+
+      // Synchroniser avec les événements du script
+      document.addEventListener('shapeSelected', (event) => {
+        if (event.detail && event.detail.shape) {
+          // Désélectionner tous les Toggle
+          document.querySelectorAll('#drawing-toolbar .toggle-button').forEach(btn => {
+            btn.dataset.selected = 'false';
+          });
+          // Sélectionner le Toggle correspondant
+          const activeToggle = document.querySelector(`#drawing-toolbar .toggle-button[data-icon="${event.detail.shape}"]`);
+          if (activeToggle) {
+            activeToggle.dataset.selected = 'true';
+            // Mettre à jour window.shapeSettings
+            window.shapeSettings[event.detail.shape] = true;
+          }
+        }
+      });
+
+      // Exposer l'état initial au script
+      document.dispatchEvent(new CustomEvent('shapeSettingsUpdated', {
+        detail: { settings: { ...window.shapeSettings } }
+      }));
     });
   </script>
 </MainLayout>

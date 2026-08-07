@@ -57,7 +57,7 @@ const GUIDE_DISPLAY_STYLE = {
   noFill: true
 };
 
-// Configuration des formes disponibles
+// Configuration des formes disponibles - initialisée par défaut, sera écrasée par window.shapeSettings
 let shapeSettings = {
   circle: true,
   ellipse: false,
@@ -706,6 +706,9 @@ function setShape(shape) {
   generateShapeParams();
   updateScoreState();
   redraw();
+  
+  // Synchroniser l'UI avec la nouvelle forme
+  notifyShapeSelection();
 }
 
 function setLevel(level) {
@@ -775,10 +778,52 @@ function updateScoreState() {
 function generateNewShape(level = currentLevel, settings = shapeSettings) {
   const availableShapes = getAvailableShapes(settings);
   if (availableShapes.length === 0) {
-    availableShapes.push('circle', 'square', 'triangle', 'horizontal-line', 'vertical-line');
+    availableShapes.push('circle', 'square', 'triangle', 'horizontal-line', 'vertical-line', 'ellipse');
   }
   selectedShape = random(availableShapes);
   currentLevel = level;
   generateShapeParams();
+  
+  // Synchroniser l'UI avec la nouvelle forme
+  notifyShapeSelection();
+  
   return selectedShape;
+}
+
+// ============================================
+// UI COMMUNICATION (Decoupled from DOM)
+// ============================================
+
+// Écouter les événements de sélection de forme depuis l'UI
+if (typeof document !== 'undefined') {
+  document.addEventListener('selectShape', (event) => {
+    if (event.detail && event.detail.shape) {
+      toggleShape(event.detail.shape);
+    }
+  });
+}
+
+// Synchroniser l'UI quand la forme change dans le script
+function notifyShapeSelection() {
+  if (typeof document !== 'undefined' && currentShape) {
+    document.dispatchEvent(new CustomEvent('shapeSelected', {
+      detail: { shape: currentShape }
+    }));
+  }
+}
+
+// Écouter les mises à jour de l'UI
+if (typeof document !== 'undefined') {
+  document.addEventListener('shapeSettingsUpdated', (event) => {
+    if (event.detail && event.detail.settings) {
+      const newSettings = event.detail.settings;
+      // Vérifier si les settings ont réellement changé
+      const settingsChanged = JSON.stringify(shapeSettings) !== JSON.stringify(newSettings);
+      shapeSettings = newSettings;
+      // Régénérer une forme si les settings ont changé
+      if (settingsChanged && currentShape === null) {
+        currentShape = generateNewShape();
+      }
+    }
+  });
 }

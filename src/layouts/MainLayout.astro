@@ -18,8 +18,11 @@ const { title = "Sketching Tools Hub" } = Astro.props;
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>{title}</title>
   <style>
-    body {
+    html, body {
+      height: 100%;
       margin: 0;
+    }
+    body {
       background: var(--bg-body);
       font-family: var(--font-family);
       color: var(--color-gray-900);
@@ -28,6 +31,7 @@ const { title = "Sketching Tools Hub" } = Astro.props;
     }
     main {
       margin: 0 auto;
+      flex: 1;
     }
   </style>
 </head>

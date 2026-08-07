@@ -4,20 +4,24 @@
  * 
  * @description
  * Une barre d'outils positionnée fixement en bas de l'écran, centrée horizontalement.
- * Contient des boutons toggle pour sélectionner des outils de dessin.
+ * Contient un groupe de boutons toggle pour sélectionner des outils de dessin.
+ * Agnostique : la logique de gestion est dans ToggleGroup.
  */
 
-import Toggle from './Toggle.astro';
+import ToggleGroup from './ToggleGroup.astro';
 import Card from './Card.astro';
+
+interface Props {
+  selectedIcon?: string;
+}
+
+const { selectedIcon = '' } = Astro.props;
 ---
 
-<Card class="fixed bottom-4 left-1/2 -translate-x-1/2 z-10 border border-gray-200">
-	<div class="flex gap-2">
-		<Toggle icon="circle" size="44" />
-		<Toggle icon="ellipse" size="44"/>
-		<Toggle icon="rectangle" size="44"/>
-		<Toggle icon="triangle" size="44"/>
-		<Toggle icon="line-horizontal" size="44"/>
-		<Toggle icon="line-vertical" size="44"/>
-	</div>
+<Card id="drawing-toolbar" class="fixed bottom-4 left-1/2 -translate-x-1/2 z-10 border border-gray-200">
+	<ToggleGroup 
+    icons={['circle', 'ellipse', 'square', 'triangle', 'horizontal-line', 'vertical-line']}
+    selectedIcon={selectedIcon}
+    groupId="shape-toggle-group"
+  />
 </Card>
