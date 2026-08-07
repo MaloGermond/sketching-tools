@@ -7,7 +7,8 @@ import Scoreboard from "../components/Scoreboard.astro";
 import ToolCard from "../components/ToolCard.astro";
 import Header from "../components/Header.astro";
 import Icon from "../components/Icon.astro";
-import Toggle from "../components/Toggle.astro";
+import Toggle from "../components/Toggle.jsx";
+import ToggleGroup from "../components/ToggleGroup.jsx";
 import Toolbar from "../components/Toolbar.astro";
 
 import fs from 'fs';
@@ -49,17 +50,6 @@ const iconNames = iconFiles.map(f => f.replace('.svg', ''));
       </Card>
     </section>
 
-    <!-- ============================================ -->
-    <!-- SECTION: Header -->
-    <!-- ============================================ -->
-    <section class="mb-12">
-      <h2 class="text-2xl font-semibold mb-4">Header</h2>
-      <Card>
-        <div class="flex flex-wrap gap-4 items-center justify-center bg-gray-50 p-4 rounded-lg mb-4">
-        <Header />
-      </div>
-      </Card>
-    </section>
 
     <!-- ============================================ -->
     <!-- SECTION: Action (Button) -->
@@ -128,12 +118,16 @@ const iconNames = iconFiles.map(f => f.replace('.svg', ''));
         <p class="text-gray-600 mb-4">Toggle button avec icône seule, bascule entre default et primary.</p>
         
         <div class="flex flex-wrap gap-4 items-center justify-center bg-gray-50 p-4 rounded-lg mb-4">
-          <Toggle icon="circle" />
-          <Toggle icon="circle" selected />
-          <Toggle icon="rectangle" size={40} />
-          <Toggle icon="rectangle" size={40} selected />
-          <Toggle icon="triangle" size={56} />
-          <Toggle icon="triangle" size={56} selected />
+          <Toggle
+            key="circle"
+            icon="circle"
+          />
+
+          <Toggle
+            key="circle"
+            icon="circle"
+            selected="true"
+          />
         </div>
         
         <p class="text-gray-600 mt-6 text-sm">
@@ -149,25 +143,56 @@ const iconNames = iconFiles.map(f => f.replace('.svg', ''));
     </section>
 
     <!-- ============================================ -->
+    <!-- SECTION: ToggleGroup -->
+    <!-- ============================================ -->
+    <section class="mb-12">
+      <h2 class="text-2xl font-semibold mb-4">ToggleGroup</h2>
+      <Card>
+        <p class="text-gray-600 mb-4">Groupe de boutons toggle (Preact) avec sélection unique. Un seul peut être sélectionné à la fois. Permet aussi la désélection.</p>
+        
+        <div class="flex flex-wrap gap-4 items-center justify-center bg-gray-50 p-4 rounded-lg mb-4">
+          <ToggleGroup 
+            client:load
+            icons={['circle', 'square', 'triangle']}
+            selectedIcon="circle"
+          />
+        </div>
+        
+        <p class="text-gray-600 mt-6 text-sm">
+          Usage: <code>&lt;ToggleGroup client:load icons={['icon1', 'icon2']} selectedIcon="icon1" /&gt;</code>
+        </p>
+        <p class="text-gray-600 mt-2 text-sm">
+          Dispatch l'événement <code>toggleGroupSelected</code> avec <code>{`{ icon: string | null }`}</code> quand une icône est sélectionnée/désélectionnée.
+        </p>
+        <p class="text-gray-600 mt-2 text-sm">
+          Écoute <code>shapeSelected</code> pour synchroniser avec les événements externes.
+        </p>
+      </Card>
+    </section>
+
+    <!-- ============================================ -->
     <!-- SECTION: Toolbar -->
     <!-- ============================================ -->
     <section class="mb-12">
       <h2 class="text-2xl font-semibold mb-4">Toolbar</h2>
       <Card>
-        <p class="text-gray-600 mb-4">Barre d'outils fixe en bas de l'écran avec des boutons toggle pour les outils de dessin.</p>
+        <p class="text-gray-600 mb-4">Barre d'outils fixe en bas de l'écran avec un ToggleGroup pour les outils de dessin.</p>
         
         <div class="bg-gray-50 p-4 rounded-lg mb-4 relative h-32">
-          <Toolbar />
+          <Toolbar selectedIcon="circle" />
         </div>
         
         <p class="text-gray-600 mt-6 text-sm">
+          Usage: <code>&lt;Toolbar icons={['circle', 'square']} selectedIcon="circle" /&gt;</code>
+        </p>
+        <p class="text-gray-600 mt-2 text-sm">
           Positionnée avec <code>fixed bottom-4 left-1/2 -translate-x-1/2 z-10</code>
         </p>
         <p class="text-gray-600 mt-2 text-sm">
           Conteneur: <code>&lt;Card class="fixed ..."&gt;&lt;Toolbar /&gt;&lt;/Card&gt;</code>
         </p>
         <p class="text-gray-600 mt-2 text-sm">
-          Contient des &lt;Toggle&gt; pour chaque outil de dessin.
+          Utilise <code>&lt;ToggleGroup&gt;</code> pour gérer la sélection unique.
         </p>
       </Card>
     </section>
@@ -231,8 +256,8 @@ const iconNames = iconFiles.map(f => f.replace('.svg', ''));
     <!-- SECTION: ToolCard -->
     <!-- ============================================ -->
     <section class="mb-12">
-      <Card>
       <h2 class="text-2xl font-semibold mb-4">ToolCard</h2>
+      <Card>
       <div class="flex flex-wrap gap-4 items-center justify-center bg-gray-50 p-4 rounded-lg mb-4">
         <ToolCard title="Drawing Tool" description="A tool for drawing" link="/tools/drawing-canvas" />
         <ToolCard title="Pattern Generator" description="Generate patterns" link="/tools/pattern-generator" />

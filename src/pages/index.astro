@@ -4,24 +4,18 @@ import ToolCard from "../components/ToolCard.astro";
 
 const tools = [
   { title: "Canvas de dessin", href: "/tools/drawing-canvas", icon: "🎨", color: "blue", description: "Dessiner avec p5.js" },
-  { title: "Générateur de motifs", href: "/tools/pattern-generator", icon: "🔄", color: "green", description: "Créer des motifs" },
   { title: "Échauffement", href: "/tools/warmup", icon: "🔥", color: "orange", description: "Échauffez-vous avant de dessiner" },
+    { title: "Librarie de composants", href: "/components", icon: "🔄", color: "green", description: "Créer des motifs" },
 ];
 ---
 
-<MainLayout title="Hub">
+<MainLayout title="Hub" class=" p-4">
   <h1 class="text-2xl">Mes outils</h1>
   
-  <p style="margin-top: 1rem;">
-    <a href="/components" style="color: var(--color-accent); text-decoration: underline;">
-      → Voir tous les composants
-    </a>
-  </p>
-  
-  <div style="display: grid; gap: 1rem; margin-top: 2rem;">
+  <section class="grid grid-cols-1 sm:grid-cols-3">
     {tools.map((tool) => (
       <ToolCard title={tool.title} href={tool.href} icon={tool.icon} color={tool.color} description={tool.description} />
     ))}
-  </div>
+  </section>
 </MainLayout>
 

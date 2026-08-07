@@ -27,6 +27,8 @@
   /* Backgrounds */
   --bg-body: var(--color-gray-100);
   --bg-card: var(--color-white);
+  --bg-thumbnail: var(--color-gray-200);
+
   
   /* Borders */
   --border-light: var(--color-gray-100);

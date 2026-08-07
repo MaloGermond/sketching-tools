@@ -819,10 +819,28 @@ if (typeof document !== 'undefined') {
       const newSettings = event.detail.settings;
       // Vérifier si les settings ont réellement changé
       const settingsChanged = JSON.stringify(shapeSettings) !== JSON.stringify(newSettings);
-      shapeSettings = newSettings;
-      // Régénérer une forme si les settings ont changé
-      if (settingsChanged && currentShape === null) {
-        currentShape = generateNewShape();
+      
+      if (settingsChanged) {
+        shapeSettings = newSettings;
+        // Forcer la génération d'une nouvelle forme avec les nouveaux paramètres
+        
+        // Arrêter le dessin en cours
+        drawing = false;
+        
+        // Réinitialiser currentShape pour forcer la régénération
+        currentShape = null;
+        
+        // Appeler redraw() si disponible (p5.js)
+        // Sinon, ensureActiveShape() sera appelé au prochain frame
+        if (typeof redraw === 'function') {
+          redraw();
+        } else {
+          // Si on n'est pas dans p5.js, déclencher manuellement
+          ensureActiveShape();
+          if (typeof draw === 'function') {
+            draw();
+          }
+        }
       }
     }
   });

@@ -1,0 +1,91 @@
+---
+/**
+ * Composant Tooltip - Info-bulle au survol
+ * 
+ * @description
+ * Affiche un tooltip au survol long (500ms) d'un élément.
+ * 
+ * @props
+ * @prop {string} text - Texte à afficher dans le tooltip
+ * @prop {string} [position] - Position du tooltip (top, bottom, left, right)
+ * @prop {number} [delay] - Délai avant affichage en ms (défaut: 500)
+ */
+
+interface Props {
+  text: string;
+  position?: 'top' | 'bottom' | 'left' | 'right';
+  delay?: number;
+}
+
+const { text, position = 'top', delay = 500 } = Astro.props;
+---
+
+<div class="tooltip-container" data-tooltip-text={text} data-tooltip-position={position} data-tooltip-delay={delay}>
+  <slot />
+</div>
+
+<style>
+  .tooltip-container {
+    position: relative;
+    display: inline-block;
+  }
+
+  .tooltip-container::after {
+    content: attr(data-tooltip-text);
+    position: absolute;
+    padding: 0.25rem 0.5rem;
+    font-size: var(--font-size-sm);
+    background: var(--color-gray-900);
+    color: var(--color-white);
+    border-radius: var(--radius-sm);
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 200ms ease;
+    transition-delay: calc(var(--tooltip-delay, 500ms) + 100ms);
+    z-index: 50;
+  }
+
+  .tooltip-container:hover::after {
+    opacity: 1;
+  }
+
+  /* Positionnement */
+  .tooltip-container[data-tooltip-position="top"]::after {
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    margin-bottom: 0.5rem;
+  }
+
+  .tooltip-container[data-tooltip-position="bottom"]::after {
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    margin-top: 0.5rem;
+  }
+
+  .tooltip-container[data-tooltip-position="left"]::after {
+    right: 100%;
+    top: 50%;
+    transform: translateY(-50%);
+    margin-right: 0.5rem;
+  }
+
+  .tooltip-container[data-tooltip-position="right"]::after {
+    left: 100%;
+    top: 50%;
+    transform: translateY(-50%);
+    margin-left: 0.5rem;
+  }
+</style>
+
+<script>
+  // Appliquer le délai via CSS variable
+  document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.tooltip-container').forEach(container => {
+      const delay = container.dataset.tooltipDelay || 500;
+      container.style.setProperty('--tooltip-delay', `${delay}ms`);
+    });
+  });
+</script>
