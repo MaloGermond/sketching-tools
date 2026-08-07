@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'preact/compat';
 import p5 from 'p5';
 
-export function Sketch({ size = 400 }) {
+export default function Sketch({ size = 400 }) {
   const containerRef = useRef(null);
 
   useEffect(() => {
