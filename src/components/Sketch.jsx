@@ -22,7 +22,8 @@ export default function Sketch({ size = 400 }) {
       p.draw = () => {
         p.background(220);
         p.fill(0);
-        p.ellipse(p.mouseX, p.mouseY, 20, 20);
+        p.stroke(255)
+        p.ellipse(p.mouseX, p.mouseY, 100, 100);
       };
     }, containerRef.current);
 
