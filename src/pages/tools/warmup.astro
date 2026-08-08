@@ -1,0 +1,127 @@
+---
+import MainLayout from "../../layouts/MainLayout.astro";
+import Card from "../../components/Card.astro";
+import Scoreboard from "../../components/Scoreboard.astro";
+import Toast from "../../components/Toast.astro";
+import Toolbar from "../../components/Toolbar.astro";
+
+const title = "Échauffement";
+---
+
+<MainLayout title={title}>
+  <Toast toastId="score-toast" label="Ressemblance" />
+
+  <div class="relative w-full h-full">
+    <div id="sketch-container" class="w-full h-full"></div>
+  </div>
+
+  <Toolbar selectedIcon="circle" />
+
+  <Scoreboard
+    class="absolute top-1 right-1 min-width-[200px]"
+  />
+
+  <script>
+    // État global des formes - défini AVANT p5.js
+    // Le ToggleGroup gère la sélection unique, on synchronise avec window.shapeSettings
+    window.shapeSettings = {
+      'circle': true,
+      'square': false,
+      'triangle': false,
+      'horizontal-line': false,
+      'vertical-line': false,
+      'ellipse': false
+    };
+  </script>
+
+  <!-- Charger p5.js -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js"></script>
+  
+  <!-- Charger le sketch modulaire -->
+  <script type="module">
+    import { WarmupOrchestrator } from '/src/modules/warmup/warmupOrchestrator.js';
+    import { warmupState } from '/src/modules/warmup/warmupState.js';
+    import { drawingState } from '/src/modules/drawing/drawingState.js';
+    import { DEFAULT_SHAPE_SETTINGS } from '/src/modules/shapes/shapeTypes.js';
+
+    // Initialiser l'état global
+    window.shapeSettings = { ...DEFAULT_SHAPE_SETTINGS };
+    
+    // Créer l'orchestrateur quand p5.js est prêt
+    let orchestrator;
+    
+    function setup() {
+      orchestrator = new WarmupOrchestrator(window);
+      orchestrator.setup();
+    }
+    
+    function draw() {
+      orchestrator.draw();
+    }
+    
+    function windowResized() {
+      orchestrator.windowResized();
+    }
+    
+    function mousePressed() {
+      orchestrator.mousePressed();
+    }
+    
+    function mouseReleased() {
+      orchestrator.mouseReleased();
+    }
+    
+    // Synchronisation entre ToggleGroup et p5.js
+    document.addEventListener("DOMContentLoaded", () => {
+      // ToggleGroup → p5.js : quand une forme est sélectionnée
+      document.addEventListener('toggleGroupSelected', (event) => {
+        if (event.detail && event.detail.icon) {
+          const selectedIcon = event.detail.icon;
+          
+          // Mettre à jour window.shapeSettings : tous à false sauf le sélectionné
+          Object.keys(window.shapeSettings).forEach(key => {
+            window.shapeSettings[key] = (key === selectedIcon);
+          });
+
+          // Notifier p5.js
+          document.dispatchEvent(new CustomEvent('shapeSettingsUpdated', {
+            detail: { settings: { ...window.shapeSettings } }
+          }));
+        }
+      });
+
+      // p5.js → ToggleGroup : quand le script sélectionne une forme
+      document.addEventListener('shapeSelected', (event) => {
+        if (event.detail && event.detail.shape) {
+          const shape = event.detail.shape;
+          window.shapeSettings[shape] = true;
+        }
+      });
+
+      // Envoyer l'état initial à p5.js
+      document.dispatchEvent(new CustomEvent('shapeSettingsUpdated', {
+        detail: { settings: { ...window.shapeSettings } }
+      }));
+    });
+    
+    // Écouter les mises à jour de l'UI
+    document.addEventListener('shapeSettingsUpdated', (event) => {
+      if (event.detail && event.detail.settings) {
+        const newSettings = event.detail.settings;
+        const settingsChanged = JSON.stringify(warmupState.shapeSettings) !== JSON.stringify(newSettings);
+        
+        if (settingsChanged) {
+          warmupState.shapeSettings = newSettings;
+          drawingState.drawing = false;
+          warmupState.currentShape = null;
+          
+          if (typeof redraw === 'function') {
+            redraw();
+          } else if (typeof draw === 'function') {
+            draw();
+          }
+        }
+      }
+    });
+  </script>
+</MainLayout>
