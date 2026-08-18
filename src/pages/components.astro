@@ -19,19 +19,25 @@ const iconNames = fs.readdirSync(iconsDir).filter(f => f.endsWith('.svg')).map(f
 ---
 
 <MainLayout title="Composants">
-  <div class="doc-page">
+  <div class="doc-layout">
+
+    <!-- Sidebar -->
+    <aside class="doc-sidebar">
+      <p class="sidebar-title">Composants</p>
+      <nav class="doc-nav">
+        {['Pill','Chip','Icon','Action','Toggle','ToggleGroup','Card','Toast','Scoreboard','ToolCard'].map(name => (
+          <a href={`#${name.toLowerCase()}`} class="doc-nav-link">{name}</a>
+        ))}
+      </nav>
+    </aside>
+
+    <!-- Content -->
+    <div class="doc-page">
 
     <header class="doc-header">
       <h1 class="doc-title">Composants</h1>
       <p class="doc-subtitle">Librairie de composants UI — page de développement.</p>
     </header>
-
-    <!-- Nav -->
-    <nav class="doc-nav">
-      {['Pill','Chip','Icon','Action','Toggle','ToggleGroup','Card','Toast','Scoreboard','ToolCard'].map(name => (
-        <a href={`#${name.toLowerCase()}`} class="doc-nav-link">{name}</a>
-      ))}
-    </nav>
 
     <!-- Pill -->
     <section class="doc-section" id="pill">
@@ -219,57 +225,88 @@ const iconNames = fs.readdirSync(iconsDir).filter(f => f.endsWith('.svg')).map(f
       </div>
     </section>
 
-  </div>
+    </div><!-- /doc-page -->
+  </div><!-- /doc-layout -->
 </MainLayout>
 
 <style>
-  .doc-page {
-    max-width: 50rem;
-    margin: 0 auto;
-    padding: 2.5rem 1.5rem 6rem;
+  /* Layout two-column */
+  .doc-layout {
+    display: flex;
+    align-items: flex-start;
+    min-height: calc(100vh - 3.5rem);
   }
 
-  /* Header */
-  .doc-header {
-    margin-bottom: 2rem;
-    padding-bottom: 1.75rem;
-    border-bottom: 1px solid var(--color-gray-200);
+  /* Sidebar */
+  .doc-sidebar {
+    position: sticky;
+    top: 3.5rem;
+    width: 13rem;
+    flex-shrink: 0;
+    height: calc(100vh - 3.5rem);
+    padding: 2rem 1rem 2rem 1.5rem;
+    border-right: 1px solid #e4e7eb;
+    overflow-y: auto;
   }
 
-  .doc-title {
-    font-size: 1.75rem;
+  .sidebar-title {
+    font-size: 0.6875rem;
     font-weight: 600;
-    letter-spacing: -0.02em;
-    color: var(--color-gray-900);
-    margin-bottom: 0.375rem;
-  }
-
-  .doc-subtitle {
-    font-size: 0.9375rem;
-    color: var(--color-gray-500);
+    color: #9ca3af;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+    padding-left: 0.5rem;
   }
 
   /* Nav */
   .doc-nav {
     display: flex;
-    flex-wrap: wrap;
-    gap: 0.25rem;
-    margin-bottom: 3rem;
+    flex-direction: column;
+    gap: 0.125rem;
   }
 
   .doc-nav-link {
     font-size: 0.8125rem;
     font-weight: 500;
-    color: var(--color-gray-500);
+    color: #6F859C;
     text-decoration: none;
-    padding: 0.25rem 0.625rem;
-    border-radius: var(--radius-md);
+    padding: 0.3125rem 0.5rem;
+    border-radius: 6px;
     transition: background 150ms ease, color 150ms ease;
   }
 
   .doc-nav-link:hover {
-    background: var(--color-gray-100);
-    color: var(--color-gray-900);
+    background: #f2f4f6;
+    color: #111827;
+  }
+
+  /* Main content */
+  .doc-page {
+    flex: 1;
+    min-width: 0;
+    padding: 2.5rem 2.5rem 6rem;
+    max-width: 52rem;
+  }
+
+  /* Header */
+  .doc-header {
+    margin-bottom: 2.5rem;
+    padding-bottom: 1.75rem;
+    border-bottom: 1px solid #e4e7eb;
+  }
+
+  .doc-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    color: #111827;
+    margin-bottom: 0.25rem;
+  }
+
+  .doc-subtitle {
+    font-size: 0.875rem;
+    color: #6F859C;
   }
 
   /* Section */
