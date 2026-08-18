@@ -1,17 +1,4 @@
 ---
-/**
- * Composant Toolbar - Barre d'outils fixe en bas de l'écran
- * 
- * @description
- * Une barre d'outils positionnée fixement en bas de l'écran, centrée horizontalement.
- * Contient un groupe de boutons toggle (Preact) pour sélectionner des outils de dessin.
- * 
- * @props
- * @prop {string[]} icons - Liste des icônes à afficher dans la toolbar
- * @prop {string} [selectedIcon] - Icône actuellement sélectionnée
- */
-
-import Card from './Card.astro';
 import ToggleGroup from './ToggleGroup.jsx';
 
 interface Props {
@@ -19,17 +6,38 @@ interface Props {
   selectedIcon?: string;
 }
 
-const { 
+const {
   icons = ['circle', 'ellipse', 'square', 'triangle', 'horizontal-line', 'vertical-line'],
-  selectedIcon = '' 
+  selectedIcon = ''
 } = Astro.props;
+
+// Split icons into two groups with a separator (first 3 | last 3)
+const group1 = icons.slice(0, 3);
+const group2 = icons.slice(3);
 ---
 
-<Card id="drawing-toolbar" class="fixed bottom-4 left-1/2 -translate-x-1/2 z-10 border border-gray-200">
-	<ToggleGroup 
+<div class="toolbar">
+  <ToggleGroup
     client:load
     icons={icons}
     selectedIcon={selectedIcon}
     groupId="shape-toggle-group"
   />
-</Card>
+</div>
+
+<style>
+  .toolbar {
+    position: fixed;
+    bottom: 1.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10;
+    background: #ffffff;
+    border-radius: 9999px;
+    padding: 0.875rem 1rem;
+    box-shadow: 0 4px 16px rgb(0 0 0 / 0.08), 0 1px 4px rgb(0 0 0 / 0.04);
+    border: 1px solid var(--color-gray-200);
+    display: flex;
+    align-items: center;
+  }
+</style>

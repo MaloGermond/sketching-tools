@@ -1,35 +1,20 @@
 ---
-// Définis les props attendues
 interface Props {
   title?: string;
   class?: string;
+  id?: string;
 }
 
-const { title, class: className } = Astro.props;
+const { title, class: className, id } = Astro.props;
 ---
 
-<div class:list={[
-  className,
-  'bg-(--bg-card)',
-  'm-(--space-sm)',
-  'p-(--space-sm)',
-  'rounded-(--radius-lg)',
-]}>
-  {title && <h2 class="card-title">{title}</h2>}
-  <slot/>
+<div
+  id={id}
+  class:list={[
+    'bg-white rounded-xl border border-gray-200 p-4',
+    className,
+  ]}
+>
+  {title && <h2 class="h4 mb-3">{title}</h2>}
+  <slot />
 </div>
-
-<style>
-  .card {
-    background: var(--bg-card);
-    margin: var(--space-sm);
-    padding: var(--space-md);
-    border-radius: var(--radius-xl);
-    z-index: 10;
-  }
-  
-  .card-title {
-    margin: 0 0 0.5rem 0;
-    font-size: 1rem;
-  }
-</style>

@@ -1,14 +1,87 @@
 ---
 import Action from "../components/Action.astro";
 
+const currentPath = Astro.url.pathname;
+const isHome = currentPath === '/';
 ---
 
-<header class="fixed z-50">
-  <Action icon="arrow-left" variant="facultatif" href="/">Sketching Tools</Action>
-  
-  <style>
-    header {
-      padding: var(--space-lg) var(--space-xl);
-    }
-  </style>
+<header class="site-header">
+  <div class="header-inner">
+    <a href="/" class="wordmark">
+      <span class="wordmark-dot" />
+      Sketching Tools
+    </a>
+
+    {!isHome && (
+      <nav class="breadcrumb">
+        <span class="breadcrumb-sep">/</span>
+        <span class="breadcrumb-page">
+          {currentPath.replace(/^\/|\/$/g, '').replace(/\//g, ' › ')}
+        </span>
+      </nav>
+    )}
+  </div>
 </header>
+
+<style>
+  .site-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 50;
+    height: 3.5rem;
+    background: rgb(255 255 255 / 0.88);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--color-gray-200);
+  }
+
+  .header-inner {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    height: 100%;
+    padding: 0 1.5rem;
+    max-width: 80rem;
+    margin: 0 auto;
+  }
+
+  .wordmark {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9375rem;
+    font-weight: 500;
+    color: var(--color-gray-900);
+    text-decoration: none;
+    transition: opacity 150ms ease;
+  }
+
+  .wordmark:hover { opacity: 0.7; }
+
+  .wordmark-dot {
+    width: 7px;
+    height: 7px;
+    background: var(--color-accent);
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .breadcrumb-sep {
+    color: var(--color-gray-300);
+    font-size: 0.9375rem;
+  }
+
+  .breadcrumb-page {
+    font-size: 0.875rem;
+    color: var(--color-gray-500);
+    text-transform: capitalize;
+  }
+</style>

@@ -1,57 +1,47 @@
-/**
- * Composant Toggle - Bouton bascule avec icône (Preact)
- * 
- * @description
- * Un bouton carré avec icône seule.
- * 
- * @props
- * @prop {string} icon - Nom de l'icône SVG à afficher
- * @prop {boolean} selected - État sélectionné
- * @prop {function} onClick - Callback au clic
- * @prop {number} size - Taille du bouton (défaut: 48)
- */
-
-import { useState } from 'preact/hooks';
-
-export default function Toggle({ 
-  icon, 
-  selected = false, 
+export default function Toggle({
+  icon,
+  selected = false,
   onClick,
-  size = 48
+  size = 36
 }) {
-  const handleClick = (e) => {
-    if (onClick) {
-      onClick(e);
-    }
-  };
-
   return (
-    <button
-      type="button"
-      className="toggle-button"
-      data-selected={selected ? 'true' : 'false'}
-      data-icon={icon}
-      onClick={handleClick}
-      style={{
-        '--toggle-size': `${size}px`,
-        width: 'var(--toggle-size)',
-        height: 'var(--toggle-size)',
-        padding: '0',
-        border: 'none',
-        borderRadius: 'var(--radius-md)',
-        cursor: 'pointer',
-        display: 'inline-flex',
-        alignItems: 'center',
-        justifyContent: 'center'
-      }}
-    >
-      <img 
-        src={`/icons/${icon}.svg`}
-        alt={icon}
-        width={size * 0.5}
-        height={size * 0.5}
-        style="display: inline-block; vertical-align: middle;"
-      />
-    </button>
+    <>
+      <style>{`
+        .toggle-btn {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          border: none;
+          border-radius: 10px;
+          cursor: pointer;
+          padding: 0;
+          background: transparent;
+          transition: background-color 150ms ease;
+          flex-shrink: 0;
+        }
+        .toggle-btn:hover:not([data-selected="true"]) {
+          background: var(--color-gray-100);
+        }
+        .toggle-btn[data-selected="true"] {
+          background: #54adff;
+        }
+      `}</style>
+      <button
+        type="button"
+        className="toggle-btn"
+        data-selected={selected ? 'true' : 'false'}
+        data-icon={icon}
+        onClick={onClick}
+        style={{ width: `${size}px`, height: `${size}px` }}
+      >
+        <img
+          src={`/icons/${icon}.svg`}
+          alt={icon}
+          width={size * 0.5}
+          height={size * 0.5}
+          style={selected ? 'filter: brightness(0) invert(1)' : 'opacity: 0.7'}
+        />
+      </button>
+    </>
   );
 }

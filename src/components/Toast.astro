@@ -1,7 +1,4 @@
 ---
-// Toast.astro - Composant de notification toast réutilisable
-// Affiche un message temporaire avec animation
-
 interface Props {
   toastId: string;
   label?: string;
@@ -13,91 +10,116 @@ const { toastId, label = 'Score' } = Astro.props;
 <div
   id={toastId}
   data-toast-id={toastId}
-  class="fixed top-4 left-1/2 -translate-x-1/2 z-50 pointer-events-none opacity-0 transition-all duration-300 ease-out"
+  class="toast-wrapper"
 >
-  <div class="flex flex-col items-center bg-white rounded-full shadow-(--shadow-md) border border-gray-200 px-6 pt-3 pb-2">
-    <p class="text-xs font-medium text-gray-600">{label}</p>
-    <p id={toastId + '-value'} class="text-md font-bold leading-none text-purple-600"></p>
+  <div class="toast-pill">
+    <span id={toastId + '-dot'} class="toast-dot"></span>
+    <div class="toast-content">
+      <p class="toast-label">{label}</p>
+      <p id={toastId + '-value'} class="toast-value"></p>
+    </div>
   </div>
 </div>
 
-<script>
-  document.addEventListener('DOMContentLoaded', function() {
-    const duration = 1500;
-    let isAnimating = false;
-    let currentTimeout = null;
-    
-    // Trouver le toast via son data attribute
-    const toastContainer = document.querySelector('[data-toast-id]');
-    if (!toastContainer) return;
-    
-    const toastId = toastContainer.dataset.toastId;
-    const toastEl = document.getElementById(toastId);
-    const valueEl = document.getElementById(toastId + '-value');
-    
-    if (!toastEl || !valueEl) return;
+<style>
+  .toast-wrapper {
+    position: fixed;
+    top: 1rem;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 50;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 300ms ease, top 300ms ease;
+  }
 
-    // Écouter l'événement personnalisé
+  .toast-pill {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    background: #ffffff;
+    border-radius: 9999px;
+    padding: 0 1.25rem;
+    height: 50px;
+    min-width: 114px;
+    box-shadow: 0 4px 16px rgb(0 0 0 / 0.10), 0 1px 4px rgb(0 0 0 / 0.06);
+    border: 1px solid var(--color-gray-200);
+  }
+
+  .toast-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--color-success);
+    flex-shrink: 0;
+    transition: background 200ms ease;
+  }
+
+  .toast-content {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .toast-label {
+    font-size: 0.6875rem;
+    font-weight: 500;
+    color: var(--color-gray-500);
+    line-height: 1;
+    margin-bottom: 0.125rem;
+  }
+
+  .toast-value {
+    font-size: 1.125rem;
+    font-weight: 700;
+    line-height: 1;
+    color: var(--color-gray-900);
+  }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const duration = 1800;
+    let currentTimeout = null;
+
+    const toastEl = document.querySelector('[data-toast-id]');
+    if (!toastEl) return;
+
+    const toastId = toastEl.dataset.toastId;
+    const valueEl = document.getElementById(toastId + '-value');
+    const dotEl = document.getElementById(toastId + '-dot');
+
+    if (!valueEl || !dotEl) return;
+
     document.addEventListener('showToast', (event) => {
       const score = event.detail?.score;
       if (score === undefined) return;
-      
-      // Clear previous timeout
-      if (currentTimeout) {
-        clearTimeout(currentTimeout);
-      }
-      
-      // Set color based on score: success (>=80), warning (>=50), error (<50)
-      // Utilisation des classes définies dans typography.css
-      const colorClass = score >= 80 
-        ? 'text-success'   // success: var(--color-success)
-        : score >= 50 
-          ? 'text-warning'  // warning: var(--color-warning)
-          : 'text-error';   // error: var(--color-error)
-      
-      valueEl.textContent = `${Math.floor(score)}%`;
-      valueEl.className = `text-xl font-bold leading-none ${colorClass}`;
-      
-      // If already animating, reset quickly
-      if (isAnimating) {
-        toastEl.style.top = '-100px';
-        toastEl.style.opacity = '0';
-        
-        setTimeout(() => {
-          startAnimation(toastEl);
-        }, 100);
-      } else {
-        startAnimation(toastEl);
-      }
-    });
 
-    function startAnimation(element) {
-      isAnimating = true;
-      
-      // Reset position
-      element.style.top = '-100px';
-      element.style.opacity = '0';
-      
-      // Force reflow
-      void element.offsetHeight;
-      
-      // Start animation
-      setTimeout(() => {
-        element.style.top = '1rem';
-        element.style.opacity = '1';
-      }, 10);
-      
-      // Hide after fixed duration
+      if (currentTimeout) clearTimeout(currentTimeout);
+
+      const color =
+        score >= 80 ? '#22c55e' :
+        score >= 50 ? '#f59e0b' :
+        '#ef4444';
+
+      valueEl.textContent = `${Math.floor(score)}%`;
+      valueEl.style.color = color;
+      dotEl.style.background = color;
+
+      toastEl.style.top = '-80px';
+      toastEl.style.opacity = '0';
+
+      void toastEl.offsetHeight;
+
+      requestAnimationFrame(() => {
+        toastEl.style.top = '1rem';
+        toastEl.style.opacity = '1';
+      });
+
       currentTimeout = setTimeout(() => {
-        element.style.transition = 'top 0.2s ease-in, opacity 0.2s ease-in';
-        element.style.top = '-100px';
-        element.style.opacity = '0';
-        
-        setTimeout(() => {
-          element.style.transition = 'top 0.3s ease-out, opacity 0.3s ease-out';
-          isAnimating = false;
-        }, 200);
+        toastEl.style.top = '-80px';
+        toastEl.style.opacity = '0';
       }, duration);
-    }
+    });
   });
 </script>

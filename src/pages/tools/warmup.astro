@@ -1,149 +1,177 @@
 ---
 import MainLayout from "../../layouts/MainLayout.astro";
-import Card from "../../components/Card.astro";
 import Scoreboard from "../../components/Scoreboard.astro";
 import Toast from "../../components/Toast.astro";
 import Toolbar from "../../components/Toolbar.astro";
-
-const title = "Échauffement";
 ---
 
-<MainLayout title={title}>
+<MainLayout title="Échauffement">
   <Toast toastId="score-toast" label="Ressemblance" />
 
-  <div class="relative w-full h-full">
-    <div id="sketch-container" class="w-full h-full"></div>
-  </div>
+  <!-- Canvas plein écran -->
+  <div id="sketch-container" class="sketch-container"></div>
 
-  <!-- <Card style="position: absolute; bottom: 1rem; left: 1rem;">
-    <div style="margin-bottom: 1rem;">
-      <span style="margin-right: 1rem;">Formes disponibles:</span>
-      <label
-        style="margin-right: 1rem; display: inline-flex; align-items: center; gap: 0.5rem;"
-      >
-        <input
-          type="checkbox"
-          id="shape-circle"
-          onchange="toggleShape('circle')"
-        />
-        <span>Cercle</span>
-      </label>
-      <label
-        style="margin-right: 1rem; display: inline-flex; align-items: center; gap: 0.5rem;"
-      >
-        <input
-          type="checkbox"
-          id="shape-ellipse"
-          onchange="toggleShape('ellipse')"
-        />
-        <span>Ellipse</span>
-      </label>
-      <label
-        style="margin-right: 1rem; display: inline-flex; align-items: center; gap: 0.5rem;"
-      >
-        <input
-          type="checkbox"
-          id="shape-square"
-          onchange="toggleShape('square')"
-        />
-        <span>Carré</span>
-      </label>
-      <label
-        style="margin-right: 1rem; display: inline-flex; align-items: center; gap: 0.5rem;"
-      >
-        <input
-          type="checkbox"
-          id="shape-triangle"
-          onchange="toggleShape('triangle')"
-        />
-        <span>Triangle</span>
-      </label>
-      <label
-        style="margin-right: 1rem; display: inline-flex; align-items: center; gap: 0.5rem;"
-      >
-        <input
-          type="checkbox"
-          id="shape-horizontal-line"
-          onchange="toggleShape('horizontal-line')"
-        />
-        <span>Ligne horizontale</span>
-      </label>
-      <label style="display: inline-flex; align-items: center; gap: 0.5rem;">
-        <input
-          type="checkbox"
-          id="shape-vertical-line"
-          onchange="toggleShape('vertical-line')"
-        />
-        <span>Ligne verticale</span>
-      </label>
+  <!-- Scoreboard gauche -->
+  <Scoreboard />
+
+  <!-- Panel niveaux droite -->
+  <aside class="levels-panel" id="levels-panel">
+    <div class="levels-list" id="levels-list">
+      <!-- Généré par JS -->
     </div>
-    <div>
-      <span style="margin-right: 1rem;">Niveau:</span>
-      <select onchange="setLevel(this.value)" style="padding: 0.5rem;">
-        <option value="1">1 - Centre, taille fixe</option>
-        <option value="2">2 - Déplacement</option>
-        <option value="3">3 - Déplacement + taille variable</option>
-        <option value="4">4 - Déplacement + taille + rotation</option>
-      </select>
-    </div>
-  </Card> -->
+  </aside>
+
+  <!-- Toolbar centré bas -->
   <Toolbar selectedIcon="circle" />
-
-  <Scoreboard
-    class="absolute top-1 right-1 min-width-[200px]"
-  />
-
-  <script>
-    // État global des formes - définis AVANT p5.js
-    // Le ToggleGroup gère la sélection unique, on synchronise avec window.shapeSettings
-    window.shapeSettings = {
-      'circle': true,
-      'square': false,
-      'triangle': false,
-      'horizontal-line': false,
-      'vertical-line': false,
-      'ellipse': false
-    };
-  </script>
-
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js"></script>
-  <script src="/scripts/sketches/warmup.js" is:inline></script>
-  <script>
-    // Synchronisation entre ToggleGroup et p5.js
-    document.addEventListener("DOMContentLoaded", () => {
-      // ToggleGroup → p5.js : quand une forme est sélectionnée
-      document.addEventListener('toggleGroupSelected', (event) => {
-        if (event.detail && event.detail.icon) {
-          const selectedIcon = event.detail.icon;
-          
-          // Mettre à jour window.shapeSettings : tous à false sauf le sélectionné
-          Object.keys(window.shapeSettings).forEach(key => {
-            window.shapeSettings[key] = (key === selectedIcon);
-          });
-
-          // Notifier p5.js
-          document.dispatchEvent(new CustomEvent('shapeSettingsUpdated', {
-            detail: { settings: { ...window.shapeSettings } }
-          }));
-        }
-      });
-
-      // p5.js → ToggleGroup : quand le script sélectionne une forme
-      // ToggleGroup écoute déjà 'shapeSelected' et met à jour son UI automatiquement
-      document.addEventListener('shapeSelected', (event) => {
-        if (event.detail && event.detail.shape) {
-          const shape = event.detail.shape;
-          // Mettre à jour window.shapeSettings
-          window.shapeSettings[shape] = true;
-          
-          // ToggleGroup gère la mise à jour UI via son propre écouteur
-        }
-      });
-
-      // Envoyer l'état initial à p5.js
-      document.dispatchEvent(new CustomEvent('shapeSettingsUpdated', {
-        detail: { settings: { ...window.shapeSettings } }
-      }));
-    });
-  </script>
 </MainLayout>
+
+<style>
+  .sketch-container {
+    position: fixed;
+    inset: 0;
+    top: 3.5rem;
+    z-index: 0;
+  }
+
+  .levels-panel {
+    position: fixed;
+    right: 1.25rem;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    width: 9rem;
+  }
+
+  .levels-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+</style>
+
+<style is:global>
+  .level-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .level-tag {
+    font-size: 0.625rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-gray-400);
+  }
+
+  .level-name {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--color-gray-800);
+    line-height: 1.35;
+  }
+
+  .level-item.is-current .level-tag {
+    color: var(--color-accent);
+  }
+
+  .level-item.is-current .level-name {
+    color: var(--color-gray-900);
+    font-weight: 600;
+  }
+
+  .level-progress {
+    height: 3px;
+    background: var(--color-gray-200);
+    border-radius: 9999px;
+    margin-top: 0.375rem;
+    overflow: hidden;
+  }
+
+  .level-progress-fill {
+    height: 100%;
+    background: #5bd224;
+    border-radius: 9999px;
+    transition: width 400ms ease;
+  }
+
+  .level-item.is-past {
+    opacity: 0.35;
+  }
+</style>
+
+<script>
+  window.shapeSettings = {
+    'circle': true,
+    'square': false,
+    'triangle': false,
+    'horizontal-line': false,
+    'vertical-line': false,
+    'ellipse': false
+  };
+
+  const levels = [
+    { id: 1, label: 'Niveau 1', name: 'Centre, taille fixe' },
+    { id: 2, label: 'Niveau 2', name: 'Carré de taille variable' },
+    { id: 3, label: 'Niveau 3', name: 'Rectangle de taille variable' },
+    { id: 4, label: 'Niveau 4', name: 'Rectangle en Déplacement' },
+    { id: 5, label: 'Niveau 5', name: 'Rectangle en Rotation' },
+  ];
+
+  let currentLevel = 1;
+
+  function renderLevels() {
+    const container = document.getElementById('levels-list');
+    if (!container) return;
+    container.innerHTML = levels.map(level => {
+      const isCurrent = level.id === currentLevel;
+      const isPast = level.id < currentLevel;
+      return `
+        <div class="level-item ${isCurrent ? 'is-current' : ''} ${isPast ? 'is-past' : ''}">
+          <span class="level-tag">${level.label}</span>
+          <span class="level-name">${level.name}</span>
+          ${isCurrent ? `<div class="level-progress"><div class="level-progress-fill" style="width: 65%"></div></div>` : ''}
+        </div>
+      `;
+    }).join('');
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    renderLevels();
+
+    document.addEventListener('toggleGroupSelected', (event) => {
+      if (event.detail?.icon) {
+        const selected = event.detail.icon;
+        Object.keys(window.shapeSettings).forEach(k => {
+          window.shapeSettings[k] = (k === selected);
+        });
+        document.dispatchEvent(new CustomEvent('shapeSettingsUpdated', {
+          detail: { settings: { ...window.shapeSettings } }
+        }));
+      }
+    });
+
+    document.addEventListener('shapeSelected', (event) => {
+      if (event.detail?.shape) {
+        window.shapeSettings[event.detail.shape] = true;
+      }
+    });
+
+    document.addEventListener('levelChanged', (event) => {
+      if (event.detail?.level) {
+        currentLevel = event.detail.level;
+        renderLevels();
+      }
+    });
+
+    document.dispatchEvent(new CustomEvent('shapeSettingsUpdated', {
+      detail: { settings: { ...window.shapeSettings } }
+    }));
+  });
+</script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js"></script>
+<script src="/scripts/sketches/warmup.js" is:inline></script>

@@ -1,184 +1,69 @@
-/* Typography Stylesheet - Global */
-/* Contient uniquement les styles de typographie globaux au projet */
+/* Typography — global semantic presets only */
 
-/* ============================================
-   FONT FAMILY
-   ============================================ */
 :root {
-  --font-family: 'Inter', sans-serif;
-}
-
-/* ============================================
-   FONT SIZES
-   ============================================ */
-:root {
-  --font-size-xs: 0.75rem;
-  --font-size-sm: 0.875rem;
-  --font-size-base: 1rem;
-  --font-size-lg: 1.125rem;
-  --font-size-xl: 1.25rem;
-  --font-size-2xl: 1.5rem;
-  --font-size-3xl: 2rem;
-  --font-size-4xl: 2.5rem;
-}
-
-/* Utility classes for font sizes */
-.text-xs { font-size: var(--font-size-xs); line-height: 1rem; }
-.text-sm { font-size: var(--font-size-sm); line-height: 1.25rem; }
-.text-base { font-size: var(--font-size-base); line-height: 1.5rem; }
-.text-lg { font-size: var(--font-size-lg); line-height: 1.75rem; }
-.text-xl { font-size: var(--font-size-xl); line-height: 1.75rem; }
-.text-2xl { font-size: var(--font-size-2xl); line-height: 2rem; }
-.text-3xl { font-size: var(--font-size-3xl); line-height: 2.25rem; }
-.text-4xl { font-size: var(--font-size-4xl); line-height: 2.5rem; }
-
-/* ============================================
-   FONT WEIGHTS
-   ============================================ */
-:root {
-  --font-weight-light: 300;
-  --font-weight-normal: 400;
-  --font-weight-medium: 500;
-  --font-weight-semibold: 600;
-  --font-weight-bold: 700;
-}
-
-.font-light { font-weight: var(--font-weight-light); }
-.font-normal { font-weight: var(--font-weight-normal); }
-.font-medium { font-weight: var(--font-weight-medium); }
-.font-semibold { font-weight: var(--font-weight-semibold); }
-.font-bold { font-weight: var(--font-weight-bold); }
-
-/* ============================================
-   LINE HEIGHT
-   ============================================ */
-:root {
+  --font-family: var(--font-sans);
   --leading-tight: 1.1;
   --leading-normal: 1.5;
   --leading-relaxed: 1.75;
-  --leading-loose: 2;
 }
 
-.leading-tight { line-height: var(--leading-tight); }
-.leading-normal { line-height: var(--leading-normal); }
-.leading-relaxed { line-height: var(--leading-relaxed); }
-.leading-loose { line-height: var(--leading-loose); }
-
-/* ============================================
-   TEXT ALIGNMENT
-   ============================================ */
-.text-left { text-align: left; }
-.text-center { text-align: center; }
-.text-right { text-align: right; }
-.text-justify { text-align: justify; }
-
-/* ============================================
-   TEXT COLORS
-   ============================================ */
-.text-white { color: var(--color-white); }
-.text-black { color: var(--color-black); }
-.text-gray-100 { color: var(--color-gray-100); }
-.text-gray-200 { color: var(--color-gray-200); }
-.text-gray-400 { color: var(--color-gray-400); }
-.text-gray-500 { color: var(--color-gray-500, #6b7280); }
-.text-gray-700 { color: var(--color-gray-700); }
-.text-gray-900 { color: var(--color-gray-900); }
-.text-accent { color: var(--color-accent); }
-.text-success { color: var(--color-success); }
-.text-warning { color: var(--color-warning); }
-.text-error { color: var(--color-error); }
-
-/* ============================================
-   TEXT TRANSFORM & DECORATION
-   ============================================ */
-.uppercase { text-transform: uppercase; }
-.lowercase { text-transform: lowercase; }
-.capitalize { text-transform: capitalize; }
-.normal-case { text-transform: none; }
-
-.underline { text-decoration: underline; }
-.no-underline { text-decoration: none; }
-.line-through { text-decoration: line-through; }
-
-/* ============================================
-   WHITE SPACE & WRAPPING
-   ============================================ */
-.truncate {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+body {
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: var(--leading-normal);
 }
-
-.pre { white-space: pre; }
-.pre-wrap { white-space: pre-wrap; }
-.pre-line { white-space: pre-line; }
-.break-words { overflow-wrap: break-word; }
-
-/* ============================================
-   TYPOGRAPHY PRESET CLASSES (Global)
-   ============================================ */
 
 .h1 {
-  font-size: var(--font-size-3xl);
-  font-weight: var(--font-weight-bold);
+  font-size: 2rem;
+  font-weight: 700;
   line-height: var(--leading-tight);
   color: var(--color-gray-900);
+  letter-spacing: -0.02em;
 }
 
 .h2 {
-  font-size: var(--font-size-2xl);
-  font-weight: var(--font-weight-semibold);
+  font-size: 1.5rem;
+  font-weight: 600;
   line-height: var(--leading-normal);
   color: var(--color-gray-900);
+  letter-spacing: -0.015em;
 }
 
 .h3 {
-  font-size: var(--font-size-xl);
-  font-weight: var(--font-weight-semibold);
+  font-size: 1.125rem;
+  font-weight: 600;
   line-height: var(--leading-normal);
   color: var(--color-gray-900);
 }
 
 .h4 {
-  font-size: var(--font-size-lg);
-  font-weight: var(--font-weight-medium);
+  font-size: 1rem;
+  font-weight: 500;
   line-height: var(--leading-normal);
   color: var(--color-gray-700);
 }
 
 .body-text {
-  font-size: var(--font-size-base);
-  font-weight: var(--font-weight-normal);
+  font-size: 1rem;
+  font-weight: 400;
   line-height: var(--leading-relaxed);
   color: var(--color-gray-700);
 }
 
 .label {
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-medium);
+  font-size: 0.875rem;
+  font-weight: 500;
   line-height: var(--leading-normal);
   color: var(--color-gray-700);
 }
 
 .caption {
-  font-size: var(--font-size-xs);
-  font-weight: var(--font-weight-normal);
+  font-size: 0.75rem;
+  font-weight: 400;
   line-height: var(--leading-normal);
   color: var(--color-gray-500);
 }
 
-/* ============================================
-   FONT FAMILIES
-   ============================================ */
-.font-mono { font-family: 'SF Mono', Monaco, 'Courier New', monospace; }
-
-/* ============================================
-   APPLY TO BODY
-   ============================================ */
-body {
-  font-family: var(--font-family, 'Inter', sans-serif);
-  font-size: var(--font-size-base);
-  font-weight: var(--font-weight-normal);
-  line-height: var(--leading-normal);
-  color: var(--color-gray-900);
+.font-mono {
+  font-family: 'SF Mono', Monaco, 'Courier New', monospace;
 }

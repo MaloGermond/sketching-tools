@@ -1,116 +1,182 @@
 ---
-// Composant Scoreboard - Affiche la moyenne et l'historique des scores avec images
-// Inclut la Card et le titre
-import Card from "./Card.astro";
-
 interface Props {
-  style?: string;
+  class?: string;
 }
 
-const { class:className = "" } = Astro.props;
+const { class: className = '' } = Astro.props;
 ---
 
-<Card class={className}>
-  <h3 class="text-lg font-semibold">Journal</h3>
-  <div class="flex flex-col gap-4 min-w-[200px] w-full">
-    <div class="flex items-baseline gap-2">
-      <span class="text-sm">Moyenne:</span>
-      <span id="score-average" class="text-xl font-bold ml-2">0%</span>
+<aside class:list={['scoreboard', className]}>
+  <div id="trace-history" class="trace-list"></div>
+  <div class="score-card" id="score-card">
+    <div class="score-thumbnail-wrapper">
+      <div class="score-thumbnail-placeholder" id="score-thumbnail-img"></div>
     </div>
-    
-    <div id="trace-history" class="flex flex-col gap-2 max-h-[400px] overflow-y-auto w-full items-stretch"></div>
+    <div class="score-info">
+      <p class="score-label">Ressemblance</p>
+      <div class="score-row">
+        <span id="score-average" class="score-value">—</span>
+        <span class="score-dot" id="score-dot"></span>
+      </div>
+    </div>
   </div>
-</Card>
+</aside>
 
 <style>
-  /* Styles pour les éléments dynamiques générés par JavaScript */
-  :global(.trace-item) {
+  .scoreboard {
+    position: fixed;
+    left: 1rem;
+    bottom: 1.5rem;
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+    width: 5rem;
+  }
+
+  /* History column — older entries at top, most recent at bottom */
+  .trace-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    width: 100%;
+  }
+
+  /* Score card — current/latest */
+  .score-card {
+    background: #ffffff;
+    border: 1px solid var(--color-gray-200);
+    border-radius: 1rem;
+    padding: 0.625rem;
+    width: 100%;
+    box-shadow: 0 2px 8px rgb(0 0 0 / 0.06);
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .score-thumbnail-wrapper {
+    width: 100%;
+    aspect-ratio: 1;
+    border-radius: 0.625rem;
+    overflow: hidden;
+    background: var(--color-gray-50);
+    border: 1px solid var(--color-gray-100);
+  }
+
+  .score-thumbnail-placeholder {
+    width: 100%;
+    height: 100%;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+  }
+
+  .score-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.125rem;
+  }
+
+  .score-label {
+    font-size: 0.625rem;
+    font-weight: 500;
+    color: var(--color-gray-400);
+    letter-spacing: 0.02em;
+  }
+
+  .score-row {
     display: flex;
     align-items: center;
-    gap: 0.75rem;
-    background: white;
-    border-radius: 0.375rem;
+    justify-content: space-between;
+  }
+
+  .score-value {
+    font-size: 0.9375rem;
+    font-weight: 700;
+    color: var(--color-gray-900);
+    line-height: 1;
+  }
+
+  .score-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--color-gray-200);
+    transition: background 200ms ease;
+    flex-shrink: 0;
+  }
+</style>
+
+<style is:global>
+  .trace-thumb {
     width: 100%;
-    box-sizing: border-box;
+    aspect-ratio: 1;
+    border-radius: 0.875rem;
+    overflow: hidden;
+    background: var(--color-gray-50);
+    border: 1px solid var(--color-gray-100);
+    flex-shrink: 0;
   }
-  
-  :global(.trace-image) {
-    width: 50px;
-    height: 50px;
+
+  .trace-thumb img {
+    width: 100%;
+    height: 100%;
     object-fit: contain;
-    background: #F6F6F6;
-    border-radius: 0.375rem;
-    border: 1px solid #E6E6E6;
-  }
-  
-  :global(.trace-score) {
-    font-weight: 600;
-    font-size: 0.875rem;
-  }
-  
-  /* Couleurs de status - utilisent les classes définies dans typography.css */
-  :global(.trace-score.success) { color: var(--color-success); }
-  :global(.trace-score.warning) { color: var(--color-warning); }
-  :global(.trace-score.error) { color: var(--color-error); }
-  
-  :global(.trace-empty) {
-    color: #9ca3af;
-    font-size: 0.875rem;
-    text-align: center;
-    padding: 1rem;
   }
 </style>
 
 <script>
-  // Fonction pour rendre le scoreboard avec les images
   function renderScoreboard() {
-    const state = window.scoreState || { 
-      average: 0, 
-      history: [], 
-      current: null,
-      traces: []
-    };
-    
+    const state = window.scoreState || { average: 0, history: [], current: null, traces: [] };
+
     const averageEl = document.getElementById('score-average');
+    const dotEl = document.getElementById('score-dot');
+    const imgEl = document.getElementById('score-thumbnail-img');
     const historyEl = document.getElementById('trace-history');
-    
+
+    const traces = state.traces || [];
+    const latest = traces[traces.length - 1];
+    const history = traces.slice(0, -1).slice(-4); // up to 4 older entries
+
+    // Update current score card
     if (averageEl) {
-      averageEl.textContent = `${state.average}%`;
+      const avg = state.average || 0;
+      averageEl.textContent = avg > 0 ? `${avg}%` : '—';
     }
-    
+
+    if (dotEl && latest) {
+      const score = Math.floor(latest.score);
+      dotEl.style.background =
+        score >= 80 ? '#22c55e' :
+        score >= 50 ? '#f59e0b' :
+        '#ef4444';
+    }
+
+    if (imgEl && latest?.image) {
+      imgEl.style.backgroundImage = `url(${latest.image})`;
+    }
+
+    // Render history (older = more transparent)
     if (historyEl) {
-      if (state.traces && state.traces.length > 0) {
-        // Utilisation des classes success/warning/error
-        historyEl.innerHTML = state.traces
-          .slice(0, 20)
-          .map((trace, i) => {
-            const score = Math.floor(trace.score);
-            const scoreClass = score >= 80 ? 'success' : score >= 50 ? 'warning' : 'error';
-            return `
-              <article class="trace-item">
-                <img class="trace-image" src="${trace.image}" alt="Tracé ${i + 1}" />
-                <span class="trace-score ${scoreClass}">${score}%</span>
-              </article>
-            `;
-          })
-          .join('');
-      } else {
-        historyEl.innerHTML = '<div class="trace-empty">Aucun tracé encore</div>';
-      }
+      const opacities = [0.15, 0.25, 0.4, 0.6];
+      const startOpacity = opacities[Math.max(0, opacities.length - history.length)];
+
+      historyEl.innerHTML = history.map((trace, i) => {
+        const opacity = opacities[opacities.length - history.length + i] ?? 0.6;
+        return `
+          <div class="trace-thumb" style="opacity: ${opacity}">
+            <img src="${trace.image}" alt="Tracé ${i + 1}" />
+          </div>
+        `;
+      }).join('');
     }
   }
-  
-  // Initialiser le scoreboard
+
   if (typeof window !== 'undefined') {
-    window.scoreState = window.scoreState || { 
-      average: 0, 
-      history: [], 
-      current: null,
-      traces: []
-    };
+    window.scoreState = window.scoreState || { average: 0, history: [], current: null, traces: [] };
     renderScoreboard();
-    
-    // Écouter les mises à jour
     document.addEventListener('scoreUpdated', renderScoreboard);
   }
 </script>

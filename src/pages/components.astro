@@ -5,266 +5,358 @@ import Card from "../components/Card.astro";
 import Toast from "../components/Toast.astro";
 import Scoreboard from "../components/Scoreboard.astro";
 import ToolCard from "../components/ToolCard.astro";
-import Header from "../components/Header.astro";
 import Icon from "../components/Icon.astro";
 import Toggle from "../components/Toggle.jsx";
 import ToggleGroup from "../components/ToggleGroup.jsx";
-import Toolbar from "../components/Toolbar.astro";
 
 import fs from 'fs';
 import path from 'path';
 
-const title = "Dev - All Components";
-
-// Lister tous les fichiers SVG dans public/icons/
 const iconsDir = path.join(process.cwd(), 'public/icons');
-const iconFiles = fs.readdirSync(iconsDir).filter(f => f.endsWith('.svg'));
-const iconNames = iconFiles.map(f => f.replace('.svg', ''));
+const iconNames = fs.readdirSync(iconsDir).filter(f => f.endsWith('.svg')).map(f => f.replace('.svg', ''));
 ---
 
-<MainLayout title={title}>
-  <div class="p-8 max-w-7xl mx-auto">
-    <h1 class="text-3xl font-bold mb-8">All Components - Dev Page</h1>
-    <p class="text-gray-600 mb-8">This page is only available in development mode.</p>
+<MainLayout title="Composants">
+  <div class="doc-page">
 
-    <!-- ============================================ -->
-    <!-- SECTION: Icon -->
-    <!-- ============================================ -->
-    <section class="mb-12">
-      <h2 class="text-2xl font-semibold mb-4">Icon</h2>
-      <Card>
-        <p class="text-gray-600 mb-4">SVG icon component from public/icons/.</p>
-        
-        <div class="flex flex-wrap gap-4 items-center justify-center bg-gray-50 p-4 rounded-lg mb-4">
-          {iconNames.map(iconName => (
-            <div class="flex flex-col items-center gap-2">
-              <Icon name={iconName} size={32} class="text-purple-500" />
-              <span class="text-sm text-gray-600">{iconName}</span>
+    <header class="doc-header">
+      <h1 class="doc-title">Composants</h1>
+      <p class="doc-subtitle">Librairie de composants UI — page de développement.</p>
+    </header>
+
+    <!-- Nav -->
+    <nav class="doc-nav">
+      {['Icon','Action','Toggle','ToggleGroup','Card','Toast','Scoreboard','ToolCard'].map(name => (
+        <a href={`#${name.toLowerCase()}`} class="doc-nav-link">{name}</a>
+      ))}
+    </nav>
+
+    <!-- Icons -->
+    <section class="doc-section" id="icon">
+      <header class="section-head">
+        <span class="section-tag">Icon</span>
+        <p class="section-desc">SVG icons chargés depuis <code>public/icons/</code>.</p>
+      </header>
+      <div class="preview">
+        <div class="icon-grid">
+          {iconNames.map(name => (
+            <div class="icon-item">
+              <Icon name={name} size={20} />
+              <span class="icon-name">{name}</span>
             </div>
           ))}
         </div>
-        
-        <p class="text-gray-600 mt-6 text-sm">
-          Usage: <code>&lt;Icon name="{iconNames[0] || 'icon-name'}" size={32} class="text-color" /&gt;</code>
-        </p>
-      </Card>
-    </section>
-
-
-    <!-- ============================================ -->
-    <!-- SECTION: Action (Button) -->
-    <!-- ============================================ -->
-    <section class="mb-12">
-      <h2 class="text-2xl font-semibold mb-4">Action (Button)</h2>
-      <Card>
-        <p class="text-gray-600 mb-4">Button component with variants and sizes.</p>
-        
-        <div class="space-y-6">
-          <div>
-            <h3 class="text-lg font-medium mb-2">Variants</h3>
-            <div class="flex flex-wrap gap-4 items-center justify-center bg-gray-50 p-4 rounded-lg mb-4">
-              <Action variant="primary">Primary</Action>
-              <Action variant="emphasis">Emphasis</Action>
-              <Action variant="default">Default</Action>
-              <Action variant="facultatif">Facultatif</Action>
-            </div>
-          </div>
-          
-          <div>
-            <h3 class="text-lg font-medium mb-2">Sizes</h3>
-            <div class="flex flex-wrap gap-4 items-center justify-center bg-gray-50 p-4 rounded-lg mb-4">
-              <Action size="sm">Small</Action>
-              <Action size="md">Medium</Action>
-              <Action size="lg">Large</Action>
-            </div>
-          </div>
-          
-          <div>
-            <h3 class="text-lg font-medium mb-2">With Icons</h3>
-            <div class="flex flex-wrap gap-4 items-center justify-center bg-gray-50 p-4 rounded-lg mb-4">
-              <Action icon="circle" iconPosition="left">Draw</Action>
-              <Action icon="rectangle" iconPosition="right">Edit</Action>
-              <Action icon="triangle">Delete</Action>
-            </div>
-          </div>
-          
-          <div>
-            <h3 class="text-lg font-medium mb-2">States</h3>
-            <div class="flex flex-wrap gap-4 items-center justify-center bg-gray-50 p-4 rounded-lg mb-4">
-              <Action disabled>Disabled</Action>
-              <Action fullWidth variant="emphasis">Full Width</Action>
-            </div>
-          </div>
-          
-          <div>
-            <h3 class="text-lg font-medium mb-2">With Href (Link)</h3>
-            <div class="flex flex-wrap gap-4 items-center justify-center bg-gray-50 p-4 rounded-lg mb-4">
-              <Action href="/">Home</Action>
-              <Action href="/tools/drawing-canvas" icon="circle">Drawing Tool</Action>
-              <Action href="/tools/pattern-generator" icon="rectangle" variant="primary">Pattern Generator</Action>
-              <Action href="/tools/warmup" icon="triangle" onClick="console.log('Navigating to warmup')">Warmup</Action>
-            </div>
-          </div>
-        </div>
-      </Card>
-    </section>
-
-    <!-- ============================================ -->
-    <!-- SECTION: Toggle -->
-    <!-- ============================================ -->
-    <section class="mb-12">
-      <h2 class="text-2xl font-semibold mb-4">Toggle</h2>
-      <Card>
-        <p class="text-gray-600 mb-4">Toggle button avec icône seule, bascule entre default et primary.</p>
-        
-        <div class="flex flex-wrap gap-4 items-center justify-center bg-gray-50 p-4 rounded-lg mb-4">
-          <Toggle
-            key="circle"
-            icon="circle"
-          />
-
-          <Toggle
-            key="circle"
-            icon="circle"
-            selected="true"
-          />
-        </div>
-        
-        <p class="text-gray-600 mt-6 text-sm">
-          Usage: <code>&lt;Toggle icon="circle" /&gt;</code> (click to toggle)
-        </p>
-        <p class="text-gray-600 mt-2 text-sm">
-          With initial state: <code>&lt;Toggle icon="circle" selected /&gt;</code>
-        </p>
-        <p class="text-gray-600 mt-2 text-sm">
-          With callback: <code>&lt;Toggle icon="circle" onClick="console.log('toggled')" /&gt;</code>
-        </p>
-      </Card>
-    </section>
-
-    <!-- ============================================ -->
-    <!-- SECTION: ToggleGroup -->
-    <!-- ============================================ -->
-    <section class="mb-12">
-      <h2 class="text-2xl font-semibold mb-4">ToggleGroup</h2>
-      <Card>
-        <p class="text-gray-600 mb-4">Groupe de boutons toggle (Preact) avec sélection unique. Un seul peut être sélectionné à la fois. Permet aussi la désélection.</p>
-        
-        <div class="flex flex-wrap gap-4 items-center justify-center bg-gray-50 p-4 rounded-lg mb-4">
-          <ToggleGroup 
-            client:load
-            icons={['circle', 'square', 'triangle']}
-            selectedIcon="circle"
-          />
-        </div>
-        
-        <p class="text-gray-600 mt-6 text-sm">
-          Usage: <code>&lt;ToggleGroup client:load icons={['icon1', 'icon2']} selectedIcon="icon1" /&gt;</code>
-        </p>
-        <p class="text-gray-600 mt-2 text-sm">
-          Dispatch l'événement <code>toggleGroupSelected</code> avec <code>{`{ icon: string | null }`}</code> quand une icône est sélectionnée/désélectionnée.
-        </p>
-        <p class="text-gray-600 mt-2 text-sm">
-          Écoute <code>shapeSelected</code> pour synchroniser avec les événements externes.
-        </p>
-      </Card>
-    </section>
-
-    <!-- ============================================ -->
-    <!-- SECTION: Toolbar -->
-    <!-- ============================================ -->
-    <section class="mb-12">
-      <h2 class="text-2xl font-semibold mb-4">Toolbar</h2>
-      <Card>
-        <p class="text-gray-600 mb-4">Barre d'outils fixe en bas de l'écran avec un ToggleGroup pour les outils de dessin.</p>
-        
-        <div class="bg-gray-50 p-4 rounded-lg mb-4 relative h-32">
-          <Toolbar selectedIcon="circle" />
-        </div>
-        
-        <p class="text-gray-600 mt-6 text-sm">
-          Usage: <code>&lt;Toolbar icons={['circle', 'square']} selectedIcon="circle" /&gt;</code>
-        </p>
-        <p class="text-gray-600 mt-2 text-sm">
-          Positionnée avec <code>fixed bottom-4 left-1/2 -translate-x-1/2 z-10</code>
-        </p>
-        <p class="text-gray-600 mt-2 text-sm">
-          Conteneur: <code>&lt;Card class="fixed ..."&gt;&lt;Toolbar /&gt;&lt;/Card&gt;</code>
-        </p>
-        <p class="text-gray-600 mt-2 text-sm">
-          Utilise <code>&lt;ToggleGroup&gt;</code> pour gérer la sélection unique.
-        </p>
-      </Card>
-    </section>
-
-    <!-- ============================================ -->
-    <!-- SECTION: Card -->
-    <!-- ============================================ -->
-    <section class="mb-12">
-      <h2 class="text-2xl font-semibold mb-4">Card</h2>
-        <Card>
-          <div class="flex flex-wrap gap-4 items-center justify-center bg-gray-50 p-4 rounded-lg mb-4">
-        <Card>
-          <h3 class="text-lg font-semibold mb-2">Default Card</h3>
-          <p class="text-gray-600">This is a default card with some content.</p>
-        </Card>
-        <Card class="bg-gray-50">
-          <h3 class="text-lg font-semibold mb-2">Custom Background</h3>
-          <p class="text-gray-600">Card with custom background color.</p>
-        </Card>
-        <Card>
-          <h3 class="text-lg font-semibold mb-2">With Padding</h3>
-          <p class="text-gray-600 p-4">Card with additional padding.</p>
-        </Card>
       </div>
-      </Card>
+      <p class="usage"><code>&lt;Icon name="circle" size={24} /&gt;</code></p>
     </section>
 
-    <!-- ============================================ -->
-    <!-- SECTION: Toast -->
-    <!-- ============================================ -->
-    <section class="mb-12">
-      <h2 class="text-2xl font-semibold mb-4">Toast</h2>
-      <Card>
-        <p class="text-gray-600 mb-4">Toast notification component.</p>
-        
-        <Toast toastId="dev-toast" label="Dev Toast" />
-
-
-        <div class="flex flex-wrap gap-4 mt-6">
-          <Action onClick="document.dispatchEvent(new CustomEvent('showToast', { detail: { score: 25 } }))">Success Toast (25%) </Action>
-
-        <Action onClick="document.dispatchEvent(new CustomEvent('showToast', { detail: { score: 65 } }))">Success Toast (65%) </Action>
-        
-        <Action onClick="document.dispatchEvent(new CustomEvent('showToast', { detail: { score: 95 } }))">Success Toast (95%) </Action>
+    <!-- Action -->
+    <section class="doc-section" id="action">
+      <header class="section-head">
+        <span class="section-tag">Action</span>
+        <p class="section-desc">Bouton réutilisable — 4 variants, 3 tailles, support icône et lien.</p>
+      </header>
+      <div class="preview">
+        <div class="row-group">
+          <span class="row-label">Variants</span>
+          <div class="row">
+            <Action variant="emphasis">Emphasis</Action>
+            <Action variant="primary">Primary</Action>
+            <Action variant="default">Default</Action>
+            <Action variant="facultatif">Facultatif</Action>
+          </div>
         </div>
-      </Card>
+        <div class="divider" />
+        <div class="row-group">
+          <span class="row-label">Tailles</span>
+          <div class="row items-center">
+            <Action size="sm">Small</Action>
+            <Action size="md">Medium</Action>
+            <Action size="lg">Large</Action>
+          </div>
+        </div>
+        <div class="divider" />
+        <div class="row-group">
+          <span class="row-label">Avec icône</span>
+          <div class="row">
+            <Action icon="circle" iconPosition="left">Gauche</Action>
+            <Action icon="rectangle" iconPosition="right">Droite</Action>
+          </div>
+        </div>
+        <div class="divider" />
+        <div class="row-group">
+          <span class="row-label">États</span>
+          <div class="row" style="max-width: 24rem;">
+            <Action disabled>Désactivé</Action>
+            <Action fullWidth variant="emphasis">Pleine largeur</Action>
+          </div>
+        </div>
+      </div>
     </section>
 
-    <!-- ============================================ -->
-    <!-- SECTION: Scoreboard -->
-    <!-- ============================================ -->
-    <section class="mb-12">
-      <h2 class="text-2xl font-semibold mb-4">Scoreboard</h2>
-      <Card>
-        <p class="text-gray-600 mb-4">Score history display component.</p>
+    <!-- Toggle -->
+    <section class="doc-section" id="toggle">
+      <header class="section-head">
+        <span class="section-tag">Toggle</span>
+        <p class="section-desc">Bouton icône bascule entre default et selected.</p>
+      </header>
+      <div class="preview">
+        <div class="row">
+          <Toggle client:load icon="circle" />
+          <Toggle client:load icon="circle" selected={true} />
+        </div>
+      </div>
+      <p class="usage"><code>&lt;Toggle icon="circle" /&gt;</code></p>
+    </section>
+
+    <!-- ToggleGroup -->
+    <section class="doc-section" id="togglegroup">
+      <header class="section-head">
+        <span class="section-tag">ToggleGroup</span>
+        <p class="section-desc">Groupe de Toggles avec sélection unique. Dispatch <code>toggleGroupSelected</code>.</p>
+      </header>
+      <div class="preview">
+        <div class="row">
+          <ToggleGroup client:load icons={['circle', 'square', 'triangle']} selectedIcon="circle" />
+        </div>
+      </div>
+      <p class="usage"><code>&lt;ToggleGroup client:load icons={["circle", "square"]} selectedIcon="circle" /&gt;</code></p>
+    </section>
+
+    <!-- Card -->
+    <section class="doc-section" id="card">
+      <header class="section-head">
+        <span class="section-tag">Card</span>
+        <p class="section-desc">Conteneur blanc avec bordure subtile et coins arrondis.</p>
+      </header>
+      <div class="preview">
+        <div class="row items-stretch flex-wrap">
+          <Card class="flex-1 min-w-[160px]">
+            <p class="label">Default</p>
+            <p class="caption mt-1">Contenu de la carte.</p>
+          </Card>
+          <Card title="Avec titre" class="flex-1 min-w-[160px]">
+            <p class="caption">Contenu avec titre.</p>
+          </Card>
+        </div>
+      </div>
+    </section>
+
+    <!-- Toast -->
+    <section class="doc-section" id="toast">
+      <header class="section-head">
+        <span class="section-tag">Toast</span>
+        <p class="section-desc">Notification temporaire avec score coloré. Écoute l'événement <code>showToast</code>.</p>
+      </header>
+      <div class="preview">
+        <Toast toastId="dev-toast" label="Score" />
+        <div class="row">
+          <Action onClick="document.dispatchEvent(new CustomEvent('showToast', { detail: { score: 25 } }))">25% — Erreur</Action>
+          <Action onClick="document.dispatchEvent(new CustomEvent('showToast', { detail: { score: 65 } }))">65% — Warning</Action>
+          <Action onClick="document.dispatchEvent(new CustomEvent('showToast', { detail: { score: 95 } }))">95% — Succès</Action>
+        </div>
+      </div>
+    </section>
+
+    <!-- Scoreboard -->
+    <section class="doc-section" id="scoreboard">
+      <header class="section-head">
+        <span class="section-tag">Scoreboard</span>
+        <p class="section-desc">Historique des scores avec images. Écoute <code>scoreUpdated</code>.</p>
+      </header>
+      <div class="preview">
         <Scoreboard />
-      </Card>
+      </div>
     </section>
 
-    <!-- ============================================ -->
-    <!-- SECTION: ToolCard -->
-    <!-- ============================================ -->
-    <section class="mb-12">
-      <h2 class="text-2xl font-semibold mb-4">ToolCard</h2>
-      <Card>
-      <div class="flex flex-wrap gap-4 items-center justify-center bg-gray-50 p-4 rounded-lg mb-4">
-        <ToolCard title="Drawing Tool" description="A tool for drawing" link="/tools/drawing-canvas" />
-        <ToolCard title="Pattern Generator" description="Generate patterns" link="/tools/pattern-generator" />
-        <ToolCard title="Warmup" description="Warmup exercises" link="/tools/warmup" />
+    <!-- ToolCard -->
+    <section class="doc-section" id="toolcard">
+      <header class="section-head">
+        <span class="section-tag">ToolCard</span>
+        <p class="section-desc">Card de navigation vers un outil. Gradient de couleur via la prop <code>color</code>.</p>
+      </header>
+      <div class="preview">
+        <div class="toolcard-grid">
+          <ToolCard title="Canvas de dessin" description="Dessiner librement" href="/tools/drawing-canvas" icon="✏️" color="blue" />
+          <ToolCard title="Échauffement" description="Exercices avant dessin" href="/tools/warmup" icon="🔥" color="orange" />
+          <ToolCard title="Composants" description="Librairie UI" href="/components" icon="⬡" color="purple" />
+        </div>
       </div>
-    </Card>
     </section>
-    
+
   </div>
 </MainLayout>
+
+<style>
+  .doc-page {
+    max-width: 50rem;
+    margin: 0 auto;
+    padding: 2.5rem 1.5rem 6rem;
+  }
+
+  /* Header */
+  .doc-header {
+    margin-bottom: 2rem;
+    padding-bottom: 1.75rem;
+    border-bottom: 1px solid var(--color-gray-200);
+  }
+
+  .doc-title {
+    font-size: 1.75rem;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    color: var(--color-gray-900);
+    margin-bottom: 0.375rem;
+  }
+
+  .doc-subtitle {
+    font-size: 0.9375rem;
+    color: var(--color-gray-500);
+  }
+
+  /* Nav */
+  .doc-nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+    margin-bottom: 3rem;
+  }
+
+  .doc-nav-link {
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: var(--color-gray-500);
+    text-decoration: none;
+    padding: 0.25rem 0.625rem;
+    border-radius: var(--radius-md);
+    transition: background 150ms ease, color 150ms ease;
+  }
+
+  .doc-nav-link:hover {
+    background: var(--color-gray-100);
+    color: var(--color-gray-900);
+  }
+
+  /* Section */
+  .doc-section {
+    margin-bottom: 3rem;
+    scroll-margin-top: 5rem;
+  }
+
+  .section-head {
+    display: flex;
+    align-items: baseline;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .section-tag {
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--color-gray-900);
+    background: var(--color-gray-100);
+    padding: 0.1875rem 0.5rem;
+    border-radius: var(--radius-sm);
+    font-family: 'SF Mono', Monaco, monospace;
+    white-space: nowrap;
+  }
+
+  .section-desc {
+    font-size: 0.875rem;
+    color: var(--color-gray-500);
+  }
+
+  .section-desc code {
+    font-family: 'SF Mono', Monaco, monospace;
+    font-size: 0.8125rem;
+    color: var(--color-gray-700);
+    background: var(--color-gray-100);
+    padding: 0.1rem 0.3rem;
+    border-radius: var(--radius-sm);
+  }
+
+  /* Preview */
+  .preview {
+    background: var(--bg-card);
+    border: 1px solid var(--color-gray-200);
+    border-radius: var(--radius-xl);
+    padding: 1.5rem;
+    margin-bottom: 0.625rem;
+  }
+
+  .row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.625rem;
+    align-items: center;
+  }
+
+  .row-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.625rem;
+  }
+
+  .row-label {
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: var(--color-gray-400);
+    letter-spacing: 0.02em;
+  }
+
+  .divider {
+    height: 1px;
+    background: var(--color-gray-100);
+    margin: 1rem 0;
+  }
+
+  /* Icon grid */
+  .icon-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+  }
+
+  .icon-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.875rem;
+    border-radius: var(--radius-lg);
+    transition: background 150ms ease;
+  }
+
+  .icon-item:hover {
+    background: var(--color-gray-50);
+  }
+
+  .icon-name {
+    font-size: 0.6875rem;
+    color: var(--color-gray-400);
+    font-family: 'SF Mono', Monaco, monospace;
+  }
+
+  /* ToolCard grid */
+  .toolcard-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 0.875rem;
+  }
+
+  /* Usage */
+  .usage {
+    font-size: 0.8125rem;
+    color: var(--color-gray-500);
+  }
+
+  .usage code {
+    font-family: 'SF Mono', Monaco, monospace;
+    background: var(--color-gray-100);
+    padding: 0.125rem 0.4rem;
+    border-radius: var(--radius-sm);
+    font-size: 0.75rem;
+    color: var(--color-gray-700);
+  }
+</style>
