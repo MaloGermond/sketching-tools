@@ -1,4 +1,6 @@
 ---
+import Chip from './Chip.astro';
+
 interface Props {
   toastId: string;
   label?: string;
@@ -12,9 +14,9 @@ const { toastId, label = 'Score' } = Astro.props;
   data-toast-id={toastId}
   class="toast-wrapper"
 >
-  <div class="toast-pill">
+  <div class="toast-chip">
     <span id={toastId + '-dot'} class="toast-dot"></span>
-    <div class="toast-content">
+    <div class="toast-text">
       <p class="toast-label">{label}</p>
       <p id={toastId + '-value'} class="toast-value"></p>
     </div>
@@ -33,47 +35,45 @@ const { toastId, label = 'Score' } = Astro.props;
     transition: opacity 300ms ease, top 300ms ease;
   }
 
-  .toast-pill {
-    display: flex;
+  .toast-chip {
+    display: inline-flex;
     align-items: center;
-    gap: 0.75rem;
-    background: #ffffff;
-    border-radius: 9999px;
-    padding: 0 1.25rem;
-    height: 50px;
-    min-width: 114px;
-    box-shadow: 0 4px 16px rgb(0 0 0 / 0.10), 0 1px 4px rgb(0 0 0 / 0.06);
-    border: 1px solid var(--color-gray-200);
+    gap: 8px;
+    padding: 6px 16px 6px 12px;
+    background: var(--color-white);
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius-full);
+    box-shadow: var(--shadow-float);
+    white-space: nowrap;
   }
 
   .toast-dot {
-    width: 10px;
-    height: 10px;
+    width: 16px;
+    height: 16px;
     border-radius: 50%;
-    background: var(--color-success);
+    background: var(--text-success);
     flex-shrink: 0;
     transition: background 200ms ease;
   }
 
-  .toast-content {
+  .toast-text {
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
+    gap: 1px;
   }
 
   .toast-label {
     font-size: 0.6875rem;
-    font-weight: 500;
-    color: var(--color-gray-500);
+    font-weight: var(--font-weight-default);
+    color: var(--text-subdue);
     line-height: 1;
-    margin-bottom: 0.125rem;
   }
 
   .toast-value {
     font-size: 1.125rem;
-    font-weight: 700;
+    font-weight: var(--font-weight-default);
+    color: var(--text-default);
     line-height: 1;
-    color: var(--color-gray-900);
   }
 </style>
 
@@ -97,18 +97,17 @@ const { toastId, label = 'Score' } = Astro.props;
 
       if (currentTimeout) clearTimeout(currentTimeout);
 
+      const style = getComputedStyle(document.documentElement);
       const color =
-        score >= 80 ? '#22c55e' :
-        score >= 50 ? '#f59e0b' :
-        '#ef4444';
+        score >= 80 ? style.getPropertyValue('--text-success').trim() :
+        score >= 50 ? style.getPropertyValue('--text-warning').trim() :
+        style.getPropertyValue('--text-error').trim();
 
       valueEl.textContent = `${Math.floor(score)}%`;
-      valueEl.style.color = color;
       dotEl.style.background = color;
 
       toastEl.style.top = '-80px';
       toastEl.style.opacity = '0';
-
       void toastEl.offsetHeight;
 
       requestAnimationFrame(() => {

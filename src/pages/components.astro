@@ -2,6 +2,8 @@
 import MainLayout from "../layouts/MainLayout.astro";
 import Action from "../components/Action.astro";
 import Card from "../components/Card.astro";
+import Chip from "../components/Chip.astro";
+import Pill from "../components/Pill.astro";
 import Toast from "../components/Toast.astro";
 import Scoreboard from "../components/Scoreboard.astro";
 import ToolCard from "../components/ToolCard.astro";
@@ -26,10 +28,43 @@ const iconNames = fs.readdirSync(iconsDir).filter(f => f.endsWith('.svg')).map(f
 
     <!-- Nav -->
     <nav class="doc-nav">
-      {['Icon','Action','Toggle','ToggleGroup','Card','Toast','Scoreboard','ToolCard'].map(name => (
+      {['Pill','Chip','Icon','Action','Toggle','ToggleGroup','Card','Toast','Scoreboard','ToolCard'].map(name => (
         <a href={`#${name.toLowerCase()}`} class="doc-nav-link">{name}</a>
       ))}
     </nav>
+
+    <!-- Pill -->
+    <section class="doc-section" id="pill">
+      <header class="section-head">
+        <span class="section-tag">Pill</span>
+        <p class="section-desc">Indicateur coloré circulaire — 3 états sémantiques.</p>
+      </header>
+      <div class="preview">
+        <div class="row">
+          <Pill color="success" />
+          <Pill color="error" />
+          <Pill color="warning" />
+        </div>
+      </div>
+      <p class="usage-note"><code>&lt;Pill color="success" /&gt;</code></p>
+    </section>
+
+    <!-- Chip -->
+    <section class="doc-section" id="chip">
+      <header class="section-head">
+        <span class="section-tag">Chip</span>
+        <p class="section-desc">Badge pill avec indicateur coloré, valeur et unité optionnelle.</p>
+      </header>
+      <div class="preview">
+        <div class="preview-row">
+          <Chip value="84" unit="%" color="success" />
+          <Chip value="51" unit="%" color="warning" />
+          <Chip value="23" unit="%" color="error" />
+          <Chip value="Score" />
+        </div>
+      </div>
+      <p class="usage-note"><code>&lt;Chip value="84" unit="%" color="success" /&gt;</code></p>
+    </section>
 
     <!-- Icons -->
     <section class="doc-section" id="icon">
@@ -278,9 +313,9 @@ const iconNames = fs.readdirSync(iconsDir).filter(f => f.endsWith('.svg')).map(f
 
   /* Preview */
   .preview {
-    background: var(--bg-card);
-    border: 1px solid var(--color-gray-200);
-    border-radius: var(--radius-xl);
+    background: #f2f4f6;
+    border: 1px solid #e4e7eb;
+    border-radius: 12px;
     padding: 1.5rem;
     margin-bottom: 0.625rem;
   }
@@ -340,9 +375,9 @@ const iconNames = fs.readdirSync(iconsDir).filter(f => f.endsWith('.svg')).map(f
 
   /* ToolCard grid */
   .toolcard-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-    gap: 0.875rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
   }
 
   /* Usage */
