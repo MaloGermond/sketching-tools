@@ -1,0 +1,62 @@
+---
+import MainLayout from "../../layouts/MainLayout.astro";
+import Snackbar from "../../components/Snackbar.tsx";
+import LevelsPanel from "../../components/LevelsPanel.tsx";
+import Toolbar from "../../components/Toolbar.astro";
+---
+
+<MainLayout title="Échauffement">
+  <!-- Canvas plein écran -->
+  <div id="sketch-container" class="sketch-container"></div>
+
+  <!-- Snackbar scores bas gauche -->
+  <Snackbar client:load />
+
+  <!-- Panel niveaux droite -->
+  <LevelsPanel client:load />
+
+  <!-- Toolbar centré bas -->
+  <Toolbar selectedIcon="circle" />
+</MainLayout>
+
+<style>
+  .sketch-container {
+    position: fixed;
+    inset: 0;
+    top: 3.5rem;
+    z-index: 0;
+  }
+
+</style>
+
+<script>
+  window.shapeSettings = {
+    'circle': true,
+    'square': false,
+    'triangle': false,
+    'horizontal-line': false,
+    'vertical-line': false,
+    'ellipse': false
+  };
+
+  document.addEventListener('DOMContentLoaded', () => {
+    document.addEventListener('toggleGroupSelected', (event) => {
+      if (event.detail?.icon) {
+        const selected = event.detail.icon;
+        Object.keys(window.shapeSettings).forEach(k => {
+          window.shapeSettings[k] = (k === selected);
+        });
+        document.dispatchEvent(new CustomEvent('shapeSettingsUpdated', {
+          detail: { settings: { ...window.shapeSettings } }
+        }));
+      }
+    });
+
+    document.dispatchEvent(new CustomEvent('shapeSettingsUpdated', {
+      detail: { settings: { ...window.shapeSettings } }
+    }));
+  });
+</script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js"></script>
+<script src="/scripts/sketches/warmup.js" is:inline></script>

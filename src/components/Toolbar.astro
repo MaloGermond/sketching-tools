@@ -1,0 +1,43 @@
+---
+import ToggleGroup from './ToggleGroup.jsx';
+
+interface Props {
+  icons?: string[];
+  selectedIcon?: string;
+}
+
+const {
+  icons = ['circle', 'ellipse', 'square', 'triangle', 'horizontal-line', 'vertical-line'],
+  selectedIcon = ''
+} = Astro.props;
+
+// Split icons into two groups with a separator (first 3 | last 3)
+const group1 = icons.slice(0, 3);
+const group2 = icons.slice(3);
+---
+
+<div class="toolbar">
+  <ToggleGroup
+    client:load
+    icons={icons}
+    selectedIcon={selectedIcon}
+    groupId="shape-toggle-group"
+  />
+</div>
+
+<style>
+  .toolbar {
+    position: fixed;
+    bottom: 1.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10;
+    background: #ffffff;
+    border-radius: 9999px;
+    padding: 0.875rem 1rem;
+    box-shadow: 0 4px 16px rgb(0 0 0 / 0.08), 0 1px 4px rgb(0 0 0 / 0.04);
+    border: 1px solid var(--color-gray-200);
+    display: flex;
+    align-items: center;
+  }
+</style>

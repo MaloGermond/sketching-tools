@@ -1,0 +1,439 @@
+---
+import MainLayout from "../layouts/MainLayout.astro";
+import Action from "../components/Action.astro";
+import Card from "../components/Card.astro";
+import Chip from "../components/Chip.astro";
+import Pill from "../components/Pill.astro";
+import Toast from "../components/Toast.tsx";
+import Snackbar from "../components/Snackbar.tsx";
+import ToolCard from "../components/ToolCard.astro";
+import Icon from "../components/Icon.astro";
+import Toggle from "../components/Toggle.jsx";
+import ToggleGroup from "../components/ToggleGroup.jsx";
+
+import fs from 'fs';
+import path from 'path';
+
+const iconsDir = path.join(process.cwd(), 'public/icons');
+const iconNames = fs.readdirSync(iconsDir).filter(f => f.endsWith('.svg')).map(f => f.replace('.svg', ''));
+---
+
+<MainLayout title="Composants">
+  <div class="doc-layout">
+
+    <!-- Sidebar -->
+    <aside class="doc-sidebar">
+      <p class="sidebar-title">Composants</p>
+      <nav class="doc-nav">
+        {['Pill','Chip','Icon','Action','Toggle','ToggleGroup','Card','Toast','Snackbar','ToolCard'].map(name => (
+          <a href={`#${name.toLowerCase()}`} class="doc-nav-link">{name}</a>
+        ))}
+      </nav>
+    </aside>
+
+    <!-- Content -->
+    <div class="doc-page">
+
+    <header class="doc-header">
+      <h1 class="doc-title">Composants</h1>
+      <p class="doc-subtitle">Librairie de composants UI — page de développement.</p>
+    </header>
+
+    <!-- Pill -->
+    <section class="doc-section" id="pill">
+      <header class="section-head">
+        <span class="section-tag">Pill</span>
+        <p class="section-desc">Indicateur coloré circulaire — 3 états sémantiques.</p>
+      </header>
+      <div class="preview">
+        <div class="row">
+          <Pill color="success" />
+          <Pill color="error" />
+          <Pill color="warning" />
+        </div>
+      </div>
+      <p class="usage-note"><code>&lt;Pill color="success" /&gt;</code></p>
+    </section>
+
+    <!-- Chip -->
+    <section class="doc-section" id="chip">
+      <header class="section-head">
+        <span class="section-tag">Chip</span>
+        <p class="section-desc">Badge pill avec indicateur coloré, valeur et unité optionnelle.</p>
+      </header>
+      <div class="preview">
+        <div class="preview-row">
+          <Chip value="84" unit="%" color="success" />
+          <Chip value="51" unit="%" color="warning" />
+          <Chip value="23" unit="%" color="error" />
+          <Chip value="Score" />
+        </div>
+      </div>
+      <p class="usage-note"><code>&lt;Chip value="84" unit="%" color="success" /&gt;</code></p>
+    </section>
+
+    <!-- Icons -->
+    <section class="doc-section" id="icon">
+      <header class="section-head">
+        <span class="section-tag">Icon</span>
+        <p class="section-desc">SVG icons chargés depuis <code>public/icons/</code>.</p>
+      </header>
+      <div class="preview">
+        <div class="icon-grid">
+          {iconNames.map(name => (
+            <div class="icon-item">
+              <Icon name={name} size={20} />
+              <span class="icon-name">{name}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+      <p class="usage"><code>&lt;Icon name="circle" size={24} /&gt;</code></p>
+    </section>
+
+    <!-- Action -->
+    <section class="doc-section" id="action">
+      <header class="section-head">
+        <span class="section-tag">Action</span>
+        <p class="section-desc">Bouton réutilisable — 4 variants, 3 tailles, support icône et lien.</p>
+      </header>
+      <div class="preview">
+        <div class="row-group">
+          <span class="row-label">Variants</span>
+          <div class="row">
+            <Action variant="emphasis">Emphasis</Action>
+            <Action variant="primary">Primary</Action>
+            <Action variant="default">Default</Action>
+            <Action variant="facultatif">Facultatif</Action>
+          </div>
+        </div>
+        <div class="divider" />
+        <div class="row-group">
+          <span class="row-label">Tailles</span>
+          <div class="row items-center">
+            <Action size="sm">Small</Action>
+            <Action size="md">Medium</Action>
+            <Action size="lg">Large</Action>
+          </div>
+        </div>
+        <div class="divider" />
+        <div class="row-group">
+          <span class="row-label">Avec icône</span>
+          <div class="row">
+            <Action icon="circle" iconPosition="left">Gauche</Action>
+            <Action icon="rectangle" iconPosition="right">Droite</Action>
+          </div>
+        </div>
+        <div class="divider" />
+        <div class="row-group">
+          <span class="row-label">États</span>
+          <div class="row" style="max-width: 24rem;">
+            <Action disabled>Désactivé</Action>
+            <Action fullWidth variant="emphasis">Pleine largeur</Action>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Toggle -->
+    <section class="doc-section" id="toggle">
+      <header class="section-head">
+        <span class="section-tag">Toggle</span>
+        <p class="section-desc">Bouton icône bascule entre default et selected.</p>
+      </header>
+      <div class="preview">
+        <div class="row">
+          <Toggle client:load icon="circle" />
+          <Toggle client:load icon="circle" selected={true} />
+        </div>
+      </div>
+      <p class="usage"><code>&lt;Toggle icon="circle" /&gt;</code></p>
+    </section>
+
+    <!-- ToggleGroup -->
+    <section class="doc-section" id="togglegroup">
+      <header class="section-head">
+        <span class="section-tag">ToggleGroup</span>
+        <p class="section-desc">Groupe de Toggles avec sélection unique. Dispatch <code>toggleGroupSelected</code>.</p>
+      </header>
+      <div class="preview">
+        <div class="row">
+          <ToggleGroup client:load icons={['circle', 'square', 'triangle']} selectedIcon="circle" />
+        </div>
+      </div>
+      <p class="usage"><code>&lt;ToggleGroup client:load icons={["circle", "square"]} selectedIcon="circle" /&gt;</code></p>
+    </section>
+
+    <!-- Card -->
+    <section class="doc-section" id="card">
+      <header class="section-head">
+        <span class="section-tag">Card</span>
+        <p class="section-desc">Conteneur blanc avec bordure subtile et coins arrondis.</p>
+      </header>
+      <div class="preview">
+        <div class="row items-stretch flex-wrap">
+          <Card class="flex-1 min-w-[160px]">
+            <p class="label">Default</p>
+            <p class="caption mt-1">Contenu de la carte.</p>
+          </Card>
+          <Card title="Avec titre" class="flex-1 min-w-[160px]">
+            <p class="caption">Contenu avec titre.</p>
+          </Card>
+        </div>
+      </div>
+    </section>
+
+    <!-- Toast -->
+    <section class="doc-section" id="toast">
+      <header class="section-head">
+        <span class="section-tag">Toast</span>
+        <p class="section-desc">Notification temporaire avec score coloré. Écoute l'événement <code>showToast</code>.</p>
+      </header>
+      <div class="preview">
+        <Toast toastId="dev-toast" client:load />
+        <div class="row">
+          <Action onClick="document.dispatchEvent(new CustomEvent('showToast', { detail: { score: 25 } }))">25% — Erreur</Action>
+          <Action onClick="document.dispatchEvent(new CustomEvent('showToast', { detail: { score: 65 } }))">65% — Warning</Action>
+          <Action onClick="document.dispatchEvent(new CustomEvent('showToast', { detail: { score: 95 } }))">95% — Succès</Action>
+        </div>
+      </div>
+    </section>
+
+    <!-- Snackbar -->
+    <section class="doc-section" id="snackbar">
+      <header class="section-head">
+        <span class="section-tag">Snackbar</span>
+        <p class="section-desc">Stack de scores avec images. Écoute <code>scoreUpdated</code>. Se collapse après 10s, se déploie au hover.</p>
+      </header>
+      <div class="preview" style="min-height: 120px; position: relative;">
+        <Snackbar client:load />
+        <div style="display:flex; gap: 8px; margin-top: 8px;">
+          <button onclick="document.dispatchEvent(new CustomEvent('scoreUpdated', { detail: {} })); window.scoreState = { traces: [{ image: 'data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2240%22 height=%2240%22><circle cx=%2220%22 cy=%2220%22 r=%2215%22 fill=%22%2322C55E%22/></svg>', score: 85 }, ...(window.scoreState?.traces ?? [])].slice(0,5) }; document.dispatchEvent(new CustomEvent('scoreUpdated'))">85% — Succès</button>
+          <button onclick="window.scoreState = { traces: [{ image: 'data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2240%22 height=%2240%22><rect x=%225%22 y=%225%22 width=%2230%22 height=%2230%22 fill=%22%23FACC15%22/></svg>', score: 62 }, ...(window.scoreState?.traces ?? [])].slice(0,5) }; document.dispatchEvent(new CustomEvent('scoreUpdated'))">62% — Warning</button>
+          <button onclick="window.scoreState = { traces: [{ image: 'data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2240%22 height=%2240%22><polygon points=%2220,5 35,35 5,35%22 fill=%22%23EF4444%22/></svg>', score: 30 }, ...(window.scoreState?.traces ?? [])].slice(0,5) }; document.dispatchEvent(new CustomEvent('scoreUpdated'))">30% — Erreur</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ToolCard -->
+    <section class="doc-section" id="toolcard">
+      <header class="section-head">
+        <span class="section-tag">ToolCard</span>
+        <p class="section-desc">Card de navigation vers un outil. Gradient de couleur via la prop <code>color</code>.</p>
+      </header>
+      <div class="preview">
+        <div class="toolcard-grid">
+          <ToolCard title="Canvas de dessin" description="Dessiner librement" href="/tools/drawing-canvas" icon="✏️" color="blue" />
+          <ToolCard title="Échauffement" description="Exercices avant dessin" href="/tools/warmup" icon="🔥" color="orange" />
+          <ToolCard title="Composants" description="Librairie UI" href="/components" icon="⬡" color="purple" />
+        </div>
+      </div>
+    </section>
+
+    </div><!-- /doc-page -->
+  </div><!-- /doc-layout -->
+</MainLayout>
+
+<style>
+  /* Layout two-column */
+  .doc-layout {
+    display: flex;
+    align-items: flex-start;
+    min-height: calc(100vh - 3.5rem);
+  }
+
+  /* Sidebar */
+  .doc-sidebar {
+    position: sticky;
+    top: 3.5rem;
+    width: 13rem;
+    flex-shrink: 0;
+    height: calc(100vh - 3.5rem);
+    padding: 2rem 1rem 2rem 1.5rem;
+    border-right: 1px solid #e4e7eb;
+    overflow-y: auto;
+  }
+
+  .sidebar-title {
+    font-size: 0.6875rem;
+    font-weight: 600;
+    color: #9ca3af;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+    padding-left: 0.5rem;
+  }
+
+  /* Nav */
+  .doc-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 0.125rem;
+  }
+
+  .doc-nav-link {
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: #6F859C;
+    text-decoration: none;
+    padding: 0.3125rem 0.5rem;
+    border-radius: 6px;
+    transition: background 150ms ease, color 150ms ease;
+  }
+
+  .doc-nav-link:hover {
+    background: #f2f4f6;
+    color: #111827;
+  }
+
+  /* Main content */
+  .doc-page {
+    flex: 1;
+    min-width: 0;
+    padding: 2.5rem 2.5rem 6rem;
+    max-width: 52rem;
+  }
+
+  /* Header */
+  .doc-header {
+    margin-bottom: 2.5rem;
+    padding-bottom: 1.75rem;
+    border-bottom: 1px solid #e4e7eb;
+  }
+
+  .doc-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    color: #111827;
+    margin-bottom: 0.25rem;
+  }
+
+  .doc-subtitle {
+    font-size: 0.875rem;
+    color: #6F859C;
+  }
+
+  /* Section */
+  .doc-section {
+    margin-bottom: 3rem;
+    scroll-margin-top: 5rem;
+  }
+
+  .section-head {
+    display: flex;
+    align-items: baseline;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .section-tag {
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--color-gray-900);
+    background: var(--color-gray-100);
+    padding: 0.1875rem 0.5rem;
+    border-radius: var(--radius-sm);
+    font-family: 'SF Mono', Monaco, monospace;
+    white-space: nowrap;
+  }
+
+  .section-desc {
+    font-size: 0.875rem;
+    color: var(--color-gray-500);
+  }
+
+  .section-desc code {
+    font-family: 'SF Mono', Monaco, monospace;
+    font-size: 0.8125rem;
+    color: var(--color-gray-700);
+    background: var(--color-gray-100);
+    padding: 0.1rem 0.3rem;
+    border-radius: var(--radius-sm);
+  }
+
+  /* Preview */
+  .preview {
+    background: #f2f4f6;
+    border: 1px solid #e4e7eb;
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 0.625rem;
+  }
+
+  .row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.625rem;
+    align-items: center;
+  }
+
+  .row-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.625rem;
+  }
+
+  .row-label {
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: var(--color-gray-400);
+    letter-spacing: 0.02em;
+  }
+
+  .divider {
+    height: 1px;
+    background: var(--color-gray-100);
+    margin: 1rem 0;
+  }
+
+  /* Icon grid */
+  .icon-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+  }
+
+  .icon-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.875rem;
+    border-radius: var(--radius-lg);
+    transition: background 150ms ease;
+  }
+
+  .icon-item:hover {
+    background: var(--color-gray-50);
+  }
+
+  .icon-name {
+    font-size: 0.6875rem;
+    color: var(--color-gray-400);
+    font-family: 'SF Mono', Monaco, monospace;
+  }
+
+  /* ToolCard grid */
+  .toolcard-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  /* Usage */
+  .usage {
+    font-size: 0.8125rem;
+    color: var(--color-gray-500);
+  }
+
+  .usage code {
+    font-family: 'SF Mono', Monaco, monospace;
+    background: var(--color-gray-100);
+    padding: 0.125rem 0.4rem;
+    border-radius: var(--radius-sm);
+    font-size: 0.75rem;
+    color: var(--color-gray-700);
+  }
+</style>

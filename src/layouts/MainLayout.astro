@@ -1,12 +1,13 @@
 ---
 import Header from "../components/Header.astro";
-import '../styles/variables.css';
+import '../styles/typography.css';
+import '../styles/tailwindcss.css';
 
 interface Props {
   title?: string;
 }
 
-const { title = "Sketching Tools Hub" } = Astro.props;
+const { title = "Sketching Tools" } = Astro.props;
 ---
 
 <!DOCTYPE html>
@@ -15,23 +16,13 @@ const { title = "Sketching Tools Hub" } = Astro.props;
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>{title}</title>
-  <style>
-    body {
-      margin: 0;
-      background: var(--bg-body);
-      font-family: var(--font-family);
-      color: var(--color-gray-900);
-    }
-    main {
-      max-width: 800px;
-      margin: 0 auto;
-      padding: var(--space-xl);
-    }
-  </style>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet" />
 </head>
-<body>
+<body class="flex flex-col min-h-screen">
   <Header />
-  <main>
+  <main class="flex-1 pt-16">
     <slot />
   </main>
 </body>

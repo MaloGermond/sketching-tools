@@ -3,18 +3,124 @@ import MainLayout from "../layouts/MainLayout.astro";
 import ToolCard from "../components/ToolCard.astro";
 
 const tools = [
-  { title: "Canvas de dessin", href: "/tools/drawing-canvas", icon: "🎨", color: "blue", description: "Dessiner avec p5.js" },
-  { title: "Générateur de motifs", href: "/tools/pattern-generator", icon: "🔄", color: "green", description: "Créer des motifs" },
+  {
+    title: "Canvas de dessin",
+    href: "/tools/drawing-canvas",
+    icon: "✏️",
+    color: "blue",
+    description: "Dessiner librement avec p5.js",
+  },
+  {
+    title: "Échauffement",
+    href: "/tools/warmup",
+    icon: "🔥",
+    color: "orange",
+    description: "Entraîne-toi avant de dessiner",
+  },
+  {
+    title: "Composants",
+    href: "/components",
+    icon: "⬡",
+    color: "purple",
+    description: "Librairie de composants UI",
+  },
 ];
 ---
 
-<MainLayout title="Hub">
-  <h1>Mes outils</h1>
-  
-  <div style="display: grid; gap: 1rem; margin-top: 2rem;">
-    {tools.map((tool) => (
-      <ToolCard title={tool.title} href={tool.href} icon={tool.icon} color={tool.color} description={tool.description} />
-    ))}
+<MainLayout title="Sketching Tools">
+  <div class="page">
+
+    <header class="hero">
+      <div class="hero-badge">Beta</div>
+      <h1 class="hero-title">Mes outils de dessin</h1>
+      <p class="hero-subtitle">
+        Une collection d'outils pour améliorer ta pratique quotidienne du dessin.
+      </p>
+    </header>
+
+    <section>
+      <p class="section-label">Outils disponibles</p>
+      <div class="tools-grid">
+        {tools.map((tool) => (
+          <ToolCard
+            title={tool.title}
+            href={tool.href}
+            icon={tool.icon}
+            color={tool.color}
+            description={tool.description}
+          />
+        ))}
+      </div>
+    </section>
+
   </div>
 </MainLayout>
 
+<style>
+  .page {
+    max-width: 52rem;
+    margin: 0 auto;
+    padding: 4rem 1.5rem 6rem;
+  }
+
+  /* Hero */
+  .hero {
+    margin-bottom: 3.5rem;
+  }
+
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--color-accent);
+    background: color-mix(in srgb, var(--color-accent) 10%, transparent);
+    border: 1px solid color-mix(in srgb, var(--color-accent) 25%, transparent);
+    padding: 0.25rem 0.625rem;
+    border-radius: var(--radius-full);
+    margin-bottom: 1.25rem;
+  }
+
+  .hero-title {
+    font-size: clamp(1.75rem, 4vw, 2.5rem);
+    font-weight: 600;
+    letter-spacing: -0.025em;
+    color: var(--color-gray-900);
+    line-height: 1.15;
+    margin-bottom: 0.75rem;
+  }
+
+  .hero-subtitle {
+    font-size: 1rem;
+    color: var(--color-gray-500);
+    max-width: 36ch;
+    line-height: 1.65;
+  }
+
+  /* Section */
+  .section-label {
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-gray-400);
+    margin-bottom: 1rem;
+  }
+
+  /* Grid */
+  .tools-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.875rem;
+  }
+
+  @media (min-width: 580px) {
+    .tools-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  @media (min-width: 860px) {
+    .tools-grid { grid-template-columns: repeat(3, 1fr); }
+  }
+</style>
