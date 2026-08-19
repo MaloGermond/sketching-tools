@@ -232,10 +232,13 @@ export default function LevelsPanel() {
   }, []);
 
   useEffect(() => {
-    /** @impure — side effect: écoute shapeSelected */
+    /** @impure — side effect: écoute shapeSelected, synchronise le niveau dans warmup.js */
     const handleShapeSelected = (e: Event) => {
       const shape = (e as CustomEvent).detail?.shape;
-      if (shape && SHAPE_CONFIG[shape]) setCurrentShape(shape);
+      if (!shape || !SHAPE_CONFIG[shape]) return;
+      setCurrentShape(shape);
+      const savedLevel = getShapeProgress(progressRef.current, shape).level;
+      document.dispatchEvent(new CustomEvent('levelChanged', { detail: { level: savedLevel } }));
     };
 
     /** @impure — side effect: traite le score, met à jour la progression */
