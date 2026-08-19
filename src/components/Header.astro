@@ -1,13 +1,17 @@
 ---
 import Action from "../components/Action.astro";
 
+const base = import.meta.env.BASE_URL;
 const currentPath = Astro.url.pathname;
-const isHome = currentPath === '/';
+const isHome = currentPath === base || currentPath === base.slice(0, -1);
+const relativePath = currentPath.startsWith(base)
+  ? currentPath.slice(base.length)
+  : currentPath.replace(/^\//, '');
 ---
 
 <header class="site-header">
   <div class="header-inner">
-    <a href="/" class="wordmark">
+    <a href={base} class="wordmark">
       <span class="wordmark-dot" />
       Sketching Tools
     </a>
@@ -16,7 +20,7 @@ const isHome = currentPath === '/';
       <nav class="breadcrumb">
         <span class="breadcrumb-sep">/</span>
         <span class="breadcrumb-page">
-          {currentPath.replace(/^\/|\/$/g, '').replace(/\//g, ' › ')}
+          {relativePath.replace(/\/$/g, '').replace(/\//g, ' › ')}
         </span>
       </nav>
     )}

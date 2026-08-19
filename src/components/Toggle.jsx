@@ -35,7 +35,7 @@ export default function Toggle({
         style={{ width: `${size}px`, height: `${size}px` }}
       >
         <img
-          src={`/icons/${icon}.svg`}
+          src={`${import.meta.env.BASE_URL}icons/${icon}.svg`}
           alt={icon}
           width={size * 0.5}
           height={size * 0.5}
