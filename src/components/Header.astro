@@ -4,6 +4,9 @@ import Action from "../components/Action.astro";
 const base = import.meta.env.BASE_URL;
 const currentPath = Astro.url.pathname;
 const isHome = currentPath === base || currentPath === base.slice(0, -1);
+const relativePath = currentPath.startsWith(base)
+  ? currentPath.slice(base.length)
+  : currentPath.replace(/^\//, '');
 ---
 
 <header class="site-header">
@@ -17,7 +20,7 @@ const isHome = currentPath === base || currentPath === base.slice(0, -1);
       <nav class="breadcrumb">
         <span class="breadcrumb-sep">/</span>
         <span class="breadcrumb-page">
-          {currentPath.replace(/^\/|\/$/g, '').replace(/\//g, ' › ')}
+          {relativePath.replace(/\/$/g, '').replace(/\//g, ' › ')}
         </span>
       </nav>
     )}
