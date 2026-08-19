@@ -14,7 +14,7 @@ import ToggleGroup from "../components/ToggleGroup.jsx";
 import fs from 'fs';
 import path from 'path';
 
-const base = import.meta.env.BASE_URL;
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 
 const iconsDir = path.join(process.cwd(), 'public/icons');
 const iconNames = fs.readdirSync(iconsDir).filter(f => f.endsWith('.svg')).map(f => f.replace('.svg', ''));
@@ -225,9 +225,9 @@ const iconNames = fs.readdirSync(iconsDir).filter(f => f.endsWith('.svg')).map(f
       </header>
       <div class="preview">
         <div class="toolcard-grid">
-          <ToolCard title="Canvas de dessin" description="Dessiner librement" href={`${base}tools/drawing-canvas`} icon="✏️" color="blue" />
-          <ToolCard title="Échauffement" description="Exercices avant dessin" href={`${base}tools/warmup`} icon="🔥" color="orange" />
-          <ToolCard title="Composants" description="Librairie UI" href={`${base}components`} icon="⬡" color="purple" />
+          <ToolCard title="Canvas de dessin" description="Dessiner librement" href={`${base}/tools/drawing-canvas`} icon="✏️" color="blue" />
+          <ToolCard title="Échauffement" description="Exercices avant dessin" href={`${base}/tools/warmup`} icon="🔥" color="orange" />
+          <ToolCard title="Composants" description="Librairie UI" href={`${base}/components`} icon="⬡" color="purple" />
         </div>
       </div>
     </section>
