@@ -258,12 +258,10 @@ export default function LevelsPanel() {
       document.dispatchEvent(new CustomEvent('levelChanged', { detail: { level: savedLevel } }));
     };
 
-    /** @impure — side effect: traite le score, met à jour la progression */
-    const handleScoreUpdated = () => {
-      const traces = (window as any).scoreState?.traces;
-      if (!traces?.length) return;
-
-      const lastScore = Math.floor(traces[0].score);
+    /** @impure — side effect: traite le score après un vrai dessin (showToast = seul event déclenché par processCompletedDrawing) */
+    const handleScoreUpdated = (e: Event) => {
+      const lastScore = (e as CustomEvent).detail?.score;
+      if (lastScore === undefined) return;
       const shape = currentShapeRef.current;
       const state = progressRef.current;
       const shapeProgress = getShapeProgress(state, shape);
@@ -292,11 +290,11 @@ export default function LevelsPanel() {
     };
 
     document.addEventListener('shapeSettingsUpdated', handleShapeSettingsUpdated);
-    document.addEventListener('scoreUpdated', handleScoreUpdated);
+    document.addEventListener('showToast', handleScoreUpdated);
 
     return () => {
       document.removeEventListener('shapeSettingsUpdated', handleShapeSettingsUpdated);
-      document.removeEventListener('scoreUpdated', handleScoreUpdated);
+      document.removeEventListener('showToast', handleScoreUpdated);
     };
   }, []);
 
