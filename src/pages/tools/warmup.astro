@@ -2,13 +2,10 @@
 import MainLayout from "../../layouts/MainLayout.astro";
 import Snackbar from "../../components/Snackbar.tsx";
 import LevelsPanel from "../../components/LevelsPanel.tsx";
-import Toast from "../../components/Toast.tsx";
 import Toolbar from "../../components/Toolbar.astro";
 ---
 
 <MainLayout title="Échauffement">
-  <Toast toastId="score-toast" client:load />
-
   <!-- Canvas plein écran -->
   <div id="sketch-container" class="sketch-container"></div>
 

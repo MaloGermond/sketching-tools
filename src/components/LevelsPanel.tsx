@@ -224,6 +224,7 @@ export default function LevelsPanel() {
   const [progress, setProgress] = useState<ProgressState>({});
   const [currentShape, setCurrentShape] = useState<string>('circle');
   const progressRef = useRef<ProgressState>({});
+  const currentShapeRef = useRef<string>('circle');
 
   useEffect(() => {
     const loaded = loadProgress();
@@ -232,12 +233,17 @@ export default function LevelsPanel() {
   }, []);
 
   useEffect(() => {
-    /** @impure — side effect: écoute shapeSelected, synchronise le niveau dans warmup.js */
-    const handleShapeSelected = (e: Event) => {
-      const shape = (e as CustomEvent).detail?.shape;
-      if (!shape || !SHAPE_CONFIG[shape]) return;
-      setCurrentShape(shape);
-      const savedLevel = getShapeProgress(progressRef.current, shape).level;
+    /** @impure — side effect: écoute shapeSettingsUpdated (toolbar click uniquement), synchronise le niveau dans warmup.js */
+    const handleShapeSettingsUpdated = (e: Event) => {
+      const settings = (e as CustomEvent).detail?.settings;
+      if (!settings) return;
+      const activeShape = Object.keys(settings).find(k => settings[k]);
+      if (!activeShape || !SHAPE_CONFIG[activeShape]) return;
+
+      currentShapeRef.current = activeShape;
+      setCurrentShape(activeShape);
+
+      const savedLevel = getShapeProgress(progressRef.current, activeShape).level;
       document.dispatchEvent(new CustomEvent('levelChanged', { detail: { level: savedLevel } }));
     };
 
@@ -247,7 +253,7 @@ export default function LevelsPanel() {
       if (!traces?.length) return;
 
       const lastScore = Math.floor(traces[0].score);
-      const shape = currentShape;
+      const shape = currentShapeRef.current;
       const state = progressRef.current;
       const shapeProgress = getShapeProgress(state, shape);
       const maxLevel = SHAPE_CONFIG[shape]?.levels.length ?? 4;
@@ -274,14 +280,14 @@ export default function LevelsPanel() {
       saveProgress(newState);
     };
 
-    document.addEventListener('shapeSelected', handleShapeSelected);
+    document.addEventListener('shapeSettingsUpdated', handleShapeSettingsUpdated);
     document.addEventListener('scoreUpdated', handleScoreUpdated);
 
     return () => {
-      document.removeEventListener('shapeSelected', handleShapeSelected);
+      document.removeEventListener('shapeSettingsUpdated', handleShapeSettingsUpdated);
       document.removeEventListener('scoreUpdated', handleScoreUpdated);
     };
-  }, [currentShape]);
+  }, []);
 
   const activeShapes = Object.keys(SHAPE_CONFIG).filter(
     s => s === currentShape || getShapeProgress(progress, s).level > 1
