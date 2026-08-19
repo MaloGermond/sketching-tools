@@ -5,6 +5,8 @@ import preact from '@astrojs/preact';
 
 // https://astro.build/config
 export default defineConfig({
+  site: 'https://malogermond.github.io',
+  base: '/sketching-tools',
   vite: {
     plugins: [tailwindcss()],
   },
