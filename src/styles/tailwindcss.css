@@ -6,7 +6,7 @@
    ===================================================== */
 @theme {
   /* Font */
-  --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
+  --font-sans: 'PP Neue Montreal', ui-sans-serif, system-ui, sans-serif;
 
   /* ── Gray scale ── */
   --color-white:    #ffffff;
