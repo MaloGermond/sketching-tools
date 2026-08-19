@@ -4,7 +4,7 @@ import Action from "../components/Action.astro";
 import Card from "../components/Card.astro";
 import Chip from "../components/Chip.astro";
 import Pill from "../components/Pill.astro";
-import Toast from "../components/Toast.astro";
+import Toast from "../components/Toast.tsx";
 import Scoreboard from "../components/Scoreboard.astro";
 import ToolCard from "../components/ToolCard.astro";
 import Icon from "../components/Icon.astro";
@@ -190,7 +190,7 @@ const iconNames = fs.readdirSync(iconsDir).filter(f => f.endsWith('.svg')).map(f
         <p class="section-desc">Notification temporaire avec score coloré. Écoute l'événement <code>showToast</code>.</p>
       </header>
       <div class="preview">
-        <Toast toastId="dev-toast" label="Score" />
+        <Toast toastId="dev-toast" client:load />
         <div class="row">
           <Action onClick="document.dispatchEvent(new CustomEvent('showToast', { detail: { score: 25 } }))">25% — Erreur</Action>
           <Action onClick="document.dispatchEvent(new CustomEvent('showToast', { detail: { score: 65 } }))">65% — Warning</Action>

@@ -1,24 +1,17 @@
 ---
-import Chip from './Chip.astro';
-
 interface Props {
   toastId: string;
-  label?: string;
 }
 
-const { toastId, label = 'Score' } = Astro.props;
+const { toastId } = Astro.props;
 ---
 
-<div
-  id={toastId}
-  data-toast-id={toastId}
-  class="toast-wrapper"
->
+<div id={toastId} data-toast-id={toastId} class="toast-wrapper">
   <div class="toast-chip">
     <span id={toastId + '-dot'} class="toast-dot"></span>
     <div class="toast-text">
-      <p class="toast-label">{label}</p>
       <p id={toastId + '-value'} class="toast-value"></p>
+      <p class="toast-unit">%</p>
     </div>
   </div>
 </div>
@@ -28,18 +21,24 @@ const { toastId, label = 'Score' } = Astro.props;
     position: fixed;
     top: 1rem;
     left: 50%;
-    transform: translateX(-50%);
     z-index: 50;
     pointer-events: none;
+    transform: translateX(-50%) translateY(calc(-100% - 2rem));
     opacity: 0;
-    transition: opacity 300ms ease, top 300ms ease;
+    transition: transform 200ms ease-in, opacity 200ms ease-in;
+  }
+
+  .toast-wrapper.is-visible {
+    transform: translateX(-50%) translateY(0);
+    opacity: 1;
+    transition: transform 380ms cubic-bezier(0.34, 1.56, 0.64, 1), opacity 250ms ease-out;
   }
 
   .toast-chip {
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    padding: 6px 16px 6px 12px;
+    padding: 6px 12px;
     background: var(--color-white);
     border: 1px solid var(--border-default);
     border-radius: var(--radius-full);
@@ -58,15 +57,9 @@ const { toastId, label = 'Score' } = Astro.props;
 
   .toast-text {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     gap: 1px;
-  }
-
-  .toast-label {
-    font-size: 0.6875rem;
-    font-weight: var(--font-weight-default);
-    color: var(--text-subdue);
-    line-height: 1;
+    align-items: baseline;
   }
 
   .toast-value {
@@ -75,12 +68,19 @@ const { toastId, label = 'Score' } = Astro.props;
     color: var(--text-default);
     line-height: 1;
   }
+
+  .toast-unit {
+    font-size: 1.125rem;
+    font-weight: var(--font-weight-subdue);
+    color: var(--text-subdue);
+    line-height: 1;
+  }
 </style>
 
 <script>
-  document.addEventListener('DOMContentLoaded', function () {
-    const duration = 1800;
-    let currentTimeout = null;
+  document.addEventListener('DOMContentLoaded', () => {
+    const DURATION = 1800;
+    const EXIT_DURATION = 220;
 
     const toastEl = document.querySelector('[data-toast-id]');
     if (!toastEl) return;
@@ -91,34 +91,49 @@ const { toastId, label = 'Score' } = Astro.props;
 
     if (!valueEl || !dotEl) return;
 
+    let hideTimeout = null;
+
+    /** @pure */
+    const getScoreColor = (score) => {
+      const style = getComputedStyle(document.documentElement);
+      if (score >= 80) return style.getPropertyValue('--text-success').trim();
+      if (score >= 50) return style.getPropertyValue('--text-warning').trim();
+      return style.getPropertyValue('--text-error').trim();
+    };
+
+    /** @impure — side effect: modifie le DOM */
+    const updateContent = (score) => {
+      valueEl.textContent = `${Math.floor(score)}`;
+      dotEl.style.background = getScoreColor(score);
+    };
+
+    /** @impure — side effect: retire la classe is-visible */
+    const hide = () => toastEl.classList.remove('is-visible');
+
+    /** @impure — side effect: anime le toast, schedule un timeout */
+    const show = (score) => {
+      if (hideTimeout) clearTimeout(hideTimeout);
+
+      const isVisible = toastEl.classList.contains('is-visible');
+
+      if (isVisible) {
+        hide();
+        setTimeout(() => {
+          updateContent(score);
+          requestAnimationFrame(() => toastEl.classList.add('is-visible'));
+          hideTimeout = setTimeout(hide, DURATION);
+        }, EXIT_DURATION);
+        return;
+      }
+
+      updateContent(score);
+      requestAnimationFrame(() => toastEl.classList.add('is-visible'));
+      hideTimeout = setTimeout(hide, DURATION);
+    };
+
     document.addEventListener('showToast', (event) => {
       const score = event.detail?.score;
-      if (score === undefined) return;
-
-      if (currentTimeout) clearTimeout(currentTimeout);
-
-      const style = getComputedStyle(document.documentElement);
-      const color =
-        score >= 80 ? style.getPropertyValue('--text-success').trim() :
-        score >= 50 ? style.getPropertyValue('--text-warning').trim() :
-        style.getPropertyValue('--text-error').trim();
-
-      valueEl.textContent = `${Math.floor(score)}%`;
-      dotEl.style.background = color;
-
-      toastEl.style.top = '-80px';
-      toastEl.style.opacity = '0';
-      void toastEl.offsetHeight;
-
-      requestAnimationFrame(() => {
-        toastEl.style.top = '1rem';
-        toastEl.style.opacity = '1';
-      });
-
-      currentTimeout = setTimeout(() => {
-        toastEl.style.top = '-80px';
-        toastEl.style.opacity = '0';
-      }, duration);
+      if (score !== undefined) show(score);
     });
   });
 </script>

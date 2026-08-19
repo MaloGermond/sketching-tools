@@ -1,12 +1,12 @@
 ---
 import MainLayout from "../../layouts/MainLayout.astro";
 import Scoreboard from "../../components/Scoreboard.astro";
-import Toast from "../../components/Toast.astro";
+import Toast from "../../components/Toast.tsx";
 import Toolbar from "../../components/Toolbar.astro";
 ---
 
 <MainLayout title="Échauffement">
-  <Toast toastId="score-toast" label="Ressemblance" />
+  <Toast toastId="score-toast" client:load />
 
   <!-- Canvas plein écran -->
   <div id="sketch-container" class="sketch-container"></div>
