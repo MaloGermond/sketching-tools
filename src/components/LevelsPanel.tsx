@@ -167,6 +167,7 @@ interface ShapeRowProps {
 }
 
 function ShapeRow({ shape, progress, isCurrent }: ShapeRowProps) {
+  const [hovered, setHovered] = useState(false);
   const config = SHAPE_CONFIG[shape];
   if (!config) return null;
 
@@ -174,16 +175,26 @@ function ShapeRow({ shape, progress, isCurrent }: ShapeRowProps) {
   const levelName = config.levels[progress.level - 1] ?? config.levels[0];
   const { count, direction } = getProgressToNext(progress.recentScores);
 
+  const handleClick = () => {
+    if (isCurrent) return;
+    document.dispatchEvent(new CustomEvent('toggleGroupSelected', { detail: { icon: shape } }));
+  };
+
   return (
-    <div style={{
-      padding: isCurrent ? '10px' : '8px 10px',
-      background: isCurrent ? 'white' : 'transparent',
-      borderWidth: '1px',
-      borderStyle: 'solid',
-      borderColor: isCurrent ? '#e4e7eb' : 'transparent',
-      borderRadius: '12px',
-      transition: 'all 250ms ease',
-    }}>
+    <div
+      onClick={handleClick}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      style={{
+        padding: isCurrent ? '10px' : '8px 10px',
+        background: isCurrent ? 'white' : hovered ? '#f2f4f6' : 'transparent',
+        borderWidth: '1px',
+        borderStyle: 'solid',
+        borderColor: isCurrent ? '#e4e7eb' : 'transparent',
+        borderRadius: '12px',
+        transition: 'all 250ms ease',
+        cursor: isCurrent ? 'default' : 'pointer',
+      }}>
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: isCurrent ? '6px' : '2px' }}>
         <span style={{
           fontSize: isCurrent ? '0.8125rem' : '0.75rem',
