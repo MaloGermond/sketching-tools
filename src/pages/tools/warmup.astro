@@ -1,6 +1,6 @@
 ---
 import MainLayout from "../../layouts/MainLayout.astro";
-import ScoreSnackbar from "../../components/ScoreSnackbar.tsx";
+import Snackbar from "../../components/Snackbar.tsx";
 import Toast from "../../components/Toast.tsx";
 import Toolbar from "../../components/Toolbar.astro";
 ---
@@ -12,7 +12,7 @@ import Toolbar from "../../components/Toolbar.astro";
   <div id="sketch-container" class="sketch-container"></div>
 
   <!-- Snackbar scores bas gauche -->
-  <ScoreSnackbar client:load />
+  <Snackbar client:load />
 
   <!-- Panel niveaux droite -->
   <aside class="levels-panel" id="levels-panel">
