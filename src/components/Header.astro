@@ -1,13 +1,14 @@
 ---
 import Action from "../components/Action.astro";
 
+const base = import.meta.env.BASE_URL;
 const currentPath = Astro.url.pathname;
-const isHome = currentPath === '/';
+const isHome = currentPath === base || currentPath === base.slice(0, -1);
 ---
 
 <header class="site-header">
   <div class="header-inner">
-    <a href="/" class="wordmark">
+    <a href={base} class="wordmark">
       <span class="wordmark-dot" />
       Sketching Tools
     </a>
