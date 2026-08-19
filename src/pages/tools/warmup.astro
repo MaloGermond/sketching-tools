@@ -1,6 +1,7 @@
 ---
 import MainLayout from "../../layouts/MainLayout.astro";
 import Snackbar from "../../components/Snackbar.tsx";
+import LevelsPanel from "../../components/LevelsPanel.tsx";
 import Toast from "../../components/Toast.tsx";
 import Toolbar from "../../components/Toolbar.astro";
 ---
@@ -15,11 +16,7 @@ import Toolbar from "../../components/Toolbar.astro";
   <Snackbar client:load />
 
   <!-- Panel niveaux droite -->
-  <aside class="levels-panel" id="levels-panel">
-    <div class="levels-list" id="levels-list">
-      <!-- Généré par JS -->
-    </div>
-  </aside>
+  <LevelsPanel client:load />
 
   <!-- Toolbar centré bas -->
   <Toolbar selectedIcon="circle" />
@@ -33,74 +30,6 @@ import Toolbar from "../../components/Toolbar.astro";
     z-index: 0;
   }
 
-  .levels-panel {
-    position: fixed;
-    right: 1.25rem;
-    top: 50%;
-    transform: translateY(-50%);
-    z-index: 10;
-    display: flex;
-    flex-direction: column;
-    gap: 0.25rem;
-    width: 9rem;
-  }
-
-  .levels-list {
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
-  }
-</style>
-
-<style is:global>
-  .level-item {
-    display: flex;
-    flex-direction: column;
-    gap: 0.25rem;
-  }
-
-  .level-tag {
-    font-size: 0.625rem;
-    font-weight: 600;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--color-gray-400);
-  }
-
-  .level-name {
-    font-size: 0.875rem;
-    font-weight: 500;
-    color: var(--color-gray-800);
-    line-height: 1.35;
-  }
-
-  .level-item.is-current .level-tag {
-    color: var(--color-accent);
-  }
-
-  .level-item.is-current .level-name {
-    color: var(--color-gray-900);
-    font-weight: 600;
-  }
-
-  .level-progress {
-    height: 3px;
-    background: var(--color-gray-200);
-    border-radius: 9999px;
-    margin-top: 0.375rem;
-    overflow: hidden;
-  }
-
-  .level-progress-fill {
-    height: 100%;
-    background: #5bd224;
-    border-radius: 9999px;
-    transition: width 400ms ease;
-  }
-
-  .level-item.is-past {
-    opacity: 0.35;
-  }
 </style>
 
 <script>
@@ -113,35 +42,7 @@ import Toolbar from "../../components/Toolbar.astro";
     'ellipse': false
   };
 
-  const levels = [
-    { id: 1, label: 'Niveau 1', name: 'Centre, taille fixe' },
-    { id: 2, label: 'Niveau 2', name: 'Carré de taille variable' },
-    { id: 3, label: 'Niveau 3', name: 'Rectangle de taille variable' },
-    { id: 4, label: 'Niveau 4', name: 'Rectangle en Déplacement' },
-    { id: 5, label: 'Niveau 5', name: 'Rectangle en Rotation' },
-  ];
-
-  let currentLevel = 1;
-
-  function renderLevels() {
-    const container = document.getElementById('levels-list');
-    if (!container) return;
-    container.innerHTML = levels.map(level => {
-      const isCurrent = level.id === currentLevel;
-      const isPast = level.id < currentLevel;
-      return `
-        <div class="level-item ${isCurrent ? 'is-current' : ''} ${isPast ? 'is-past' : ''}">
-          <span class="level-tag">${level.label}</span>
-          <span class="level-name">${level.name}</span>
-          ${isCurrent ? `<div class="level-progress"><div class="level-progress-fill" style="width: 65%"></div></div>` : ''}
-        </div>
-      `;
-    }).join('');
-  }
-
   document.addEventListener('DOMContentLoaded', () => {
-    renderLevels();
-
     document.addEventListener('toggleGroupSelected', (event) => {
       if (event.detail?.icon) {
         const selected = event.detail.icon;
@@ -151,19 +52,6 @@ import Toolbar from "../../components/Toolbar.astro";
         document.dispatchEvent(new CustomEvent('shapeSettingsUpdated', {
           detail: { settings: { ...window.shapeSettings } }
         }));
-      }
-    });
-
-    document.addEventListener('shapeSelected', (event) => {
-      if (event.detail?.shape) {
-        window.shapeSettings[event.detail.shape] = true;
-      }
-    });
-
-    document.addEventListener('levelChanged', (event) => {
-      if (event.detail?.level) {
-        currentLevel = event.detail.level;
-        renderLevels();
       }
     });
 

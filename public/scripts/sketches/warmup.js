@@ -844,4 +844,10 @@ if (typeof document !== 'undefined') {
       }
     }
   });
+
+  document.addEventListener('levelChanged', (event) => {
+    if (event.detail?.level) {
+      setLevel(event.detail.level);
+    }
+  });
 }
