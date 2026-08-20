@@ -30,7 +30,7 @@ const year = new Date().getFullYear();
 
     <div class="footer-bottom">
       <p class="footer-copy">© {year} Sketching Tools. All rights reserved.</p>
-      <p class="footer-author"><span class="by">By</span> Malo Germond</p>
+      <p class="footer-author"><span class="by">By</span> <a href="https://malogermond.com" class="author-link" target="_blank" rel="noopener">Malo Germond</a></p>
     </div>
 
   </div>
@@ -114,5 +114,15 @@ const year = new Date().getFullYear();
   .by {
     font-weight: 100;
     color: #bfcbd6;
+  }
+
+  .author-link {
+    color: #f9fafb;
+    text-decoration: none;
+    transition: opacity 150ms ease;
+  }
+
+  .author-link:hover {
+    opacity: 0.7;
   }
 </style>
