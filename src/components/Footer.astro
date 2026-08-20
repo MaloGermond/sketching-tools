@@ -1,0 +1,118 @@
+---
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const year = new Date().getFullYear();
+---
+
+<footer class="footer">
+  <div class="footer-inner">
+
+    <p class="footer-brand">Sketching Tools</p>
+
+    <div class="footer-cols">
+      <div class="footer-col">
+        <p class="col-title">Design</p>
+        <a href={`${base}/components`} class="col-link">Components</a>
+      </div>
+      <div class="footer-col">
+        <p class="col-title">Navigate</p>
+        <a href={`${base}/`} class="col-link">Home</a>
+        <a href={`${base}/tools/warmup`} class="col-link">Warmup</a>
+        <a href={`${base}/tools/drawing-canvas`} class="col-link">Tools</a>
+      </div>
+      <div class="footer-col">
+        <p class="col-title">Legal</p>
+        <a href="#" class="col-link">Terms and condition</a>
+        <a href="#" class="col-link">Privacy Policy</a>
+      </div>
+    </div>
+
+    <div class="footer-divider"></div>
+
+    <div class="footer-bottom">
+      <p class="footer-copy">© {year} Sketching Tools. All rights reserved.</p>
+      <p class="footer-author"><span class="by">By</span> Malo Germond</p>
+    </div>
+
+  </div>
+</footer>
+
+<style>
+  .footer {
+    background: #111827;
+    width: 100%;
+  }
+
+  .footer-inner {
+    max-width: 62rem;
+    margin: 0 auto;
+    padding: 3rem 1.5rem 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
+
+  .footer-brand {
+    font-size: 1.5rem;
+    font-weight: 500;
+    color: #f9fafb;
+  }
+
+  .footer-cols {
+    display: flex;
+    gap: 3.25rem;
+  }
+
+  .footer-col {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .col-title {
+    font-size: 1rem;
+    font-weight: 500;
+    color: #f9fafb;
+    margin-bottom: 0.25rem;
+  }
+
+  .col-link {
+    font-size: 0.875rem;
+    font-weight: 300;
+    color: #f9fafb;
+    text-decoration: none;
+    opacity: 0.7;
+    transition: opacity 150ms ease;
+  }
+
+  .col-link:hover {
+    opacity: 1;
+  }
+
+  .footer-divider {
+    height: 1px;
+    background: #1f2937;
+  }
+
+  .footer-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .footer-copy {
+    font-size: 0.75rem;
+    font-weight: 300;
+    color: #bfcbd6;
+  }
+
+  .footer-author {
+    font-size: 0.75rem;
+    font-weight: 300;
+    color: #f9fafb;
+  }
+
+  .by {
+    font-weight: 100;
+    color: #bfcbd6;
+  }
+</style>
