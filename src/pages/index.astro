@@ -33,7 +33,10 @@ const tools = [
   <div class="page">
 
     <header class="hero">
-      <div class="hero-badge">Alpha</div>
+      <div class="hero-meta">
+        <div class="hero-badge">Alpha</div>
+        <span class="hero-version">v0.1.2</span>
+      </div>
       <h1 class="hero-title">Mes outils de dessin</h1>
       <p class="hero-subtitle">
         Une collection d'outils pour améliorer ta pratique quotidienne du dessin.
@@ -70,6 +73,13 @@ const tools = [
     margin-bottom: 3.5rem;
   }
 
+  .hero-meta {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 1.25rem;
+  }
+
   .hero-badge {
     display: inline-flex;
     align-items: center;
@@ -82,7 +92,13 @@ const tools = [
     border: 1px solid color-mix(in srgb, var(--color-accent) 25%, transparent);
     padding: 0.25rem 0.625rem;
     border-radius: var(--radius-full);
-    margin-bottom: 1.25rem;
+  }
+
+  .hero-version {
+    font-size: 0.6875rem;
+    font-weight: 500;
+    color: var(--color-gray-400);
+    letter-spacing: 0.02em;
   }
 
   .hero-title {
