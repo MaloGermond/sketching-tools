@@ -1,3 +1,10 @@
+---
+layout: ../../layouts/LegalLayout.astro
+title: Politique de Confidentialité
+description: Comment Sketching Tools traite vos données et protège votre vie privée.
+lastUpdated: 21 août 2026
+---
+
 # Conditions Générales d’Utilisation – Sketching Tools Hub
 
 **Dernière mise à jour** : 20 août 2026
@@ -5,9 +12,13 @@
 ---
 
 ## 📌 Éditeur
-**Malo Germond**
-**Contact** : [À REMPLIR : Votre email]
-**Site Web** : [À REMPLIR : URL de votre site, ex : https://malogermond.github.io/sketching-tools/]
+
+**Malo Germond** 
+
+**Contact** : sketchingtools@matchalo.org
+
+**Site Web** : https://malogermond.github.io/sketching-tools/
+
 **Hébergement** : GitHub Pages (GitHub, Inc., 88 Colin P Kelly Jr St, San Francisco, CA 94107, États-Unis)
 
 ---
