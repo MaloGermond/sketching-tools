@@ -29,6 +29,7 @@ export class WarmupOrchestrator {
     this.canvasElement = this.p5.createCanvas(this.p5.windowWidth, this.p5.windowHeight);
 
     this.drawingBuffer = this.p5.createGraphics(this.p5.width, this.p5.height);
+    this.drawingBuffer.pixelDensity(1);
     this.drawingBuffer.noSmooth();
 
     this.p5.background(255);
@@ -49,6 +50,7 @@ export class WarmupOrchestrator {
   windowResized() {
     this.p5.resizeCanvas(this.p5.windowWidth, this.p5.windowHeight);
     this.drawingBuffer = this.p5.createGraphics(this.p5.width, this.p5.height);
+    this.drawingBuffer.pixelDensity(1);
     this.drawingBuffer.noSmooth();
     
     if (warmupState.currentShape !== null) {

@@ -107,6 +107,7 @@ export function createShapeMask(p5, params, shapeType, maskStyle = GUIDE_MASK_ST
   if (!p5 || !params) return null;
 
   const mask = p5.createGraphics(p5.width, p5.height);
+  mask.pixelDensity(1);
   mask.clear();
   
   if (maskStyle.noSmooth) mask.noSmooth();
