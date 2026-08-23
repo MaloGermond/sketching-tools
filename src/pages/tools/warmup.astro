@@ -3,19 +3,14 @@ import MainLayout from "../../layouts/MainLayout.astro";
 import Snackbar from "../../components/Snackbar.tsx";
 import LevelsPanel from "../../components/LevelsPanel.tsx";
 import Toolbar from "../../components/Toolbar.astro";
+import P5Sketch from "../../components/P5Sketch.tsx";
 ---
 
 <MainLayout title="Échauffement" footer={false}>
-  <!-- Canvas plein écran -->
-  <div id="sketch-container" class="sketch-container"></div>
+  <P5Sketch src="warmup.js" class="sketch-container" client:load />
 
-  <!-- Snackbar scores bas gauche -->
   <Snackbar client:load />
-
-  <!-- Panel niveaux droite -->
   <LevelsPanel client:load />
-
-  <!-- Toolbar centré bas -->
   <Toolbar selectedIcon="circle" />
 </MainLayout>
 
@@ -25,18 +20,18 @@ import Toolbar from "../../components/Toolbar.astro";
     inset: 0;
     top: 3.5rem;
     z-index: 0;
+    border-radius: 0 !important;
   }
-
 </style>
 
 <script>
   window.shapeSettings = {
-    'circle': true,
-    'square': false,
-    'triangle': false,
+    circle: true,
+    square: false,
+    triangle: false,
     'horizontal-line': false,
     'vertical-line': false,
-    'ellipse': false
+    ellipse: false,
   };
 
   document.addEventListener('DOMContentLoaded', () => {
@@ -47,83 +42,13 @@ import Toolbar from "../../components/Toolbar.astro";
           window.shapeSettings[k] = (k === selected);
         });
         document.dispatchEvent(new CustomEvent('shapeSettingsUpdated', {
-          detail: { settings: { ...window.shapeSettings } }
+          detail: { settings: { ...window.shapeSettings } },
         }));
       }
     });
 
     document.dispatchEvent(new CustomEvent('shapeSettingsUpdated', {
-      detail: { settings: { ...window.shapeSettings } }
+      detail: { settings: { ...window.shapeSettings } },
     }));
-  });
-</script>
-
-<script is:inline src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js"></script>
-
-<script type="module">
-  import { WarmupOrchestrator } from '../../modules/warmup/warmupOrchestrator.js';
-  import { warmupState } from '../../modules/warmup/warmupState.js';
-  import { drawingState } from '../../modules/drawing/drawingState.js';
-  import { DEFAULT_SHAPE_SETTINGS } from '../../modules/shapes/shapeTypes.js';
-
-  // Initialiser l'état global des formes (pour la compatibilité avec l'UI)
-  window.shapeSettings = { ...DEFAULT_SHAPE_SETTINGS };
-
-  let orchestrator;
-
-  function setup() {
-    orchestrator = new WarmupOrchestrator(window);
-    orchestrator.setup();
-  }
-
-  function windowResized() {
-    orchestrator.windowResized();
-  }
-
-  function draw() {
-    orchestrator.draw();
-  }
-
-  function mousePressed() {
-    orchestrator.mousePressed();
-  }
-
-  function mouseReleased() {
-    orchestrator.mouseReleased();
-  }
-
-  // p5.js cherche ces fonctions sur `window` (mode global) : un script de type
-  // module ne les y attache pas automatiquement, contrairement à un script classique.
-  window.setup = setup;
-  window.windowResized = windowResized;
-  window.draw = draw;
-  window.mousePressed = mousePressed;
-  window.mouseReleased = mouseReleased;
-
-  // Écouter les mises à jour de l'UI (dispatchées par le script en tête de page)
-  document.addEventListener('shapeSettingsUpdated', (event) => {
-    if (event.detail?.settings) {
-      const newSettings = event.detail.settings;
-      const settingsChanged = JSON.stringify(warmupState.shapeSettings) !== JSON.stringify(newSettings);
-
-      if (settingsChanged) {
-        warmupState.shapeSettings = newSettings;
-        drawingState.drawing = false;
-        warmupState.currentShape = null;
-
-        if (typeof redraw === 'function') {
-          redraw();
-        } else if (typeof draw === 'function') {
-          draw();
-        }
-      }
-    }
-  });
-
-  // LevelsPanel → p5.js : changement de niveau (progression par forme)
-  document.addEventListener('levelChanged', (event) => {
-    if (event.detail?.level && orchestrator) {
-      orchestrator.setLevel(event.detail.level);
-    }
   });
 </script>

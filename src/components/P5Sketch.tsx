@@ -5,11 +5,12 @@ interface Props {
   src: string;
   width?: number;
   height?: number;
+  class?: string;
 }
 
 const sketches = import.meta.glob('../sketches/*.js');
 
-export default function P5Sketch({ src, width, height }: Props) {
+export default function P5Sketch({ src, width, height, class: className }: Props) {
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -44,11 +45,12 @@ export default function P5Sketch({ src, width, height }: Props) {
   return (
     <div
       ref={ref}
+      class={className}
       style={{
         width: width ? `${width}px` : '100%',
         height: height ? `${height}px` : '100%',
         maxWidth: '100%',
-        borderRadius: '12px',
+        ...(className ? {} : { borderRadius: '12px' }),
         overflow: 'hidden',
         display: 'block',
       }}

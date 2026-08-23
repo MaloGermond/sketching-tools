@@ -27,7 +27,6 @@ export class WarmupOrchestrator {
   setup() {
     this.p5.pixelDensity(1);
     this.canvasElement = this.p5.createCanvas(this.p5.windowWidth, this.p5.windowHeight);
-    this.canvasElement.parent('sketch-container');
 
     this.drawingBuffer = this.p5.createGraphics(this.p5.width, this.p5.height);
     this.drawingBuffer.noSmooth();
