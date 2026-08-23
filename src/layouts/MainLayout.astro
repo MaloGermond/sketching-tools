@@ -6,9 +6,10 @@ import '../styles/tailwindcss.css';
 
 interface Props {
   title?: string;
+  footer?: boolean;
 }
 
-const { title = "Sketching Tools" } = Astro.props;
+const { title = "Sketching Tools", footer = true } = Astro.props;
 const f = `${import.meta.env.BASE_URL}fonts/PPNeueMontreal`;
 ---
 
@@ -35,6 +36,6 @@ const f = `${import.meta.env.BASE_URL}fonts/PPNeueMontreal`;
   <main class="flex-1 pt-16">
     <slot />
   </main>
-  <Footer />
+  {footer && <Footer />}
 </body>
 </html>
