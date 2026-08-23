@@ -10,6 +10,7 @@ import ToolCard from "../components/ToolCard.astro";
 import Icon from "../components/Icon.astro";
 import Toggle from "../components/Toggle.jsx";
 import ToggleGroup from "../components/ToggleGroup.jsx";
+import P5Sketch from "../components/P5Sketch.tsx";
 
 import fs from 'fs';
 import path from 'path';
@@ -27,7 +28,7 @@ const iconNames = fs.readdirSync(iconsDir).filter(f => f.endsWith('.svg')).map(f
     <aside class="doc-sidebar">
       <p class="sidebar-title">Composants</p>
       <nav class="doc-nav">
-        {['Pill','Chip','Icon','Action','Toggle','ToggleGroup','Card','Toast','Snackbar','ToolCard'].map(name => (
+        {['Pill','Chip','Icon','Action','Toggle','ToggleGroup','Card','Toast','Snackbar','ToolCard','P5Sketch'].map(name => (
           <a href={`#${name.toLowerCase()}`} class="doc-nav-link">{name}</a>
         ))}
       </nav>
@@ -232,6 +233,49 @@ const iconNames = fs.readdirSync(iconsDir).filter(f => f.endsWith('.svg')).map(f
       </div>
     </section>
 
+    <!-- P5Sketch -->
+    <section class="doc-section" id="p5sketch">
+      <header class="section-head">
+        <span class="section-tag">P5Sketch</span>
+        <p class="section-desc">Canvas p5.js en instance mode. Importe p5 depuis le package npm, sketches dans <code>src/sketches/</code>.</p>
+      </header>
+
+      <div class="row-group">
+        <span class="row-label">Taille fixe — <code>width</code> et <code>height</code> en props</span>
+        <div class="preview" style="padding: 0; overflow: hidden; border-radius: var(--radius-lg);">
+          <P5Sketch src="demo.js" width={560} height={240} client:load />
+        </div>
+        <p class="usage"><code>&lt;P5Sketch src="demo.js" width={560} height={240} client:load /&gt;</code></p>
+      </div>
+
+      <div class="divider" style="margin: 1.5rem 0;" />
+
+      <div class="row-group">
+        <span class="row-label">Taille fluide — sans props, prend les dimensions du container</span>
+        <div class="preview" style="padding: 0; overflow: hidden; border-radius: var(--radius-lg); height: 200px;">
+          <P5Sketch src="demo.js" client:load />
+        </div>
+        <p class="usage"><code>&lt;P5Sketch src="demo.js" client:load /&gt;</code></p>
+      </div>
+
+      <div class="divider" style="margin: 1.5rem 0;" />
+
+      <div class="row-group">
+        <span class="row-label">Format du sketch — instance mode, sans <code>createCanvas</code></span>
+        <pre class="code-block"><code>{`// src/sketches/mon-sketch.js
+export default function(p) {
+  p.setup = function() {
+    // p.width / p.height sont déjà définis par le composant
+    p.background(242, 244, 246);
+  };
+
+  p.draw = function() {
+    // ...
+  };
+}`}</code></pre>
+      </div>
+    </section>
+
     </div><!-- /doc-page -->
   </div><!-- /doc-layout -->
 </MainLayout>
@@ -422,6 +466,23 @@ const iconNames = fs.readdirSync(iconsDir).filter(f => f.endsWith('.svg')).map(f
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
+  }
+
+  /* Code block */
+  .code-block {
+    background: var(--color-gray-900);
+    border-radius: var(--radius-md);
+    padding: 1rem 1.25rem;
+    overflow-x: auto;
+    margin: 0;
+  }
+
+  .code-block code {
+    font-family: 'SF Mono', Monaco, monospace;
+    font-size: 0.8125rem;
+    color: var(--color-gray-300);
+    line-height: 1.65;
+    white-space: pre;
   }
 
   /* Usage */
