@@ -31,7 +31,6 @@ export class WarmupOrchestrator {
 
     this.drawingBuffer = this.p5.createGraphics(this.p5.width, this.p5.height);
     this.drawingBuffer.pixelDensity(1);
-    this.drawingBuffer.noSmooth();
 
     this.p5.background(255);
     this.p5.stroke(0);
@@ -52,8 +51,7 @@ export class WarmupOrchestrator {
     this.p5.resizeCanvas(this.p5.windowWidth, this.p5.windowHeight);
     this.drawingBuffer = this.p5.createGraphics(this.p5.width, this.p5.height);
     this.drawingBuffer.pixelDensity(1);
-    this.drawingBuffer.noSmooth();
-    
+
     if (warmupState.currentShape !== null) {
       warmupState.shapeParams = warmupState.getShapeParams();
       this.p5.redraw();
@@ -81,21 +79,49 @@ export class WarmupOrchestrator {
    */
   handleUserDrawing() {
     const d = this.p5.dist(this.p5.mouseX, this.p5.mouseY, drawingState.prevX, drawingState.prevY);
+    if (d < 2) return;
 
-    if (d >= BRUSH_CONFIG.SPACING) {
-      const steps = Math.floor(d / BRUSH_CONFIG.SPACING);
-      for (let i = 0; i <= steps; i++) {
-        const t = i / steps;
-        const x = this.p5.lerp(drawingState.prevX, this.p5.mouseX, t);
-        const y = this.p5.lerp(drawingState.prevY, this.p5.mouseY, t);
-        this.drawingBuffer.noStroke();
-        this.drawingBuffer.fill(0);
-        this.drawingBuffer.ellipse(x, y, BRUSH_CONFIG.SIZE, BRUSH_CONFIG.SIZE);
-        drawingState.addPoint(x, y);
-      }
-      drawingState.prevX = this.p5.mouseX;
-      drawingState.prevY = this.p5.mouseY;
+    drawingState.addPoint(this.p5.mouseX, this.p5.mouseY);
+
+    const pts = drawingState.currentPathPoints;
+    const n = pts.length;
+
+    this.drawingBuffer.stroke(0);
+    this.drawingBuffer.strokeWeight(BRUSH_CONFIG.SIZE);
+    this.drawingBuffer.strokeCap(this.p5.ROUND);
+    this.drawingBuffer.strokeJoin(this.p5.ROUND);
+    this.drawingBuffer.noFill();
+
+    if (n === 2) {
+      const ctx = this.drawingBuffer.drawingContext;
+      ctx.beginPath();
+      ctx.moveTo(pts[0].x, pts[0].y);
+      ctx.lineTo(pts[1].x, pts[1].y);
+      ctx.strokeStyle = 'black';
+      ctx.lineWidth = BRUSH_CONFIG.SIZE;
+      ctx.lineCap = 'round';
+      ctx.stroke();
+      return;
     }
+
+    // Bezier quadratique entre midpoints via canvas natif
+    const p1 = pts[n - 3];
+    const p2 = pts[n - 2];
+    const p3 = pts[n - 1];
+    const mx1 = (p1.x + p2.x) / 2;
+    const my1 = (p1.y + p2.y) / 2;
+    const mx2 = (p2.x + p3.x) / 2;
+    const my2 = (p2.y + p3.y) / 2;
+
+    const ctx = this.drawingBuffer.drawingContext;
+    ctx.beginPath();
+    ctx.moveTo(mx1, my1);
+    ctx.quadraticCurveTo(p2.x, p2.y, mx2, my2);
+    ctx.strokeStyle = 'black';
+    ctx.lineWidth = BRUSH_CONFIG.SIZE;
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+    ctx.stroke();
   }
 
   /**

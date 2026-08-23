@@ -9,7 +9,6 @@ export * from './drawingState.js';
 
 export const BRUSH_CONFIG = {
   SIZE: 6,
-  SPACING: 2,
 };
 
 export const MIN_TRACE_LENGTH = 20;
