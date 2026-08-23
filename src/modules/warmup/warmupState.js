@@ -49,7 +49,7 @@ export class WarmupState {
    * Obtient les paramètres de la forme actuelle
    */
   getShapeParams() {
-    return getShapeParams(this.selectedShape, this.currentLevel, window.width, window.height);
+    return getShapeParams(this.selectedShape, this.currentLevel, window.innerWidth, window.innerHeight);
   }
 
   /**
