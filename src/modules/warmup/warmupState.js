@@ -4,7 +4,8 @@
 // ============================================
 
 import { SHAPE_TYPES, DEFAULT_SHAPE_SETTINGS } from '../shapes/shapeTypes.js';
-import { getAvailableShapes, getShapeParams } from '../shapes/shapeParams.js';
+import { getAvailableShapes } from '../shapes/shapeRenderer.js';
+import { getShapeParams } from '../shapes/shapeParams.js';
 
 /**
  * État global du warm-up

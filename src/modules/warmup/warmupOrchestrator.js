@@ -182,7 +182,7 @@ export class WarmupOrchestrator {
       warmupState.shapeParams,
       warmupState.selectedShape
     );
-    
+
     return calculateScoreFromBuffer(this.drawingBuffer, this.guideMask);
   }
 
