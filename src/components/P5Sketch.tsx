@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'preact/hooks';
-import p5 from 'p5';
+import type p5Type from 'p5';
 
 interface Props {
   src: string;
@@ -14,7 +14,7 @@ export default function P5Sketch({ src, width, height }: Props) {
 
   useEffect(() => {
     if (!ref.current) return;
-    let instance: p5;
+    let instance: p5Type;
 
     const w = width ?? ref.current.offsetWidth;
     const h = height ?? ref.current.offsetHeight;
@@ -26,9 +26,9 @@ export default function P5Sketch({ src, width, height }: Props) {
       return;
     }
 
-    loader().then((mod: any) => {
+    Promise.all([import('p5'), loader()]).then(([{ default: p5 }, mod]) => {
       if (!ref.current) return;
-      instance = new p5((p: p5) => {
+      instance = new p5((p: p5Type) => {
         mod.default(p);
         const userSetup = p.setup?.bind(p);
         p.setup = function () {
