@@ -1,6 +1,7 @@
 ---
 import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
+import FeedbackSnackbar from "../components/FeedbackSnackbar.tsx";
 import '../styles/typography.css';
 import '../styles/tailwindcss.css';
 
@@ -36,5 +37,6 @@ const f = `${import.meta.env.BASE_URL}fonts/PPNeueMontreal`;
     <slot />
   </main>
   <Footer />
+  <FeedbackSnackbar client:idle />
 </body>
 </html>
