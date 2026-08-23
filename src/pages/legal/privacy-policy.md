@@ -1,25 +1,38 @@
 ---
 layout: ../../layouts/LegalLayout.astro
 title: Politique de Confidentialité
-description: Comment Sketching Tools traite vos données et protège votre vie privée.
-lastUpdated: 21 août 2026
 ---
 
-## 1. Introduction
+# Politique de Confidentialité
 
-La présente Politique de Confidentialité décrit la manière dont **Sketching Tools** traite les informations lors de votre utilisation du Site.
+Dernière mise à jour : 20 août 2026
 
-Malo Germond s'engage à respecter votre vie privée et à traiter vos données conformément au Règlement Général sur la Protection des Données (RGPD).
+## 1. Éditeur
+
+**Malo Germond**
+
+**Contact** : sketchingtools@matchalo.org
+
+**Site Web** : https://malogermond.github.io/sketching-tools/
+
+**Hébergement** : GitHub Pages (GitHub, Inc., 88 Colin P Kelly Jr St, San Francisco, CA 94107, États-Unis)
 
 ## 2. Données Collectées
 
-### 2.1 Données non collectées
+### 2.1 Données d'analyse (via Umami.js)
 
-Sketching Tools **ne collecte aucune donnée personnelle** via ses serveurs. Nous ne disposons pas de base de données utilisateurs, pas de système d'inscription, et ne transmettons aucune information à des tiers.
+Le Service utilise **Umami.js**, un outil d'analyse respectueux de la vie privée, hébergé en Union Européenne. Les données suivantes peuvent être collectées :
+
+| **Type** | **Exemple** | **Base légale (RGPD)** | **Durée** |
+|----------|-------------|-------------------------|------------|
+| Données techniques | Adresse IP (anonymisée), user agent, résolution d'écran | Intérêt légitime | 13 mois |
+| Données d'usage | Pages visitées, durée de visite, source de trafic | Intérêt légitime | 13 mois |
+
+Umami.js **ne dépose aucun cookie** et n'effectue **aucun suivi cross-site**. Les adresses IP sont anonymisées avant stockage.
 
 ### 2.2 Stockage local (localStorage)
 
-Certaines données fonctionnelles sont stockées **uniquement dans votre navigateur** :
+Certaines données fonctionnelles sont stockées **uniquement dans votre navigateur**, sans jamais être transmises à un serveur :
 
 - **Progression de l'échauffement** : niveaux atteints et historique des scores par forme (cercle, carré, triangle…)
 
@@ -27,31 +40,38 @@ Ces données restent sur votre appareil et peuvent être supprimées à tout mom
 
 ## 3. Cookies
 
-Le Site n'utilise **aucun cookie** de tracking ou d'analyse. Aucun outil de mesure d'audience (Google Analytics, etc.) n'est intégré.
+Le Service n'utilise **aucun cookie de tracking ou publicitaire**. Umami.js fonctionne sans cookies.
 
-## 4. Services Tiers
+## 4. Sous-Traitants
 
-Le Site charge les ressources suivantes depuis des serveurs tiers :
+| **Sous-traitant** | **Rôle** | **Localisation** | **Garanties** |
+|-------------------|----------|------------------|---------------|
+| GitHub, Inc. | Hébergement (GitHub Pages) | États-Unis | Clauses Contractuelles Types (CCT) |
+| Umami | Analyse d'audience | Union Européenne | RGPD conforme |
 
-- **p5.js** (cdnjs.cloudflare.com) — bibliothèque de dessin utilisée pour les outils canvas
-- **GitHub Pages** — hébergement du Site
+## 5. Vos Droits (RGPD)
 
-Ces services peuvent être soumis à leurs propres politiques de confidentialité.
+Conformément au Règlement Général sur la Protection des Données (UE) 2016/679, vous disposez des droits suivants :
 
-## 5. Vos Droits
+- **Droit d'accès** : obtenir une copie des données vous concernant
+- **Droit de rectification** : corriger des données inexactes
+- **Droit à l'effacement** : demander la suppression de vos données
+- **Droit d'opposition** : vous opposer au traitement fondé sur l'intérêt légitime
+- **Droit à la portabilité** : recevoir vos données dans un format structuré
+- **Droit de limitation** : restreindre le traitement de vos données
 
-Conformément au RGPD, vous disposez des droits suivants :
+Pour les données stockées en localStorage, vous pouvez les supprimer directement via les paramètres de votre navigateur.
 
-- **Droit d'accès** : accéder aux données vous concernant
-- **Droit de suppression** : supprimer vos données (via les paramètres de votre navigateur pour le localStorage)
-- **Droit d'opposition** : vous opposer à tout traitement
+Pour exercer vos autres droits ou pour toute question : sketchingtools@matchalo.org
 
-Pour exercer ces droits ou pour toute question : [malogermond.com](https://malogermond.com)
+## 6. Sécurité
 
-## 6. Modification de la Politique
+Le Service est servi exclusivement en **HTTPS**. Aucune donnée personnelle identifiable n'est stockée sur nos serveurs.
 
-Cette politique peut être mise à jour. La date de dernière révision est indiquée en haut de cette page.
+## 7. Modification de la Politique
 
-## 7. Contact
+Cette politique peut être mise à jour. La date de dernière révision est indiquée en haut de cette page. L'utilisation continue du Service après modification vaut acceptation des nouvelles conditions.
 
-**Malo Germond** — [malogermond.com](https://malogermond.com)
+## 8. Contact
+
+**Malo Germond** — sketchingtools@matchalo.org
