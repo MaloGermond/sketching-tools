@@ -7,11 +7,9 @@
 export * from './drawingBuffer.js';
 export * from './drawingState.js';
 
-/**
- * Configuration par défaut du module drawing
- */
-export const DEFAULT_CONFIG = {
-  brushSize: 6,
-  brushSpacing: 2,
-  minTraceLength: 20
+export const BRUSH_CONFIG = {
+  SIZE: 6,
+  SPACING: 2,
 };
+
+export const MIN_TRACE_LENGTH = 20;

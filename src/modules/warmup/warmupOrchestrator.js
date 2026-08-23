@@ -3,7 +3,8 @@
 // Orchestre les modules drawing, shapes et scoring
 // ============================================
 
-import { createDrawingBuffer, drawSmoothLine, BRUSH_CONFIG, MIN_TRACE_LENGTH } from '../drawing/drawingBuffer.js';
+import { createDrawingBuffer, drawSmoothLine } from '../drawing/drawingBuffer.js';
+import { BRUSH_CONFIG, MIN_TRACE_LENGTH } from '../drawing/index.js';
 import { drawingState } from '../drawing/drawingState.js';
 import { warmupState } from './warmupState.js';
 import { drawShape, createShapeMask, GUIDE_DISPLAY_STYLE } from '../shapes/shapeRenderer.js';

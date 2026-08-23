@@ -88,15 +88,3 @@ export function lerp(start, end, t) {
   return start + (end - start) * t;
 }
 
-/**
- * Configuration du pinceau
- */
-export const BRUSH_CONFIG = {
-  SIZE: 6,
-  SPACING: 2
-};
-
-/**
- * Longueur minimale pour valider un tracé
- */
-export const MIN_TRACE_LENGTH = 20;
