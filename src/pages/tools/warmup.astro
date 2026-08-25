@@ -3,26 +3,14 @@ import MainLayout from "../../layouts/MainLayout.astro";
 import Snackbar from "../../components/Snackbar.tsx";
 import LevelsPanel from "../../components/LevelsPanel.tsx";
 import Toolbar from "../../components/Toolbar.astro";
-import fs from 'fs';
-import path from 'path';
-
-const warmupScript = fs.readFileSync(
-  path.join(process.cwd(), 'public/scripts/sketches/warmup.js'),
-  'utf-8'
-);
+import P5Sketch from "../../components/P5Sketch.tsx";
 ---
 
-<MainLayout title="Échauffement">
-  <!-- Canvas plein écran -->
-  <div id="sketch-container" class="sketch-container"></div>
+<MainLayout title="Échauffement" footer={false}>
+  <P5Sketch src="warmup.js" class="sketch-container" client:load />
 
-  <!-- Snackbar scores bas gauche -->
   <Snackbar client:load />
-
-  <!-- Panel niveaux droite -->
   <LevelsPanel client:load />
-
-  <!-- Toolbar centré bas -->
   <Toolbar selectedIcon="circle" />
 </MainLayout>
 
@@ -32,18 +20,18 @@ const warmupScript = fs.readFileSync(
     inset: 0;
     top: 3.5rem;
     z-index: 0;
+    border-radius: 0 !important;
   }
-
 </style>
 
 <script>
   window.shapeSettings = {
-    'circle': true,
-    'square': false,
-    'triangle': false,
+    circle: true,
+    square: false,
+    triangle: false,
     'horizontal-line': false,
     'vertical-line': false,
-    'ellipse': false
+    ellipse: false,
   };
 
   document.addEventListener('DOMContentLoaded', () => {
@@ -54,16 +42,13 @@ const warmupScript = fs.readFileSync(
           window.shapeSettings[k] = (k === selected);
         });
         document.dispatchEvent(new CustomEvent('shapeSettingsUpdated', {
-          detail: { settings: { ...window.shapeSettings } }
+          detail: { settings: { ...window.shapeSettings } },
         }));
       }
     });
 
     document.dispatchEvent(new CustomEvent('shapeSettingsUpdated', {
-      detail: { settings: { ...window.shapeSettings } }
+      detail: { settings: { ...window.shapeSettings } },
     }));
   });
 </script>
-
-<script is:inline src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js"></script>
-<Fragment set:html={`<script>${warmupScript}</script>`} />

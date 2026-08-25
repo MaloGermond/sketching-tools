@@ -9,6 +9,9 @@ export default defineConfig({
   base: '/sketching-tools',
   vite: {
     plugins: [tailwindcss()],
+    build: {
+      chunkSizeWarningLimit: 1000,
+    },
   },
   integrations: [preact()],
 });
