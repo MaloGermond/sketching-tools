@@ -1,0 +1,24 @@
+---
+import MainLayout from "../../layouts/MainLayout.astro";
+import P5Sketch from "../../components/P5Sketch";
+
+// Métadonnées pour l'affichage dans le hub
+const title = "Page blanche";
+const description = "Une page blanche pour dessiner librement au trait noir";
+const icon = "✏️";
+const color = "blue";
+---
+
+<MainLayout title={title} footer={false}>
+  <P5Sketch src="pageBlanche.js" class="sketch-container" client:load />
+</MainLayout>
+
+<style>
+  .sketch-container {
+    position: fixed;
+    inset: 0;
+    top: 3.5rem;
+    z-index: 0;
+    border-radius: 0 !important;
+  }
+</style>
