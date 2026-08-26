@@ -1,5 +1,7 @@
 const STROKE_WEIGHT = 4;
-const CURSOR_SIZE = STROKE_WEIGHT + 10;
+const CURSOR_RING_SIZE = 20;
+const CURSOR_DOT_SIZE = 3;
+const CURSOR_INK = [17, 24, 39]; // #111827
 
 export default function (p) {
   let buffer;
@@ -111,14 +113,30 @@ export default function (p) {
     }
   };
 
+  // Curseur : anneau à triple contour (sombre/blanc/sombre) pour rester
+  // visible sur fond blanc comme sur un trait noir, plus un point central.
+  function drawCursor() {
+    const [r, g, b] = CURSOR_INK;
+    p.noFill();
+    p.stroke(r, g, b, 0.7 * 255);
+    p.strokeWeight(1.5);
+    p.circle(p.mouseX, p.mouseY, CURSOR_RING_SIZE);
+    p.stroke(255, 255, 255, 0.9 * 255);
+    p.strokeWeight(3);
+    p.circle(p.mouseX, p.mouseY, CURSOR_RING_SIZE);
+    p.stroke(r, g, b, 0.7 * 255);
+    p.strokeWeight(1.5);
+    p.circle(p.mouseX, p.mouseY, CURSOR_RING_SIZE);
+    p.noStroke();
+    p.fill(r, g, b);
+    p.circle(p.mouseX, p.mouseY, CURSOR_DOT_SIZE);
+  }
+
   p.draw = function () {
     p.image(buffer, 0, 0);
 
     if (isInCanvas()) {
-      p.noFill();
-      p.stroke(150);
-      p.strokeWeight(1);
-      p.circle(p.mouseX, p.mouseY, CURSOR_SIZE);
+      drawCursor();
     }
   };
 }
