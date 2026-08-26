@@ -3,7 +3,10 @@ import MainLayout from "../../layouts/MainLayout.astro";
 import Snackbar from "../../components/Snackbar.tsx";
 import LevelsPanel from "../../components/LevelsPanel.tsx";
 import Toolbar from "../../components/Toolbar.astro";
+import ToggleGroup from "../../components/ToggleGroup.jsx";
 import P5Sketch from "../../components/P5Sketch.tsx";
+
+const shapeIcons = ['circle', 'ellipse', 'square', 'triangle', 'horizontal-line', 'vertical-line'];
 ---
 
 <MainLayout title="Échauffement" footer={false}>
@@ -11,7 +14,9 @@ import P5Sketch from "../../components/P5Sketch.tsx";
 
   <Snackbar client:load />
   <LevelsPanel client:load />
-  <Toolbar selectedIcon="circle" />
+  <Toolbar>
+    <ToggleGroup client:load icons={shapeIcons} selectedIcon="circle" />
+  </Toolbar>
 </MainLayout>
 
 <style>

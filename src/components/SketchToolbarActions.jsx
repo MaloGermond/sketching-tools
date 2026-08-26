@@ -2,7 +2,8 @@ import { useEffect, useRef, useState } from 'preact/hooks';
 
 const iconUrl = (icon) => `${import.meta.env.BASE_URL.replace(/\/$/, '')}/icons/${icon}.svg`;
 
-export default function SketchToolbar() {
+// Contenu (annuler/rétablir + menu télécharger/nouveau dessin) à placer dans un <Toolbar>.
+export default function SketchToolbarActions() {
   const [canUndo, setCanUndo] = useState(false);
   const [canRedo, setCanRedo] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
@@ -43,21 +44,6 @@ export default function SketchToolbar() {
   return (
     <>
       <style>{`
-        .sketch-toolbar {
-          position: fixed;
-          bottom: 1.5rem;
-          left: 50%;
-          transform: translateX(-50%);
-          z-index: 10;
-          display: flex;
-          align-items: center;
-          gap: 1rem;
-          padding: 0.75rem 1rem;
-          background: var(--color-gray-50);
-          border: 1px solid var(--color-gray-200);
-          border-radius: 1.5rem;
-          box-shadow: 0 0 28px rgb(0 0 0 / 0.16);
-        }
         .sketch-toolbar-history {
           display: flex;
           align-items: center;
@@ -139,56 +125,54 @@ export default function SketchToolbar() {
           opacity: 0.75;
         }
       `}</style>
-      <div class="sketch-toolbar">
-        <div class="sketch-toolbar-history">
-          <button
-            type="button"
-            class="sketch-toolbar-btn"
-            disabled={!canUndo}
-            title="Annuler"
-            aria-label="Annuler"
-            onClick={handleUndo}
-          >
-            ‹
-          </button>
-          <button
-            type="button"
-            class="sketch-toolbar-btn"
-            disabled={!canRedo}
-            title="Rétablir"
-            aria-label="Rétablir"
-            onClick={handleRedo}
-          >
-            ›
-          </button>
-        </div>
+      <div class="sketch-toolbar-history">
+        <button
+          type="button"
+          class="sketch-toolbar-btn"
+          disabled={!canUndo}
+          title="Annuler"
+          aria-label="Annuler"
+          onClick={handleUndo}
+        >
+          ‹
+        </button>
+        <button
+          type="button"
+          class="sketch-toolbar-btn"
+          disabled={!canRedo}
+          title="Rétablir"
+          aria-label="Rétablir"
+          onClick={handleRedo}
+        >
+          ›
+        </button>
+      </div>
 
-        <div class="sketch-toolbar-divider" />
+      <div class="sketch-toolbar-divider" />
 
-        <div class="sketch-toolbar-menu" ref={wrapperRef}>
-          <button
-            type="button"
-            class="sketch-toolbar-btn sketch-toolbar-menu-btn"
-            title="Options"
-            aria-label="Options"
-            aria-expanded={menuOpen}
-            onClick={() => setMenuOpen((open) => !open)}
-          >
-            •••
-          </button>
-          {menuOpen && (
-            <div class="sketch-toolbar-overlay">
-              <button type="button" class="sketch-toolbar-menu-item" onClick={handleDownload}>
-                <img src={iconUrl('download')} alt="" width={14} height={14} />
-                Télécharger
-              </button>
-              <button type="button" class="sketch-toolbar-menu-item" onClick={handleNew}>
-                <img src={iconUrl('plus')} alt="" width={14} height={14} />
-                Nouveau dessin
-              </button>
-            </div>
-          )}
-        </div>
+      <div class="sketch-toolbar-menu" ref={wrapperRef}>
+        <button
+          type="button"
+          class="sketch-toolbar-btn sketch-toolbar-menu-btn"
+          title="Options"
+          aria-label="Options"
+          aria-expanded={menuOpen}
+          onClick={() => setMenuOpen((open) => !open)}
+        >
+          •••
+        </button>
+        {menuOpen && (
+          <div class="sketch-toolbar-overlay">
+            <button type="button" class="sketch-toolbar-menu-item" onClick={handleDownload}>
+              <img src={iconUrl('download')} alt="" width={14} height={14} />
+              Télécharger
+            </button>
+            <button type="button" class="sketch-toolbar-menu-item" onClick={handleNew}>
+              <img src={iconUrl('plus')} alt="" width={14} height={14} />
+              Nouveau dessin
+            </button>
+          </div>
+        )}
       </div>
     </>
   );
