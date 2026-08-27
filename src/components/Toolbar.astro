@@ -39,5 +39,40 @@ const group2 = icons.slice(3);
     border: 1px solid var(--color-gray-200);
     display: flex;
     align-items: center;
+    max-width: calc(100vw - 2rem);
+  }
+
+  /* Breakpoints mutuellement exclusifs : pas de dépendance à l'ordre du bundler CSS */
+
+  /* Mobile: 2-3 outils principaux, cibles tactiles agrandies */
+  @media (max-width: 767px) {
+    .toolbar :global(#shape-toggle-group > button:nth-of-type(n+4)) {
+      display: none;
+    }
+
+    .toolbar :global(.toggle-btn) {
+      width: 44px !important;
+      height: 44px !important;
+    }
+  }
+
+  /* Tablette: davantage d'outils, taille intermédiaire (usage stylet) */
+  @media (min-width: 768px) and (max-width: 1023px) {
+    .toolbar :global(#shape-toggle-group > button:nth-of-type(n+6)) {
+      display: none;
+    }
+
+    .toolbar :global(.toggle-btn) {
+      width: 40px !important;
+      height: 40px !important;
+    }
+  }
+
+  /* Ordinateur: tous les outils, taille compacte (usage souris/tablette graphique) */
+  @media (min-width: 1024px) {
+    .toolbar :global(.toggle-btn) {
+      width: 36px !important;
+      height: 36px !important;
+    }
   }
 </style>

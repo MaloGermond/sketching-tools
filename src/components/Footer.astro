@@ -62,6 +62,14 @@ const year = new Date().getFullYear();
     gap: 3.25rem;
   }
 
+  /* Mobile: colonnes trop étroites pour tenir sur une ligne sans wrap */
+  @media (max-width: 639px) {
+    .footer-cols.footer-cols {
+      flex-wrap: wrap;
+      gap: 1.75rem 2.5rem;
+    }
+  }
+
   .footer-col {
     display: flex;
     flex-direction: column;
