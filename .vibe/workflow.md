@@ -10,6 +10,18 @@
   - Si aucun numéro de ticket n'existe, garder l'ancien système de préfixes (`feature/`, `bugfix/`, etc.) en secours.
 - [x] **Pull Requests** : Une fois le développement terminé, créer une **Pull Request en draft** ciblant `dev` (pas `main`) pour que tu puisses tester et inspecter le code avant fusion.
 
+## Design Workflow (Penpot)
+
+- **Détection d'un besoin de design** : Si un ticket nécessite un design (écran, UI, composant visuel) et qu'aucune maquette n'existe encore, ne pas hésiter à :
+  1. Demander l'accès au projet Penpot si la connexion MCP n'est pas active.
+  2. Créer une nouvelle **Page** Penpot dont le nom référence le ticket concerné (numéro + nom du ticket, ex : `42 - Ajout mode sombre`).
+  3. Produire la maquette sur cette page.
+- **Tokens** : Toujours utiliser les design tokens définis dans la librairie locale du fichier Penpot (`penpot.library.local.tokens`) plutôt que des valeurs codées en dur (couleurs, espacements, typographies, rayons, etc.).
+- **Composants** :
+  1. Utiliser en priorité les composants définis dans la librairie du projet Penpot (`penpot.library.local.components`, ou librairies connectées).
+  2. À défaut, se référer aux composants déjà existants dans le projet courant (`src/components/` - Astro/React).
+  3. **Ne jamais créer un nouveau composant (Penpot ou code) sans validation explicite de l'utilisateur** : proposer le composant, expliquer son rôle et pourquoi les composants existants ne suffisent pas, puis attendre l'accord avant de le créer.
+
 ## Checklist Template
 ```
 ## Checklist
