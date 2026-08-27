@@ -1,6 +1,8 @@
 ---
 import MainLayout from "../../layouts/MainLayout.astro";
 import P5Sketch from "../../components/P5Sketch";
+import Toolbar from "../../components/Toolbar.astro";
+import SketchToolbarActions from "../../components/SketchToolbarActions.jsx";
 
 // Métadonnées pour l'affichage dans le hub
 const title = "Page blanche";
@@ -11,6 +13,9 @@ const color = "blue";
 
 <MainLayout title={title} footer={false}>
   <P5Sketch src="pageBlanche.js" class="sketch-container" client:load />
+  <Toolbar>
+    <SketchToolbarActions client:load />
+  </Toolbar>
 </MainLayout>
 
 <style>
