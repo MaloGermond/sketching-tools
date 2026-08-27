@@ -42,7 +42,7 @@ export default function ThemeSwitch() {
           align-items: center;
           gap: 4px;
           padding: 4px;
-          background: var(--surface-subdue);
+          background: var(--color-gray-200);
           border-radius: 10px;
         }
         .theme-switch-option {
@@ -54,17 +54,18 @@ export default function ThemeSwitch() {
           font-family: var(--font-sans);
           font-size: 0.875rem;
           font-weight: 400;
-          color: var(--text-subdue);
+          color: var(--color-gray-500);
           background: transparent;
-          transition: background-color 150ms ease, color 150ms ease;
+          transition: background-color 150ms ease, color 150ms ease, box-shadow 150ms ease;
         }
         .theme-switch-option:hover:not(.is-active) {
-          color: var(--text-default);
+          color: var(--color-gray-900);
         }
         .theme-switch-option.is-active {
-          background: var(--surface-default);
-          color: var(--text-default);
+          background: var(--color-gray-100);
+          color: var(--color-gray-900);
           font-weight: 600;
+          box-shadow: 0 1px 3px rgb(0 0 0 / 0.12);
         }
       `}</style>
       <div class="theme-switch" role="radiogroup" aria-label="Thème de l'application">

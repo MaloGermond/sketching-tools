@@ -25,7 +25,12 @@ const relativePath = currentPath.startsWith(base)
       </nav>
     )}
 
-    <a href={`${base}/settings`} class="settings-link">Réglages</a>
+    <a href={`${base}/settings`} class="settings-link" aria-label="Réglages" title="Réglages">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+        <path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z" stroke="currentColor" stroke-width="1.5"/>
+        <path d="M19.4 13a7.97 7.97 0 0 0 0-2l2.1-1.6-2-3.4-2.5 1a8 8 0 0 0-1.7-1L14.9 3h-4l-.4 2.6a8 8 0 0 0-1.7 1l-2.5-1-2 3.4L6.4 11a8 8 0 0 0 0 2l-2.1 1.6 2 3.4 2.5-1a8 8 0 0 0 1.7 1l.4 2.6h4l.4-2.6a8 8 0 0 0 1.7-1l2.5 1 2-3.4-2.1-1.6Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </a>
   </div>
 </header>
 
@@ -37,10 +42,8 @@ const relativePath = currentPath.startsWith(base)
     right: 0;
     z-index: 50;
     height: 3.5rem;
-    background: rgb(255 255 255 / 0.88);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border-bottom: 1px solid var(--color-gray-200);
+    background: var(--color-gray-50);
+    border-bottom: 1px solid var(--color-gray-400);
   }
 
   .header-inner {
@@ -93,14 +96,19 @@ const relativePath = currentPath.startsWith(base)
 
   .settings-link {
     margin-left: auto;
-    font-size: 0.875rem;
-    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: var(--radius-xs);
+    background: var(--color-gray-100);
     color: var(--color-gray-500);
-    text-decoration: none;
-    transition: color 150ms ease;
+    transition: background-color 150ms ease, color 150ms ease;
   }
 
   .settings-link:hover {
+    background: var(--color-gray-200);
     color: var(--color-gray-900);
   }
 </style>
