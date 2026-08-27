@@ -87,7 +87,7 @@ export default function (p) {
     emitHistoryChanged();
   };
 
-  p.mousePressed = function (event) {
+  function startStroke(event) {
     if (!isCanvasEvent(event) || !isInCanvas()) return;
     currentStroke = [{ x: p.mouseX, y: p.mouseY }];
     buffer.point(p.mouseX, p.mouseY);
@@ -95,22 +95,45 @@ export default function (p) {
       redoStack = [];
       emitHistoryChanged();
     }
-  };
+  }
 
-  p.mouseDragged = function () {
+  function continueStroke() {
     if (!currentStroke || !isInCanvas()) return;
     const last = currentStroke[currentStroke.length - 1];
     if (p.mouseX === last.x && p.mouseY === last.y) return;
     currentStroke.push({ x: p.mouseX, y: p.mouseY });
     buffer.line(last.x, last.y, p.mouseX, p.mouseY);
-  };
+  }
 
-  p.mouseReleased = function () {
+  function endStroke() {
     if (currentStroke) {
       strokes.push(currentStroke);
       currentStroke = null;
       emitHistoryChanged();
     }
+  }
+
+  p.mousePressed = startStroke;
+  p.mouseDragged = continueStroke;
+  p.mouseReleased = endStroke;
+
+  // Gestionnaires tactiles dédiés : sur mobile, la simulation souris de p5
+  // à partir des évènements touch peut perdre le mouseReleased (ex. iOS
+  // Safari), laissant currentStroke actif — le trait suivant se retrouvait
+  // alors relié au point précédent malgré le doigt relevé entre-temps.
+  p.touchStarted = function (event) {
+    startStroke(event);
+    return false;
+  };
+
+  p.touchMoved = function () {
+    continueStroke();
+    return false;
+  };
+
+  p.touchEnded = function () {
+    endStroke();
+    return false;
   };
 
   // Curseur : anneau à triple contour (sombre/blanc/sombre) pour rester
