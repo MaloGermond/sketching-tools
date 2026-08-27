@@ -24,6 +24,8 @@ const relativePath = currentPath.startsWith(base)
         </span>
       </nav>
     )}
+
+    <a href={`${base}/settings`} class="settings-link">Réglages</a>
   </div>
 </header>
 
@@ -87,5 +89,18 @@ const relativePath = currentPath.startsWith(base)
     font-size: 0.875rem;
     color: var(--color-gray-500);
     text-transform: capitalize;
+  }
+
+  .settings-link {
+    margin-left: auto;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--color-gray-500);
+    text-decoration: none;
+    transition: color 150ms ease;
+  }
+
+  .settings-link:hover {
+    color: var(--color-gray-900);
   }
 </style>
