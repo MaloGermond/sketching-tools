@@ -4,15 +4,11 @@
 - [x] Be economical with tokens
 - [x] Show checklist before each action
 - [x] Commit after each completed task
-- [x] **Branches** : Toujours créer une branche dédiée pour les nouvelles fonctionnalités ou corrections. Utiliser un préfixe clair comme :
-  - `feature/<nom-de-la-fonctionnalité>` pour les nouvelles fonctionnalités,
-  - `update/<nom-de-l-update>` pour les mises à jour,
-  - `refactor/<description>` pour les refactoring,
-  - `bugfix/<description>` pour les corrections de bugs,
-  - `hotfix/<description>` pour les corrections urgentes,
-  - `chore/<description>` pour les tâches techniques,
-  - `component/<nom-du-component>` pour les nouveaux composants.
-- [x] **Pull Requests** : Une fois le développement terminé, créer une **Pull Request en draft** pour que tu puisses tester et inspecter le code avant fusion.
+- [x] **Branches** : Toujours créer une branche dédiée pour les nouvelles fonctionnalités ou corrections, à partir de `dev` (jamais depuis `main`). Nommer la branche avec le numéro du ticket suivi du nom du ticket, au format :
+  - `<numero-ticket>-<nom-du-ticket>` (ex : `42-ajout-mode-sombre`, `123-correction-bug-login`)
+  - Le nom du ticket doit être en kebab-case (minuscules, mots séparés par des tirets, sans accents ni caractères spéciaux)
+  - Si aucun numéro de ticket n'existe, garder l'ancien système de préfixes (`feature/`, `bugfix/`, etc.) en secours.
+- [x] **Pull Requests** : Une fois le développement terminé, créer une **Pull Request en draft** ciblant `dev` (pas `main`) pour que tu puisses tester et inspecter le code avant fusion.
 
 ## Checklist Template
 ```
