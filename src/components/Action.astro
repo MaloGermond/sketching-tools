@@ -2,7 +2,7 @@
 import Icon from './Icon.astro';
 
 interface Props {
-  variant?: 'emphasis' | 'primary' | 'default' | 'facultatif';
+  variant?: 'emphasis' | 'primary' | 'default' | 'facultatif' | 'danger';
   size?: 'sm' | 'md' | 'lg';
   disabled?: boolean;
   fullWidth?: boolean;
@@ -134,4 +134,14 @@ const classes = [
   }
   .action--facultatif:hover { background-color: #f2f4f6; color: #111827; }
   .action--facultatif:active { background-color: #e4e7eb; }
+
+  /* ─── Danger — rouge ─── */
+  .action--danger {
+    background-color: #EF4444;
+    color: #F9FAFB;
+    border-color: #EF4444;
+    box-shadow: 0 1px 2px rgb(239 68 68 / 0.25);
+  }
+  .action--danger:hover { background-color: #DC2626; border-color: #DC2626; }
+  .action--danger:active { box-shadow: none; filter: brightness(0.96); }
 </style>

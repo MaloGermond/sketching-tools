@@ -13,7 +13,8 @@ const year = new Date().getFullYear();
         <p class="col-title">Navigate</p>
         <a href={`${base}/`} class="col-link">Home</a>
         <a href={`${base}/tools/warmup`} class="col-link">Warmup</a>
-        <a href={`${base}/tools/page-blanche`} class="col-link">Sketchbook</a>
+        <a href={`${base}/tools/drafts`} class="col-link">Sketchbook</a>
+        <a href={`${base}/settings`} class="col-link">Réglages</a>
       </div>
       <div class="footer-col">
         <p class="col-title">Design</p>
@@ -59,7 +60,9 @@ const year = new Date().getFullYear();
 
   .footer-cols {
     display: flex;
-    gap: 3.25rem;
+    flex-wrap: wrap;
+    row-gap: 1.75rem;
+    column-gap: 3.5rem;
   }
 
   .footer-col {
@@ -95,8 +98,11 @@ const year = new Date().getFullYear();
 
   .footer-bottom {
     display: flex;
+    flex-wrap: wrap;
     justify-content: space-between;
-    align-items: center;
+    align-items: flex-start;
+    row-gap: 0.5rem;
+    column-gap: 1.5rem;
   }
 
   .footer-copy {

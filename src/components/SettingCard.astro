@@ -1,0 +1,61 @@
+---
+interface Props {
+  heading: string;
+  description: string;
+}
+
+const { heading, description } = Astro.props;
+---
+
+<div class="setting-card">
+  <div class="setting-text">
+    <p class="setting-heading">{heading}</p>
+    <p class="setting-description">{description}</p>
+  </div>
+  <div class="setting-control">
+    <slot />
+  </div>
+</div>
+
+<style>
+  .setting-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+    padding: 1.25rem;
+    background: var(--color-gray-100);
+    border: 1px solid var(--color-gray-400);
+    border-radius: var(--radius-lg);
+  }
+
+  .setting-text {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    min-width: 0;
+  }
+
+  .setting-heading {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--color-gray-900);
+  }
+
+  .setting-description {
+    font-size: 0.875rem;
+    color: var(--color-gray-500);
+    line-height: 1.4;
+  }
+
+  .setting-control {
+    flex-shrink: 0;
+  }
+
+  @media (max-width: 640px) {
+    .setting-card {
+      flex-direction: column;
+      align-items: stretch;
+    }
+  }
+</style>
