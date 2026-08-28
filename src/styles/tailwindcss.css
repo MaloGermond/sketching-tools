@@ -174,4 +174,19 @@
     --text-error:      var(--color-red-300);
     --text-warning:    var(--color-yellow-300);
   }
+
+  /* "Système" — pas de préférence explicite: suit l'OS */
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme]) {
+      --background:      var(--color-gray-900);
+      --surface-default: var(--color-gray-700);
+      --surface-subdue:  var(--color-gray-800);
+      --text-default:    var(--color-gray-50);
+      --text-subdue:     var(--color-gray-400);
+      --border-default:  var(--color-gray-300);
+      --text-success:    var(--color-green-300);
+      --text-error:      var(--color-red-300);
+      --text-warning:    var(--color-yellow-300);
+    }
+  }
 }

@@ -1,0 +1,160 @@
+---
+import MainLayout from "../layouts/MainLayout.astro";
+import SettingCard from "../components/SettingCard.astro";
+import Action from "../components/Action.astro";
+import ThemeSwitch from "../components/ThemeSwitch.jsx";
+---
+
+<MainLayout title="Réglages — Sketching Tools">
+  <div class="settings-layout">
+
+    <aside class="settings-sidebar">
+      <p class="sidebar-group">Réglages</p>
+      <nav class="sidebar-nav">
+        <span class="sidebar-link is-active">Système</span>
+      </nav>
+    </aside>
+
+    <div class="settings-main">
+      <header class="settings-header">
+        <p class="eyebrow">Settings</p>
+        <h1 class="title">Réglages</h1>
+      </header>
+
+      <div class="settings-cards">
+        <SettingCard
+          heading="Thème"
+          description="Choisis l'apparence de l'application."
+        >
+          <ThemeSwitch client:load />
+        </SettingCard>
+
+        <SettingCard
+          heading="Cache"
+          description="Purge le cache local de l'application sur cet appareil."
+        >
+          <Action variant="danger" onClick="window.purgeCache(event)">
+            Purger le cache
+          </Action>
+        </SettingCard>
+      </div>
+    </div>
+
+  </div>
+</MainLayout>
+
+<script is:inline>
+  window.purgeCache = async function (event) {
+    const btn = event.currentTarget;
+    const original = btn.textContent;
+
+    try {
+      if (window.caches) {
+        const keys = await caches.keys();
+        await Promise.all(keys.map((key) => caches.delete(key)));
+      }
+      Object.keys(localStorage)
+        .filter((key) => key !== 'theme')
+        .forEach((key) => localStorage.removeItem(key));
+    } catch (e) {}
+
+    btn.textContent = 'Cache vidé ✓';
+    setTimeout(() => {
+      btn.textContent = original;
+    }, 1800);
+  };
+</script>
+
+<style>
+  .settings-layout {
+    max-width: 62rem;
+    margin: 0 auto;
+    padding: 4rem 1.5rem 6rem;
+    display: grid;
+    grid-template-columns: 14rem 1fr;
+    gap: 4rem;
+    align-items: start;
+  }
+
+  /* Sidebar */
+  .settings-sidebar {
+    position: sticky;
+    top: 5.5rem;
+  }
+
+  .sidebar-group {
+    font-size: 0.75rem;
+    font-weight: var(--font-weight-emphasis);
+    color: var(--text-default);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 0.75rem;
+  }
+
+  .sidebar-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 0.125rem;
+  }
+
+  .sidebar-link {
+    font-size: 0.875rem;
+    font-weight: var(--font-weight-subdue);
+    color: var(--text-subdue);
+    padding: 0.375rem 0.625rem;
+    border-radius: var(--radius-sm);
+  }
+
+  .sidebar-link.is-active {
+    color: var(--text-default);
+    font-weight: var(--font-weight-default);
+    background: var(--surface-subdue);
+  }
+
+  /* Main */
+  .settings-main {
+    min-width: 0;
+  }
+
+  .settings-header {
+    margin-bottom: 2rem;
+  }
+
+  .eyebrow {
+    font-size: 0.6875rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--text-subdue);
+    margin-bottom: 0.5rem;
+  }
+
+  .title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+    color: var(--text-default);
+  }
+
+  .settings-cards {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  @media (max-width: 768px) {
+    .settings-layout {
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+
+    .settings-sidebar {
+      position: static;
+    }
+
+    .sidebar-nav {
+      flex-direction: row;
+    }
+  }
+</style>
