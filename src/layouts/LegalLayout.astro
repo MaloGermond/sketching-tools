@@ -61,6 +61,59 @@ const navItems = [
     top: 5.5rem;
   }
 
+  /* Note: sélecteurs dupliqués (ex. .legal-layout.legal-layout) pour garantir une
+     spécificité supérieure aux règles de base ci-dessus, quel que soit l'ordre
+     dans lequel le bundler CSS regroupe les blocs @media. */
+
+  /* Mobile: menu transformé en barre horizontale défilante sous le header */
+  @media (max-width: 767px) {
+    .legal-layout.legal-layout {
+      grid-template-columns: 1fr;
+      padding: 1.25rem 1.25rem 4rem;
+      gap: 1rem;
+    }
+
+    .legal-sidebar.legal-sidebar {
+      position: sticky;
+      top: 3.5rem;
+      background: var(--background, #fff);
+      padding: 0.75rem 0;
+      border-bottom: 1px solid var(--surface-default);
+      z-index: 20;
+    }
+
+    .sidebar-group.sidebar-group {
+      display: none;
+    }
+
+    .sidebar-nav.sidebar-nav {
+      flex-direction: row;
+      flex-wrap: wrap;
+      gap: 0.375rem 0.75rem;
+    }
+
+    .sidebar-link.sidebar-link {
+      white-space: nowrap;
+    }
+
+    .legal-body.legal-body :global(h1) {
+      font-size: 1.75rem;
+    }
+
+    .legal-body.legal-body :global(h2) {
+      font-size: 1.1875rem;
+    }
+  }
+
+  /* Tablette: menu latéral conservé mais rétréci */
+  @media (min-width: 768px) and (max-width: 1023px) {
+    .legal-layout.legal-layout {
+      grid-template-columns: 11rem 1fr;
+      gap: 2rem;
+      padding: 3rem 1.25rem 5rem;
+    }
+  }
+
   .sidebar-group {
     font-size: 0.75rem;
     font-weight: var(--font-weight-emphasis);
@@ -159,6 +212,9 @@ const navItems = [
   }
 
   .legal-body :global(table) {
+    display: block;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
     width: 100%;
     border-collapse: collapse;
     font-size: 0.9375rem;

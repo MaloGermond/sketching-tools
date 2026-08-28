@@ -15,7 +15,7 @@ const shapeIcons = ['circle', 'ellipse', 'square', 'triangle', 'horizontal-line'
   <Snackbar client:load />
   <LevelsPanel client:load />
   <Toolbar>
-    <ToggleGroup client:load icons={shapeIcons} selectedIcon="circle" />
+    <ToggleGroup client:load icons={shapeIcons} selectedIcon="circle" groupId="shape-toggle-group" />
   </Toolbar>
 </MainLayout>
 
@@ -26,6 +26,42 @@ const shapeIcons = ['circle', 'ellipse', 'square', 'triangle', 'horizontal-line'
     top: 3.5rem;
     z-index: 0;
     border-radius: 0 !important;
+  }
+</style>
+
+<style is:global>
+  /* Breakpoints mutuellement exclusifs : pas de dépendance à l'ordre du bundler CSS */
+
+  /* Mobile: 2-3 outils principaux, cibles tactiles agrandies */
+  @media (max-width: 767px) {
+    #shape-toggle-group > button:nth-of-type(n+4) {
+      display: none;
+    }
+
+    #shape-toggle-group .toggle-btn {
+      width: 44px !important;
+      height: 44px !important;
+    }
+  }
+
+  /* Tablette: davantage d'outils, taille intermédiaire (usage stylet) */
+  @media (min-width: 768px) and (max-width: 1023px) {
+    #shape-toggle-group > button:nth-of-type(n+6) {
+      display: none;
+    }
+
+    #shape-toggle-group .toggle-btn {
+      width: 40px !important;
+      height: 40px !important;
+    }
+  }
+
+  /* Ordinateur: tous les outils, taille compacte (usage souris/tablette graphique) */
+  @media (min-width: 1024px) {
+    #shape-toggle-group .toggle-btn {
+      width: 36px !important;
+      height: 36px !important;
+    }
   }
 </style>
 

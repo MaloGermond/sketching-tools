@@ -59,7 +59,9 @@ const year = new Date().getFullYear();
 
   .footer-cols {
     display: flex;
-    gap: 3.25rem;
+    flex-wrap: wrap;
+    row-gap: 1.75rem;
+    column-gap: 3.5rem;
   }
 
   .footer-col {
@@ -95,8 +97,11 @@ const year = new Date().getFullYear();
 
   .footer-bottom {
     display: flex;
+    flex-wrap: wrap;
     justify-content: space-between;
-    align-items: center;
+    align-items: flex-start;
+    row-gap: 0.5rem;
+    column-gap: 1.5rem;
   }
 
   .footer-copy {
