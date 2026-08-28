@@ -10,6 +10,8 @@ import ToolCard from "../components/ToolCard.astro";
 import Icon from "../components/Icon.astro";
 import Toggle from "../components/Toggle.jsx";
 import ToggleGroup from "../components/ToggleGroup.jsx";
+import Toolbar from "../components/Toolbar.astro";
+import SketchToolbarActions from "../components/SketchToolbarActions.jsx";
 import P5Sketch from "../components/P5Sketch.tsx";
 
 import fs from 'fs';
@@ -28,7 +30,7 @@ const iconNames = fs.readdirSync(iconsDir).filter(f => f.endsWith('.svg')).map(f
     <aside class="doc-sidebar">
       <p class="sidebar-title">Composants</p>
       <nav class="doc-nav">
-        {['Pill','Chip','Icon','Action','Toggle','ToggleGroup','Card','Toast','Snackbar','ToolCard','P5Sketch'].map(name => (
+        {['Pill','Chip','Icon','Action','Toggle','ToggleGroup','Toolbar','Card','Toast','Snackbar','ToolCard','P5Sketch'].map(name => (
           <a href={`#${name.toLowerCase()}`} class="doc-nav-link">{name}</a>
         ))}
       </nav>
@@ -167,6 +169,31 @@ const iconNames = fs.readdirSync(iconsDir).filter(f => f.endsWith('.svg')).map(f
       <p class="usage"><code>&lt;ToggleGroup client:load icons={["circle", "square"]} selectedIcon="circle" /&gt;</code></p>
     </section>
 
+    <!-- Toolbar -->
+    <section class="doc-section" id="toolbar">
+      <header class="section-head">
+        <span class="section-tag">Toolbar</span>
+        <p class="section-desc">Conteneur pill unique (fond, bordure, ombre) pour toute barre d'outils flottante. Le contenu est passé en <code>&lt;slot /&gt;</code> — vide par défaut.</p>
+      </header>
+      <div class="preview">
+        <div class="row-group">
+          <span class="row-label">Avec un ToggleGroup (sélection de forme)</span>
+          <Toolbar fixed={false}>
+            <ToggleGroup client:load icons={['circle', 'square', 'triangle']} selectedIcon="circle" />
+          </Toolbar>
+        </div>
+        <div class="divider" />
+        <div class="row-group">
+          <span class="row-label">Avec les actions de dessin (annuler/rétablir + menu)</span>
+          <Toolbar fixed={false}>
+            <SketchToolbarActions client:load />
+          </Toolbar>
+        </div>
+      </div>
+      <p class="usage"><code>&lt;Toolbar&gt;&lt;ToggleGroup client:load ... /&gt;&lt;/Toolbar&gt;</code></p>
+      <p class="usage">Prop <code>fixed</code> (déf. <code>true</code>) — ancre la barre en bas de l'écran ; passer <code>false</code> pour un rendu en flux normal.</p>
+    </section>
+
     <!-- Card -->
     <section class="doc-section" id="card">
       <header class="section-head">
@@ -226,7 +253,7 @@ const iconNames = fs.readdirSync(iconsDir).filter(f => f.endsWith('.svg')).map(f
       </header>
       <div class="preview">
         <div class="toolcard-grid">
-          <ToolCard title="Page blanche" description="Dessiner librement" href={`${base}/tools/page-blanche`} icon="✏️" color="blue" />
+          <ToolCard title="Drafts" description="Dessiner librement" href={`${base}/tools/drafts`} icon="✏️" color="blue" />
           <ToolCard title="Échauffement" description="Exercices avant dessin" href={`${base}/tools/warmup`} icon="🔥" color="orange" />
           <ToolCard title="Composants" description="Librairie UI" href={`${base}/components`} icon="⬡" color="purple" />
         </div>

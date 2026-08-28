@@ -4,11 +4,28 @@
 - [x] Be economical with tokens
 - [x] Show checklist before each action
 - [x] Commit after each completed task
-- [x] **Branches** : Toujours créer une branche dédiée pour les nouvelles fonctionnalités ou corrections. Nommer la branche avec le numéro du ticket suivi du nom du ticket, au format :
+- [x] **Branches** : Toujours créer une branche dédiée pour les nouvelles fonctionnalités ou corrections, à partir de `dev` (jamais depuis `main`). Nommer la branche avec le numéro du ticket suivi du nom du ticket, au format :
   - `<numero-ticket>-<nom-du-ticket>` (ex : `42-ajout-mode-sombre`, `123-correction-bug-login`)
   - Le nom du ticket doit être en kebab-case (minuscules, mots séparés par des tirets, sans accents ni caractères spéciaux)
   - Si aucun numéro de ticket n'existe, garder l'ancien système de préfixes (`feature/`, `bugfix/`, etc.) en secours.
-- [x] **Pull Requests** : Une fois le développement terminé, créer une **Pull Request en draft** pour que tu puisses tester et inspecter le code avant fusion.
+- [x] **Pull Requests** : Une fois le développement terminé, créer une **Pull Request en draft** ciblant `dev` (pas `main`) pour que tu puisses tester et inspecter le code avant fusion.
+
+## Design Workflow (Penpot)
+
+- **Organisation du fichier Penpot** : Le fichier Penpot est organisé en pages dédiées par périmètre :
+  - **Website** : pages/écrans concernant le site web (vitrine, marketing, contenu du site).
+  - **Tools** : pages/écrans concernant les produits/tools (le layout des pages d'outils en particulier).
+  - Les composants suivent le même découpage : **Component Website** (composants du site) et **Component Tools** (composants des tools). Toujours vérifier ces pages en premier pour retrouver les références existantes avant de créer quoi que ce soit.
+- **Détection d'un besoin de design** : Si un ticket nécessite un design (écran, UI, composant visuel) et qu'aucune maquette n'existe encore, ne pas hésiter à :
+  1. Demander l'accès au projet Penpot si la connexion MCP n'est pas active.
+  2. Identifier le bon périmètre (Website vs Tools) selon l'objet du ticket.
+  3. Créer une nouvelle **Page** Penpot dans ce périmètre, dont le nom référence le ticket concerné (numéro + nom du ticket, ex : `42 - Ajout mode sombre`).
+  4. Produire la maquette sur cette page.
+- **Tokens** : Toujours utiliser les design tokens définis dans la librairie locale du fichier Penpot (`penpot.library.local.tokens`) plutôt que des valeurs codées en dur (couleurs, espacements, typographies, rayons, etc.).
+- **Composants** :
+  1. Utiliser en priorité les composants définis dans les pages **Component Website** / **Component Tools** de la librairie du projet Penpot (`penpot.library.local.components`, ou librairies connectées), selon le périmètre concerné.
+  2. À défaut, se référer aux composants déjà existants dans le projet courant (`src/components/` - Astro/React).
+  3. **Ne jamais créer un nouveau composant (Penpot ou code) sans validation explicite de l'utilisateur** : proposer le composant, expliquer son rôle et pourquoi les composants existants ne suffisent pas, puis attendre l'accord avant de le créer.
 
 ## Checklist Template
 ```
