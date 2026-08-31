@@ -111,6 +111,7 @@ document.addEventListener('showToast', (e) => { const score = e.detail.score; })
 
 ### Design (Penpot)
 - Le fichier Penpot est organisé en pages par périmètre : **Website** (site vitrine/marketing) et **Tools** (produits/outils). Les composants suivent le même découpage : **Component Website** / **Component Tools**. Toujours vérifier ces pages en premier pour retrouver les références existantes.
+- **Avant de considérer qu'un design est manquant** (écran, composant, comportement responsive...) : toujours checker le MCP Penpot en premier — page **Website** ou **Tools** selon le périmètre du ticket — pour voir si la maquette existe déjà. Ne conclure à son absence qu'après avoir vérifié.
 - Si un ticket nécessite un design sans maquette existante :
   1. Demander l'accès au projet Penpot si la connexion MCP n'est pas active
   2. Identifier le bon périmètre (Website vs Tools)
