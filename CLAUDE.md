@@ -112,11 +112,12 @@ document.addEventListener('showToast', (e) => { const score = e.detail.score; })
 ### Design (Penpot)
 - Le fichier Penpot est organisé en pages par périmètre : **Website** (site vitrine/marketing) et **Tools** (produits/outils). Les composants suivent le même découpage : **Website / Components** et **Tools / Components**. Toujours vérifier ces pages en premier pour retrouver les références existantes.
 - **Avant de considérer qu'un design est manquant** (écran, composant, comportement responsive...) : toujours checker le MCP Penpot en premier — page **Website** ou **Tools** selon le périmètre du ticket — pour voir si la maquette existe déjà. Ne conclure à son absence qu'après avoir vérifié.
-- Si un ticket nécessite un design sans maquette existante :
-  1. Demander l'accès au projet Penpot si la connexion MCP n'est pas active
-  2. Identifier le bon périmètre (Website vs Tools)
-  3. Créer une nouvelle Page Penpot dans ce périmètre, nommée `<numéro> - <nom du ticket>`
-  4. Produire la maquette sur cette page
+- Si le design est bien manquant et que le MCP Penpot est disponible :
+  1. Identifier le bon périmètre (Website vs Tools)
+  2. Créer une nouvelle Page Penpot dans ce périmètre, nommée `<numéro> - <nom du ticket>`
+  3. Produire un ou plusieurs designs sur cette page pour illustrer le ticket
+  4. Référencer cette page/ces designs dans le ticket (lien ou export) une fois créés
+- Si la connexion MCP n'est pas active, demander l'accès au projet Penpot avant de continuer.
 - **Tokens** : toujours utiliser les design tokens de la librairie locale (`penpot.library.local.tokens`), jamais de valeurs codées en dur (couleurs, espacements, typographies, rayons)
 - **Composants** :
   1. Utiliser en priorité les composants des pages Website / Components et Tools / Components de la librairie Penpot (`penpot.library.local.components`, ou librairies connectées)
