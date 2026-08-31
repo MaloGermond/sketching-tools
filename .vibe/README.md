@@ -9,7 +9,6 @@ Store Vibe-specific configuration, scripts, and documentation that help Vibe und
 ## Files to include here:
 
 - `instructions.md` - Project-specific instructions for Vibe
-- `best-practices.md` - UI/UX best practices (based on the [Interfaces.dev cheat sheet](https://interfaces.dev/cheat-sheet))
 - `scripts/` - Automation scripts for common Vibe tasks
 - `templates/` - Code templates for this project
 - `prompts/` - Common prompts used with Vibe
