@@ -110,7 +110,7 @@ document.addEventListener('showToast', (e) => { const score = e.detail.score; })
 - **Pull Requests** : une fois le développement terminé, créer une PR en **draft** ciblant `dev` (jamais `main`)
 
 ### Design (Penpot)
-- Le fichier Penpot est organisé en pages par périmètre : **Website** (site vitrine/marketing) et **Tools** (produits/outils). Les composants suivent le même découpage : **Component Website** / **Component Tools**. Toujours vérifier ces pages en premier pour retrouver les références existantes.
+- Le fichier Penpot est organisé en pages par périmètre : **Website** (site vitrine/marketing) et **Tools** (produits/outils). Les composants suivent le même découpage : **Website / Components** et **Tools / Components**. Toujours vérifier ces pages en premier pour retrouver les références existantes.
 - **Avant de considérer qu'un design est manquant** (écran, composant, comportement responsive...) : toujours checker le MCP Penpot en premier — page **Website** ou **Tools** selon le périmètre du ticket — pour voir si la maquette existe déjà. Ne conclure à son absence qu'après avoir vérifié.
 - Si un ticket nécessite un design sans maquette existante :
   1. Demander l'accès au projet Penpot si la connexion MCP n'est pas active
@@ -119,7 +119,7 @@ document.addEventListener('showToast', (e) => { const score = e.detail.score; })
   4. Produire la maquette sur cette page
 - **Tokens** : toujours utiliser les design tokens de la librairie locale (`penpot.library.local.tokens`), jamais de valeurs codées en dur (couleurs, espacements, typographies, rayons)
 - **Composants** :
-  1. Utiliser en priorité les composants des pages Component Website/Tools de la librairie Penpot (`penpot.library.local.components`, ou librairies connectées)
+  1. Utiliser en priorité les composants des pages Website / Components et Tools / Components de la librairie Penpot (`penpot.library.local.components`, ou librairies connectées)
   2. À défaut, se référer aux composants déjà existants dans `src/components/`
   3. Ne jamais créer un nouveau composant (Penpot ou code) sans validation explicite de l'utilisateur : proposer le composant, expliquer pourquoi les composants existants ne suffisent pas, attendre l'accord
 
