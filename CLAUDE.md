@@ -92,6 +92,7 @@ Noms explicites, code auto-documenté, commentaires seulement si nécessaires.
 - Variables partagées (couleurs, fonts, espacements) dans `src/styles/variables.css`
 - Pas de framework CSS externe sans validation explicite de l'utilisateur
 - Composants toast/notification réutilisables (durée, position configurables)
+- Voir `.claude/best-practices.md` pour les règles UI/UX détaillées (accessibilité, animation, typographie, couleurs, layout, rédaction)
 
 ### Communication inter-composants
 Utiliser des `CustomEvent` plutôt que des appels de fonction directs :
