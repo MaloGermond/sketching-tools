@@ -276,9 +276,11 @@ export default function LevelsPanel() {
       if (successStreak >= STREAK_LENGTH && newLevel < maxLevel) {
         newLevel = newLevel + 1;
         notifyLevelChange(newLevel);
+        window.umami?.track('warmup_level_change', { shape, level: newLevel, direction: 'up' });
       } else if (failureStreak >= STREAK_LENGTH && newLevel > 1) {
         newLevel = newLevel - 1;
         notifyLevelChange(newLevel);
+        window.umami?.track('warmup_level_change', { shape, level: newLevel, direction: 'down' });
       }
 
       const newProgress: ShapeProgress = { level: newLevel, recentScores: newLevel !== shapeProgress.level ? [] : newScores };
