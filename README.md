@@ -30,9 +30,11 @@ sketching-tools/
 │       └── global.css       # Fichier Tailwind CSS
 │
 ├── public/                  # Assets statiques
+├── .claude/
+│   └── skills/               # Skills Claude Code du projet
 ├── package.json
 ├── astro.config.mjs
-└── AGENTS.md                # Configuration et besoins du projet
+└── CLAUDE.md                 # Contexte projet, règles de code et workflow pour Claude Code
 ```
 
 ## Ajouter un nouvel outil
