@@ -43,7 +43,7 @@ export default function ThemeSwitch() {
           align-items: center;
           gap: 4px;
           padding: 4px;
-          background: var(--color-gray-200);
+          background: var(--surface-default);
           border-radius: 10px;
         }
         .theme-switch-option {
@@ -53,18 +53,18 @@ export default function ThemeSwitch() {
           padding: 8px 14px;
           border-radius: 8px;
           font-family: var(--font-sans);
-          font-size: 0.875rem;
+          font-size: var(--text-sm);
           font-weight: 400;
-          color: var(--color-gray-500);
+          color: var(--text-subdue);
           background: transparent;
           transition: background-color 150ms ease, color 150ms ease, box-shadow 150ms ease;
         }
         .theme-switch-option:hover:not(.is-active) {
-          color: var(--color-gray-900);
+          color: var(--text-default);
         }
         .theme-switch-option.is-active {
-          background: var(--color-gray-100);
-          color: var(--color-gray-900);
+          background: var(--surface-raised);
+          color: var(--text-default);
           font-weight: 600;
           box-shadow: 0 1px 3px rgb(0 0 0 / 0.12);
         }
