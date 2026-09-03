@@ -164,7 +164,7 @@
     --action-corner:  var(--radius-lg);
     --main-background: var(--background);
     --footer-background:  var(--background-dark);
-    --toolCard-background: var(--surface-default);
+    --toolCard-background: var(--surface-subdue);
     --toolCard-border:     var(--border-subdue);
     --sketch-stroke:       var(--text-default);
 
