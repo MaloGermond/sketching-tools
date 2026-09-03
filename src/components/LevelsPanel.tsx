@@ -164,9 +164,10 @@ interface ShapeRowProps {
   shape: string;
   progress: ShapeProgress;
   isCurrent: boolean;
+  appearDelay: number;
 }
 
-function ShapeRow({ shape, progress, isCurrent }: ShapeRowProps) {
+function ShapeRow({ shape, progress, isCurrent, appearDelay }: ShapeRowProps) {
   const [hovered, setHovered] = useState(false);
   const config = SHAPE_CONFIG[shape];
   if (!config) return null;
@@ -182,6 +183,7 @@ function ShapeRow({ shape, progress, isCurrent }: ShapeRowProps) {
 
   return (
     <div
+      class="shape-row-appear"
       onClick={handleClick}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
@@ -194,6 +196,7 @@ function ShapeRow({ shape, progress, isCurrent }: ShapeRowProps) {
         borderRadius: '12px',
         transition: 'all 250ms ease',
         cursor: isCurrent ? 'default' : 'pointer',
+        animationDelay: `${appearDelay}s`,
       }}>
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: isCurrent ? '6px' : '2px' }}>
         <span style={{
@@ -234,14 +237,25 @@ function ShapeRow({ shape, progress, isCurrent }: ShapeRowProps) {
 export default function LevelsPanel() {
   const [progress, setProgress] = useState<ProgressState>({});
   const [currentShape, setCurrentShape] = useState<string>('circle');
+  const [hasLoaded, setHasLoaded] = useState(false);
   const progressRef = useRef<ProgressState>({});
   const currentShapeRef = useRef<string>('circle');
+  const initialAppearDoneRef = useRef(false);
 
   useEffect(() => {
     const loaded = loadProgress();
     setProgress(loaded);
     progressRef.current = loaded;
+    setHasLoaded(true);
   }, []);
+
+  // Passé true juste après le premier rendu qui affiche les VRAIES cartes
+  // (une fois loadProgress() résolu) : seules celles-ci ont le délai décalé
+  // (stagger), pas celles qui apparaissent plus tard suite à un changement
+  // de forme.
+  useEffect(() => {
+    if (hasLoaded) initialAppearDoneRef.current = true;
+  }, [hasLoaded]);
 
   useEffect(() => {
     /** @impure — side effect: écoute shapeSettingsUpdated (toolbar click uniquement), synchronise le niveau dans warmup.js */
@@ -300,11 +314,16 @@ export default function LevelsPanel() {
     };
   }, []);
 
+  if (!hasLoaded) return null;
+
   const activeShapes = Object.keys(SHAPE_CONFIG).filter(
     s => s === currentShape || getShapeProgress(progress, s).level > 1
   );
 
   if (activeShapes.length === 0) return null;
+
+  // Décalées pour apparaître une par une après la toolbar (délai 0.3s + durée 0.22s, cf. Toolbar.astro)
+  let visibleIndex = 0;
 
   return (
     <div style={{
@@ -318,16 +337,30 @@ export default function LevelsPanel() {
       gap: '4px',
       width: '9rem',
     }}>
+      <style>{`
+        @media (prefers-reduced-motion: no-preference) {
+          .shape-row-appear {
+            animation: shape-row-appear 0.22s ease-out both;
+          }
+        }
+        @keyframes shape-row-appear {
+          from { opacity: 0; transform: translateX(10px); }
+          to { opacity: 1; transform: translateX(0); }
+        }
+      `}</style>
       {Object.keys(SHAPE_CONFIG).map(shape => {
         const shapeProgress = getShapeProgress(progress, shape);
         const isCurrent = shape === currentShape;
         if (!isCurrent && shapeProgress.level === 1 && shapeProgress.recentScores.length === 0) return null;
+        const appearDelay = initialAppearDoneRef.current ? 0 : 0.55 + visibleIndex * 0.06;
+        visibleIndex++;
         return (
           <ShapeRow
             key={shape}
             shape={shape}
             progress={shapeProgress}
             isCurrent={isCurrent}
+            appearDelay={appearDelay}
           />
         );
       })}
