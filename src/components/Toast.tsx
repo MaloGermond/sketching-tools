@@ -35,7 +35,7 @@ const chipStyle: Record<string, string | number> = {
   alignItems: 'center',
   gap: '8px',
   padding: '6px 12px',
-  background: 'white',
+  background: 'var(--surface-raised)',
   borderWidth: '1px',
   borderStyle: 'solid',
   borderColor: 'var(--border-default)',

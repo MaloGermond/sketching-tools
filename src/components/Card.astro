@@ -10,11 +10,17 @@ const { title, class: className, id } = Astro.props;
 
 <div
   id={id}
-  class:list={[
-    'bg-white rounded-xl border border-gray-200 p-4',
-    className,
-  ]}
+  class:list={['card', className]}
 >
   {title && <h2 class="h4 mb-3">{title}</h2>}
   <slot />
 </div>
+
+<style>
+  .card {
+    background: var(--surface-raised);
+    border: 1px solid var(--border-subdue);
+    border-radius: var(--radius-xl);
+    padding: 1rem;
+  }
+</style>

@@ -5,16 +5,17 @@ interface Props {
   href: string;
   icon?: string;
   color?: string;
+  track?: boolean;
 }
 
-const { title, description, href, icon, color = 'gray' } = Astro.props;
+const { title, description, href, icon, color = 'gray', track = false } = Astro.props;
 
 const iconBg: Record<string, string> = {
   blue:   '#EFF6FF',
   orange: '#FFF7ED',
   green:  '#F0FDF4',
   purple: '#FAF5FF',
-  gray:   '#F2F4F6',
+  gray:   'var(--color-gray-100)',
 };
 
 const iconColor: Record<string, string> = {
@@ -22,14 +23,18 @@ const iconColor: Record<string, string> = {
   orange: '#EA580C',
   green:  '#16A34A',
   purple: '#7E22CE',
-  gray:   '#6F859C',
+  gray:   'var(--color-gray-500)',
 };
 
 const bg = iconBg[color] ?? iconBg.gray;
 const fg = iconColor[color] ?? iconColor.gray;
 ---
 
-<a href={href} class="tool-card">
+<a
+  href={href}
+  class="tool-card"
+  {...(track && { 'data-umami-event': 'tool_open', 'data-umami-event-tool': title })}
+>
   <div class="tool-icon-wrap" style={`background: ${bg};`}>
     <span class="tool-icon" style={`color: ${fg};`}>{icon}</span>
   </div>
@@ -48,8 +53,8 @@ const fg = iconColor[color] ?? iconColor.gray;
     align-items: center;
     gap: 0.875rem;
     padding: 0.875rem 1rem;
-    background: #ffffff;
-    border: 1px solid #e4e7eb;
+    background: var(--toolCard-background);
+    border: 1px solid var(--toolCard-border);
     border-radius: 12px;
     text-decoration: none;
     transition: box-shadow 180ms ease, border-color 180ms ease, transform 180ms ease;
@@ -57,7 +62,7 @@ const fg = iconColor[color] ?? iconColor.gray;
 
   .tool-card:hover {
     box-shadow: 0 4px 12px rgb(0 0 0 / 0.07), 0 1px 3px rgb(0 0 0 / 0.05);
-    border-color: #BFCBD6;
+    border-color: var(--border-default);
     transform: translateY(-1px);
   }
 
@@ -82,9 +87,9 @@ const fg = iconColor[color] ?? iconColor.gray;
   }
 
   .tool-title {
-    font-size: 0.9375rem;
+    font-size: var(--text-md);
     font-weight: 500;
-    color: #111827;
+    color: var(--text-default);
     line-height: 1.3;
     margin-bottom: 0.125rem;
     white-space: nowrap;
@@ -93,8 +98,8 @@ const fg = iconColor[color] ?? iconColor.gray;
   }
 
   .tool-desc {
-    font-size: 0.8125rem;
-    color: #6F859C;
+    font-size: var(--text-sm);
+    color: var(--text-subdue);
     line-height: 1.4;
     white-space: nowrap;
     overflow: hidden;
@@ -102,13 +107,13 @@ const fg = iconColor[color] ?? iconColor.gray;
   }
 
   .tool-arrow {
-    color: #BFCBD6;
+    color: var(--border-default);
     flex-shrink: 0;
     transition: color 180ms ease, transform 180ms ease;
   }
 
   .tool-card:hover .tool-arrow {
-    color: #6F859C;
+    color: var(--text-subdue);
     transform: translateX(2px);
   }
 </style>

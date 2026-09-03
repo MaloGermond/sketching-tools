@@ -23,4 +23,7 @@ pnpm-debug.log*
 # jetbrains setting folder
 .idea/
 .vscode/
-.claude/
+
+# Claude Code local-only settings (project config in .claude/ is tracked)
+.claude/settings.local.json
+.claude/worktrees/
