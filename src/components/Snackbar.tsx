@@ -24,9 +24,9 @@ const COLLAPSE_DELAY = 10_000;
 
 /** @pure */
 const getScoreColor = (score: number): string => {
-  if (score >= 80) return '#22C55E';
-  if (score >= 50) return '#FACC15';
-  return '#EF4444';
+  if (score >= 80) return 'var(--text-success)';
+  if (score >= 50) return 'var(--text-warning)';
+  return 'var(--text-error)';
 };
 
 /** @pure */
@@ -66,10 +66,10 @@ function SnackbarCard({ entry, index }: SnackbarCardProps) {
       alignItems: 'center',
       gap: '10px',
       padding: '8px',
-      background: 'white',
+      background: 'var(--surface-raised)',
       borderWidth: '1px',
       borderStyle: 'solid',
-      borderColor: '#e4e7eb',
+      borderColor: 'var(--border-subdue)',
       borderRadius: '14px',
       boxShadow: '0 2px 8px rgb(0 0 0 / 0.06)',
       width: '196px',
@@ -82,20 +82,20 @@ function SnackbarCard({ entry, index }: SnackbarCardProps) {
         height: '40px',
         borderRadius: '8px',
         overflow: 'hidden',
-        background: '#f9fafb',
+        background: 'var(--surface-subdue)',
         borderWidth: '1px',
         borderStyle: 'solid',
-        borderColor: '#f2f4f6',
+        borderColor: 'var(--border-subdue)',
         flexShrink: 0,
       }}>
         <img src={entry.image} alt="" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
       </div>
       <div style={{ display: 'flex', flexDirection: 'column', gap: '2px', flex: 1 }}>
-        <span style={{ fontSize: '0.625rem', fontWeight: 500, color: '#9ca3af', letterSpacing: '0.02em' }}>
+        <span style={{ fontSize: '0.625rem', fontWeight: 500, color: 'var(--text-subdue)', letterSpacing: '0.02em' }}>
           Ressemblance
         </span>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-          <span style={{ fontSize: '0.9375rem', fontWeight: 700, color: '#111827', lineHeight: 1 }}>
+          <span style={{ fontSize: 'var(--text-md)', fontWeight: 700, color: 'var(--text-default)', lineHeight: 1 }}>
             {entry.score}%
           </span>
           <div style={{
@@ -143,10 +143,10 @@ function CollapsedStack({ entries, visible }: CollapsedStackProps) {
             height: '60px',
             borderRadius: '12px',
             overflow: 'hidden',
-            background: 'white',
+            background: 'var(--surface-raised)',
             borderWidth: '1px',
             borderStyle: 'solid',
-            borderColor: '#e4e7eb',
+            borderColor: 'var(--border-subdue)',
             transform: `translateY(${-depth * 5}px) translateX(${depth * 3}px) rotate(${depth * -2.5}deg)`,
             transformOrigin: 'bottom center',
             opacity: 1 - depth * 0.3,
@@ -168,10 +168,10 @@ function CollapsedStack({ entries, visible }: CollapsedStackProps) {
           height: '60px',
           borderRadius: '12px',
           overflow: 'hidden',
-          background: 'white',
+          background: 'var(--surface-raised)',
           borderWidth: '1px',
           borderStyle: 'solid',
-          borderColor: '#e4e7eb',
+          borderColor: 'var(--border-subdue)',
           boxShadow: '0 4px 12px rgb(0 0 0 / 0.12)',
           zIndex: 3,
           transition: 'transform 350ms cubic-bezier(0.34, 1.56, 0.64, 1)',
