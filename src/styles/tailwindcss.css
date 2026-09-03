@@ -128,6 +128,7 @@
     --text-success:    var(--color-green-500);
     --text-error:      var(--color-red-500);
     --text-warning:    var(--color-yellow-400);
+    --frame-hairline:  rgb(0 0 0 / 8%);
 
     /* accent */
     --color-accent:   var(--color-blue-600);
@@ -173,6 +174,7 @@
     --text-success:    var(--color-green-300);
     --text-error:      var(--color-red-300);
     --text-warning:    var(--color-yellow-300);
+    --frame-hairline:  rgb(255 255 255 / 8%);
   }
 
   /* "Système" — pas de préférence explicite: suit l'OS */
@@ -187,6 +189,20 @@
       --text-success:    var(--color-green-300);
       --text-error:      var(--color-red-300);
       --text-warning:    var(--color-yellow-300);
+      --frame-hairline:  rgb(255 255 255 / 8%);
     }
   }
+}
+
+/* =====================================================
+   UTILITIES — Interfaces.dev cheat sheet
+   (.claude/best-practices.md)
+   ===================================================== */
+
+/* Bordure d'image 1px, offset -1px, réagit au thème (règle "Bordure des
+   images" de .claude/best-practices.md). À poser sur le conteneur direct
+   de l'<img> plutôt que sur l'<img> elle-même si un border-radius/overflow
+   hidden est déjà présent dessus. */
+@utility image-frame {
+  box-shadow: inset 0 0 0 1px var(--frame-hairline);
 }
