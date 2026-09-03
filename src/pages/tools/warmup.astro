@@ -81,6 +81,7 @@ const shapeIcons = ['circle', 'ellipse', 'square', 'triangle', 'horizontal-line'
     document.addEventListener('toggleGroupSelected', (event) => {
       if (event.detail?.icon) {
         const selected = event.detail.icon;
+        window.umami?.track('warmup_shape_select', { shape: selected });
         Object.keys(window.shapeSettings).forEach(k => {
           window.shapeSettings[k] = (k === selected);
         });

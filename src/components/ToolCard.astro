@@ -5,9 +5,10 @@ interface Props {
   href: string;
   icon?: string;
   color?: string;
+  track?: boolean;
 }
 
-const { title, description, href, icon, color = 'gray' } = Astro.props;
+const { title, description, href, icon, color = 'gray', track = false } = Astro.props;
 
 const iconBg: Record<string, string> = {
   blue:   '#EFF6FF',
@@ -29,7 +30,11 @@ const bg = iconBg[color] ?? iconBg.gray;
 const fg = iconColor[color] ?? iconColor.gray;
 ---
 
-<a href={href} class="tool-card">
+<a
+  href={href}
+  class="tool-card"
+  {...(track && { 'data-umami-event': 'tool_open', 'data-umami-event-tool': title })}
+>
   <div class="tool-icon-wrap" style={`background: ${bg};`}>
     <span class="tool-icon" style={`color: ${fg};`}>{icon}</span>
   </div>

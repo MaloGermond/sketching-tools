@@ -58,6 +58,8 @@ import ThemeSwitch from "../components/ThemeSwitch.jsx";
         .forEach((key) => localStorage.removeItem(key));
     } catch (e) {}
 
+    window.umami?.track('cache_purge');
+
     btn.textContent = 'Cache vidé ✓';
     setTimeout(() => {
       btn.textContent = original;

@@ -36,10 +36,12 @@ export default function SketchToolbarActions() {
 
   const dispatch = (action) => document.dispatchEvent(new CustomEvent(`sketch:${action}`));
 
-  const handleUndo = () => canUndo && dispatch('undo');
-  const handleRedo = () => canRedo && dispatch('redo');
-  const handleNew = () => { dispatch('new'); setMenuOpen(false); };
-  const handleDownload = () => { dispatch('download'); setMenuOpen(false); };
+  const track = (name) => window.umami?.track(name);
+
+  const handleUndo = () => { if (canUndo) { dispatch('undo'); track('sketch_undo'); } };
+  const handleRedo = () => { if (canRedo) { dispatch('redo'); track('sketch_redo'); } };
+  const handleNew = () => { dispatch('new'); track('sketch_new'); setMenuOpen(false); };
+  const handleDownload = () => { dispatch('download'); track('sketch_download'); setMenuOpen(false); };
 
   return (
     <>
