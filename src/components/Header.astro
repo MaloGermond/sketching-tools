@@ -42,8 +42,8 @@ const relativePath = currentPath.startsWith(base)
     right: 0;
     z-index: 50;
     height: 3.5rem;
-    background: var(--color-gray-50);
-    border-bottom: 1px solid var(--color-gray-400);
+    background: var(--background);
+    border-bottom: 1px solid var(--border-default);
   }
 
   .header-inner {
@@ -62,7 +62,7 @@ const relativePath = currentPath.startsWith(base)
     gap: 0.5rem;
     font-size: 0.9375rem;
     font-weight: 500;
-    color: var(--color-gray-900);
+    color: var(--text-default);
     text-decoration: none;
     transition: opacity 150ms ease;
   }
@@ -72,7 +72,7 @@ const relativePath = currentPath.startsWith(base)
   .wordmark-dot {
     width: 7px;
     height: 7px;
-    background: #2563EB;
+    background: var(--color-accent);
     border-radius: 50%;
     flex-shrink: 0;
   }
@@ -84,13 +84,13 @@ const relativePath = currentPath.startsWith(base)
   }
 
   .breadcrumb-sep {
-    color: var(--color-gray-300);
+    color: var(--border-default);
     font-size: 0.9375rem;
   }
 
   .breadcrumb-page {
-    font-size: 0.875rem;
-    color: var(--color-gray-500);
+    font-size: var(--text-sm);
+    color: var(--text-subdue);
     text-transform: capitalize;
   }
 
@@ -102,13 +102,13 @@ const relativePath = currentPath.startsWith(base)
     width: 32px;
     height: 32px;
     border-radius: var(--radius-xs);
-    background: var(--color-gray-100);
-    color: var(--color-gray-500);
+    background: var(--surface-subdue);
+    color: var(--text-subdue);
     transition: background-color 150ms ease, color 150ms ease;
   }
 
   .settings-link:hover {
-    background: var(--color-gray-200);
-    color: var(--color-gray-900);
+    background: var(--surface-default);
+    color: var(--text-default);
   }
 </style>
