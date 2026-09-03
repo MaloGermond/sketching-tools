@@ -166,12 +166,35 @@
     --footer-background:  var(--background-dark);
     --toolCard-background: var(--surface-default);
     --toolCard-border:     var(--border-subdue);
+    --sketch-stroke:       var(--text-default);
 
     /* Legacy aliases — gardés pour la compatibilité */
     --bg-body:   var(--background);
     --bg-card:   var(--surface-raised);
     --bg-surface: var(--surface-subdue);
     --transition-fast: 150ms ease;
+  }
+
+  /* Force le clair sur un sous-arbre même si un ancêtre est en
+     [data-theme="dark"] (ex. les panneaux de comparaison sur /style) —
+     sans ceci, les custom properties sombres seraient simplement héritées,
+     car :root ne cible que l'élément racine. */
+  [data-theme="light"] {
+    --background:      var(--color-gray-50);
+    --surface-default: var(--color-gray-200);
+    --surface-subdue:  var(--color-gray-100);
+    --surface-raised:  var(--color-white);
+    --text-default:    var(--color-gray-900);
+    --text-subdue:     var(--color-gray-500);
+    --border-default:  var(--color-gray-400);
+    --border-subdue:   var(--color-gray-200);
+    --text-success:    var(--color-green-500);
+    --text-error:      var(--color-red-500);
+    --text-warning:    var(--color-yellow-400);
+    --background-dark: var(--color-gray-900);
+    --icon-filter:     none;
+    --frame-hairline:  rgb(0 0 0 / 8%);
+    --sketch-stroke:   var(--color-gray-900);
   }
 
   html, body {
@@ -206,6 +229,7 @@
     --background-dark: var(--color-gray-800);
     --icon-filter:     invert(1);
     --frame-hairline:  rgb(255 255 255 / 8%);
+    --sketch-stroke:   var(--color-gray-50);
   }
 
   /* "Système" — pas de préférence explicite: suit l'OS */
@@ -225,6 +249,7 @@
       --background-dark: var(--color-gray-800);
       --icon-filter:     invert(1);
       --frame-hairline:  rgb(255 255 255 / 8%);
+      --sketch-stroke:   var(--color-gray-50);
     }
   }
 }
