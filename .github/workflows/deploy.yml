@@ -25,6 +25,8 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm run build
+        env:
+          PUBLIC_UMAMI_WEBSITE_ID: 4a305f8f-86c2-42d5-88ea-bdb9a102f570
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist

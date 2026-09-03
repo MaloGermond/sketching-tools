@@ -4,6 +4,7 @@ import P5Sketch from "../../components/P5Sketch";
 import Toolbar from "../../components/Toolbar.astro";
 import SketchToolbarActions from "../../components/SketchToolbarActions.jsx";
 import KeyboardShortcuts from "../../components/KeyboardShortcuts.jsx";
+import PreventPullToRefresh from "../../components/PreventPullToRefresh.astro";
 
 // Métadonnées pour l'affichage dans le hub
 const title = "Drafts";
@@ -13,6 +14,7 @@ const color = "blue";
 ---
 
 <MainLayout title={title} footer={false}>
+  <PreventPullToRefresh />
   <P5Sketch src="drafts.js" class="sketch-container" client:load />
   <KeyboardShortcuts client:load />
   <Toolbar>

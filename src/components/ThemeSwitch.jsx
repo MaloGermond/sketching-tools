@@ -32,6 +32,7 @@ export default function ThemeSwitch() {
       if (value === 'system') localStorage.removeItem('theme');
       else localStorage.setItem('theme', value);
     } catch (e) {}
+    window.umami?.track('theme_change', { theme: value });
   };
 
   return (

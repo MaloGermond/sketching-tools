@@ -5,11 +5,13 @@ import LevelsPanel from "../../components/LevelsPanel.tsx";
 import Toolbar from "../../components/Toolbar.astro";
 import ToggleGroup from "../../components/ToggleGroup.jsx";
 import P5Sketch from "../../components/P5Sketch.tsx";
+import PreventPullToRefresh from "../../components/PreventPullToRefresh.astro";
 
 const shapeIcons = ['circle', 'ellipse', 'square', 'triangle', 'horizontal-line', 'vertical-line'];
 ---
 
 <MainLayout title="Échauffement" footer={false}>
+  <PreventPullToRefresh />
   <P5Sketch src="warmup.js" class="sketch-container" client:load />
 
   <Snackbar client:load />
@@ -79,6 +81,7 @@ const shapeIcons = ['circle', 'ellipse', 'square', 'triangle', 'horizontal-line'
     document.addEventListener('toggleGroupSelected', (event) => {
       if (event.detail?.icon) {
         const selected = event.detail.icon;
+        window.umami?.track('warmup_shape_select', { shape: selected });
         Object.keys(window.shapeSettings).forEach(k => {
           window.shapeSettings[k] = (k === selected);
         });
