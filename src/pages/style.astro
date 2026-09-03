@@ -3,13 +3,17 @@ import MainLayout from "../layouts/MainLayout.astro";
 import Action from "../components/Action.astro";
 import ThemeSwitch from "../components/ThemeSwitch.jsx";
 
+// Palette : couleurs brutes, agnostiques de l'interface (core/colors dans Penpot).
+// Rien ici n'est un choix d'UI — ça vient plus loin, dans les Thèmes puis les Styles.
 const grayScale = [50, 100, 200, 300, 400, 500, 600, 700, 800, 900];
-const brandScales: { name: string; steps: number[] }[] = [
-  { name: "blue", steps: [50, 100, 300, 500, 600, 700, 900] },
-  { name: "green", steps: [50, 100, 300, 500, 600, 700, 900] },
-  { name: "yellow", steps: [50, 100, 300, 400, 500, 600, 900] },
-  { name: "red", steps: [50, 100, 300, 500, 600, 700, 900] },
-  { name: "purple", steps: [50, 100, 300, 500, 600, 700, 900] },
+const hueSteps = [0, 50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 950];
+const paletteScales: { name: string; steps: number[] }[] = [
+  { name: "gray", steps: grayScale },
+  { name: "blue", steps: hueSteps },
+  { name: "green", steps: hueSteps },
+  { name: "yellow", steps: hueSteps },
+  { name: "red", steps: hueSteps },
+  { name: "purple", steps: hueSteps },
 ];
 
 const semanticTokens = [
@@ -34,9 +38,8 @@ const typeScale = [
 ];
 
 const exportableTokens = [
-  ...grayScale.map((s) => `--color-gray-${s}`),
+  ...paletteScales.flatMap((s) => s.steps.map((step) => `--color-${s.name}-${step}`)),
   "--color-accent",
-  ...brandScales.flatMap((s) => s.steps.map((step) => `--color-${s.name}-${step}`)),
   ...semanticTokens.map((t) => t.name),
   "--text-success",
   "--text-error",
@@ -49,6 +52,51 @@ const exportableTokens = [
   "--text-2xl",
   "--text-3xl",
 ];
+
+// Styles : tokens propres à un composant, qui puisent dans les tokens de thème
+// (jamais directement dans la palette brute). Hiérarchie : Palette → Thèmes → Styles.
+const componentStyles: {
+  component: string;
+  description: string;
+  tokens: { name: string; type: "color" | "radius"; refToken: string }[];
+}[] = [
+  {
+    component: "Action",
+    description: "Bouton / élément interactif générique",
+    tokens: [
+      { name: "--action-bg", type: "color", refToken: "--surface-default" },
+      { name: "--action-label", type: "color", refToken: "--text-default" },
+      { name: "--action-border", type: "color", refToken: "--border-default" },
+      { name: "--action-corner", type: "radius", refToken: "--radius-lg" },
+    ],
+  },
+  {
+    component: "ToolCard",
+    description: "Carte outil affichée sur la home",
+    tokens: [
+      { name: "--toolCard-background", type: "color", refToken: "--surface-default" },
+      { name: "--toolCard-border", type: "color", refToken: "--border-subdue" },
+    ],
+  },
+  {
+    component: "Footer",
+    description: "Pied de page — toujours sombre, quel que soit le thème actif",
+    tokens: [
+      { name: "--footer-background", type: "color", refToken: "--background-dark" },
+    ],
+  },
+  {
+    component: "Main",
+    description: "Fond de la zone de contenu principal",
+    tokens: [
+      { name: "--main-background", type: "color", refToken: "--background" },
+    ],
+  },
+];
+
+exportableTokens.push(
+  ...componentStyles.flatMap((c) => c.tokens.map((t) => t.name)),
+);
 ---
 
 <MainLayout title="Style — Sketching Tools">
@@ -68,11 +116,32 @@ const exportableTokens = [
       </div>
     </header>
 
-    <!-- Palette sémantique — comparatif Light / Dark côte à côte -->
+    <!-- Palette — couleurs brutes, agnostiques de l'interface -->
     <section class="style-section">
-      <h2 class="section-title">Palette sémantique</h2>
+      <h2 class="section-title">Palette de couleurs</h2>
       <p class="section-desc">
-        Les tokens s'inversent automatiquement selon le thème actif ; comparaison ci-dessous.
+        Couleurs brutes (core/colors), sans rôle d'interface — ce ne sont pas des « couleurs
+        de thème » : ce rôle est assigné plus loin, dans les Thèmes ci-dessous puis les
+        Styles, qui puisent dans cette palette.
+      </p>
+      {paletteScales.map((s) => (
+        <div class="scale-row">
+          {s.steps.map((step) => (
+            <div class="scale-swatch">
+              <div class="scale-color" style={`background: var(--color-${s.name}-${step});`} />
+              <p class="scale-label">{s.name}-{step}</p>
+            </div>
+          ))}
+        </div>
+      ))}
+    </section>
+
+    <!-- Thèmes — tokens sémantiques qui puisent dans la palette, comparatif Light / Dark -->
+    <section class="style-section">
+      <h2 class="section-title">Thèmes</h2>
+      <p class="section-desc">
+        Tokens sémantiques qui puisent dans la palette ci-dessus. Ils s'inversent
+        automatiquement selon le thème actif ; comparaison ci-dessous.
       </p>
       <div class="theme-compare">
         <div class="theme-pane" data-theme="light">
@@ -120,34 +189,37 @@ const exportableTokens = [
       </div>
     </section>
 
-    <!-- Échelle de gris -->
+    <!-- Styles — tokens propres à chaque composant, qui puisent dans les tokens de thème -->
     <section class="style-section">
-      <h2 class="section-title">Gris neutre</h2>
-      <p class="section-desc">Échelle désaturée (aucune dominante bleue) — reste lisible aux côtés du bleu d'accent.</p>
-      <div class="scale-row">
-        {grayScale.map((step) => (
-          <div class="scale-swatch">
-            <div class="scale-color" style={`background: var(--color-gray-${step});`} />
-            <p class="scale-label">{step}</p>
+      <h2 class="section-title">Styles</h2>
+      <p class="section-desc">
+        Palette (couleurs brutes, agnostiques de l'interface) → Thèmes (tokens sémantiques
+        qui puisent dans la palette) → Styles (ci-dessous : tokens propres à chaque composant,
+        qui puisent dans les tokens de thème — jamais directement dans la palette).
+      </p>
+      <div class="component-styles">
+        {componentStyles.map((c) => (
+          <div class="component-group">
+            <p class="component-title">{c.component}</p>
+            <p class="component-desc">{c.description}</p>
+            <div class="token-rows">
+              {c.tokens.map((t) => (
+                <div class="token-row">
+                  {t.type === "color" ? (
+                    <div class="token-preview" style={`background: var(${t.name}); border: 1px solid var(--border-default);`} />
+                  ) : (
+                    <div class="token-preview token-preview--radius" style={`border-radius: var(${t.name});`} />
+                  )}
+                  <div class="token-meta">
+                    <p class="token-name"><code>{t.name}</code></p>
+                    <p class="token-ref">→ <code>{t.refToken}</code></p>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         ))}
       </div>
-    </section>
-
-    <!-- Couleurs de marque -->
-    <section class="style-section">
-      <h2 class="section-title">Couleurs de marque</h2>
-      <p class="section-desc">Bleu d'accent + couleurs sémantiques (succès / avertissement / erreur), constantes dans les deux thèmes.</p>
-      {brandScales.map((s) => (
-        <div class="scale-row">
-          {s.steps.map((step) => (
-            <div class="scale-swatch">
-              <div class="scale-color" style={`background: var(--color-${s.name}-${step});`} />
-              <p class="scale-label">{s.name}-{step}</p>
-            </div>
-          ))}
-        </div>
-      ))}
     </section>
 
     <!-- Typographie -->
@@ -358,6 +430,64 @@ const exportableTokens = [
     margin-top: 0.25rem;
     text-align: center;
     font-family: 'SF Mono', Monaco, monospace;
+  }
+
+  /* Styles (tokens par composant) */
+  .component-styles {
+    display: flex;
+    flex-direction: column;
+    gap: 1.75rem;
+  }
+
+  .component-title {
+    font-size: var(--text-sm);
+    font-weight: 600;
+    color: var(--text-default);
+  }
+
+  .component-desc {
+    font-size: var(--text-xs);
+    color: var(--text-subdue);
+    margin-bottom: 0.75rem;
+  }
+
+  .token-rows {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+
+  .token-row {
+    display: flex;
+    align-items: center;
+    gap: 0.625rem;
+    padding: 0.5rem 0.75rem;
+    background: var(--surface-subdue);
+    border-radius: var(--radius-md);
+  }
+
+  .token-preview {
+    width: 1.75rem;
+    height: 1.75rem;
+    border-radius: var(--radius-sm);
+    flex-shrink: 0;
+  }
+
+  .token-preview--radius {
+    background: var(--surface-raised);
+    border: 1px solid var(--border-default);
+  }
+
+  .token-name {
+    font-family: 'SF Mono', Monaco, monospace;
+    font-size: 0.6875rem;
+    color: var(--text-default);
+  }
+
+  .token-ref {
+    font-family: 'SF Mono', Monaco, monospace;
+    font-size: 0.6875rem;
+    color: var(--text-subdue);
   }
 
   /* Typographie */
