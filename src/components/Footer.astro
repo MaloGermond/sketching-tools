@@ -41,7 +41,7 @@ const year = new Date().getFullYear();
 <style>
   .footer {
     /* Fond volontairement toujours sombre, quel que soit le thème du site */
-    background: var(--color-gray-900);
+    background: var(--footer-background);
     width: 100%;
   }
 
@@ -57,7 +57,7 @@ const year = new Date().getFullYear();
   .footer-brand {
     font-size: var(--text-2xl);
     font-weight: 500;
-    color: var(--color-gray-50);
+    color: var(--text-light);
   }
 
   .footer-cols {
@@ -76,14 +76,14 @@ const year = new Date().getFullYear();
   .col-title {
     font-size: var(--text-md);
     font-weight: 500;
-    color: var(--color-gray-50);
+    color: var(--text-light);
     margin-bottom: 0.25rem;
   }
 
   .col-link {
     font-size: var(--text-sm);
     font-weight: 300;
-    color: var(--color-gray-50);
+    color: var(--text-light);
     text-decoration: none;
     opacity: 0.7;
     transition: opacity 150ms ease;
@@ -110,22 +110,22 @@ const year = new Date().getFullYear();
   .footer-copy {
     font-size: var(--text-xs);
     font-weight: 300;
-    color: var(--color-gray-300);
+    color: var(--text-light-subdue);
   }
 
   .footer-author {
     font-size: var(--text-xs);
     font-weight: 300;
-    color: var(--color-gray-50);
+    color: var(--text-light);
   }
 
   .by {
     font-weight: 100;
-    color: var(--color-gray-300);
+    color: var(--text-light-subdue);
   }
 
   .author-link {
-    color: var(--color-gray-50);
+    color: var(--text-light);
     text-decoration: none;
     transition: opacity 150ms ease;
   }
