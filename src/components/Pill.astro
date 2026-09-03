@@ -7,9 +7,9 @@ interface Props {
 const { color = 'success', size = 16 } = Astro.props;
 
 const colorMap: Record<string, string> = {
-  success: '#22C55E',
-  error:   '#EF4444',
-  warning: '#FACC15',
+  success: 'var(--text-success)',
+  error:   'var(--text-error)',
+  warning: 'var(--text-warning)',
 };
 
 const bg = colorMap[color] ?? colorMap.success;

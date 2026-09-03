@@ -101,9 +101,9 @@ const countConsecutive = (scores: number[], predicate: (s: number) => boolean): 
 
 /** @pure */
 const getScoreColor = (score: number): string => {
-  if (score >= SUCCESS_THRESHOLD) return '#22C55E';
-  if (score >= FAILURE_THRESHOLD) return '#FACC15';
-  return '#EF4444';
+  if (score >= SUCCESS_THRESHOLD) return 'var(--text-success)';
+  if (score >= FAILURE_THRESHOLD) return 'var(--text-warning)';
+  return 'var(--text-error)';
 };
 
 /** @pure */
@@ -150,7 +150,7 @@ function StreakDots({ scores }: StreakDotsProps) {
           height: '6px',
           borderRadius: '50%',
           background: score === null
-            ? '#e4e7eb'
+            ? 'var(--border-subdue)'
             : getScoreColor(score),
           flexShrink: 0,
           transition: 'background 200ms ease',
@@ -189,10 +189,10 @@ function ShapeRow({ shape, progress, isCurrent, appearDelay }: ShapeRowProps) {
       onMouseLeave={() => setHovered(false)}
       style={{
         padding: isCurrent ? '10px' : '8px 10px',
-        background: isCurrent ? 'white' : hovered ? '#f2f4f6' : 'transparent',
+        background: isCurrent ? 'var(--surface-raised)' : hovered ? 'var(--surface-subdue)' : 'transparent',
         borderWidth: '1px',
         borderStyle: 'solid',
-        borderColor: isCurrent ? '#e4e7eb' : 'transparent',
+        borderColor: isCurrent ? 'var(--border-subdue)' : 'transparent',
         borderRadius: '12px',
         transition: 'all 250ms ease',
         cursor: isCurrent ? 'default' : 'pointer',
@@ -200,16 +200,16 @@ function ShapeRow({ shape, progress, isCurrent, appearDelay }: ShapeRowProps) {
       }}>
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: isCurrent ? '6px' : '2px' }}>
         <span style={{
-          fontSize: isCurrent ? '0.8125rem' : '0.75rem',
+          fontSize: isCurrent ? 'var(--text-sm)' : 'var(--text-xs)',
           fontWeight: 600,
-          color: isCurrent ? '#111827' : '#6f859c',
+          color: isCurrent ? 'var(--text-default)' : 'var(--text-subdue)',
         }}>
           {config.label}
         </span>
         <span style={{
           fontSize: '0.6875rem',
           fontWeight: 500,
-          color: isCurrent ? '#9ca3af' : '#BFCBD6',
+          color: isCurrent ? 'var(--text-subdue)' : 'var(--border-default)',
         }}>
           N{progress.level}/{maxLevel}
         </span>
@@ -217,12 +217,12 @@ function ShapeRow({ shape, progress, isCurrent, appearDelay }: ShapeRowProps) {
 
       {isCurrent && (
         <>
-          <p style={{ fontSize: '0.6875rem', color: '#9ca3af', marginBottom: '8px', lineHeight: 1.3 }}>
+          <p style={{ fontSize: '0.6875rem', color: 'var(--text-subdue)', marginBottom: '8px', lineHeight: 1.3 }}>
             {levelName}
           </p>
           <StreakDots scores={progress.recentScores} />
           {direction && (
-            <p style={{ fontSize: '0.625rem', color: direction === 'up' ? '#22C55E' : '#EF4444', marginTop: '6px' }}>
+            <p style={{ fontSize: '0.625rem', color: direction === 'up' ? 'var(--text-success)' : 'var(--text-error)', marginTop: '6px' }}>
               {count}/{STREAK_LENGTH} pour {direction === 'up' ? 'monter' : 'descendre'}
             </p>
           )}

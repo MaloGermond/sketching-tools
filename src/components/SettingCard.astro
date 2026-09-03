@@ -24,8 +24,8 @@ const { heading, description } = Astro.props;
     justify-content: space-between;
     gap: 1.5rem;
     padding: 1.25rem;
-    background: var(--color-gray-100);
-    border: 1px solid var(--color-gray-400);
+    background: var(--surface-subdue);
+    border: 1px solid var(--border-default);
     border-radius: var(--radius-lg);
   }
 
@@ -37,14 +37,14 @@ const { heading, description } = Astro.props;
   }
 
   .setting-heading {
-    font-size: 1rem;
+    font-size: var(--text-md);
     font-weight: 600;
-    color: var(--color-gray-900);
+    color: var(--text-default);
   }
 
   .setting-description {
-    font-size: 0.875rem;
-    color: var(--color-gray-500);
+    font-size: var(--text-sm);
+    color: var(--text-subdue);
     line-height: 1.4;
   }
 

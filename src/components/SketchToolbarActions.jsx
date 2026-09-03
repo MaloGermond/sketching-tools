@@ -59,8 +59,8 @@ export default function SketchToolbarActions() {
           height: 32px;
           border: none;
           border-radius: 8px;
-          background: #f1f1f1;
-          color: var(--color-gray-900);
+          background: var(--surface-subdue);
+          color: var(--text-default);
           font-size: 1.125rem;
           line-height: 1;
           cursor: pointer;
@@ -68,7 +68,7 @@ export default function SketchToolbarActions() {
           transition: background-color 150ms ease, opacity 150ms ease;
         }
         .sketch-toolbar-btn:hover:not(:disabled) {
-          background: var(--color-gray-200);
+          background: var(--surface-default);
         }
         .sketch-toolbar-btn:disabled {
           opacity: 0.4;
@@ -77,20 +77,20 @@ export default function SketchToolbarActions() {
         .sketch-toolbar-divider {
           width: 1px;
           height: 32px;
-          background: var(--color-gray-200);
+          background: var(--border-subdue);
         }
         .sketch-toolbar-menu {
           position: relative;
         }
         .sketch-toolbar-menu-btn {
-          background: #54adff;
-          color: #ffffff;
-          font-size: 0.75rem;
+          background: var(--color-accent);
+          color: var(--color-white);
+          font-size: var(--text-xs);
           font-weight: 700;
           letter-spacing: 0.05em;
         }
         .sketch-toolbar-menu-btn:hover {
-          background: #3f9bf5;
+          background: var(--color-accent-hover);
         }
         .sketch-toolbar-overlay {
           position: absolute;
@@ -101,8 +101,8 @@ export default function SketchToolbarActions() {
           gap: 2px;
           padding: 6px;
           min-width: 200px;
-          background: #ffffff;
-          border: 1px solid var(--color-gray-200);
+          background: var(--surface-raised);
+          border: 1px solid var(--border-subdue);
           border-radius: 12px;
           box-shadow: 0 4px 16px rgb(0 0 0 / 0.16);
         }
@@ -114,17 +114,18 @@ export default function SketchToolbarActions() {
           border: none;
           border-radius: 8px;
           background: transparent;
-          color: var(--color-gray-900);
+          color: var(--text-default);
           font-family: var(--font-sans);
-          font-size: 0.875rem;
+          font-size: var(--text-sm);
           text-align: left;
           cursor: pointer;
         }
         .sketch-toolbar-menu-item:hover {
-          background: #f1f1f1;
+          background: var(--surface-subdue);
         }
         .sketch-toolbar-menu-item img {
           opacity: 0.75;
+          filter: var(--icon-filter);
         }
       `}</style>
       <div class="sketch-toolbar-history">

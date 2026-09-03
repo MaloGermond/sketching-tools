@@ -9,6 +9,9 @@ import { drawingState } from '../drawing/drawingState.js';
 import { warmupState } from './warmupState.js';
 import { drawShape, createShapeMask, GUIDE_DISPLAY_STYLE } from '../shapes/shapeRenderer.js';
 import { calculateScoreFromBuffer, calculateFinalScore, updateScoreState } from '../scoring/scoring.js';
+import { getThemeColor, watchThemeColors } from '../theme/themeColor.js';
+
+const THEME_TOKENS = ['--background', '--sketch-stroke'];
 
 /**
  * Classe principale du warm-up qui orchestrer les modules
@@ -32,8 +35,10 @@ export class WarmupOrchestrator {
     this.drawingBuffer = this.p5.createGraphics(this.p5.width, this.p5.height);
     this.drawingBuffer.pixelDensity(1);
 
-    this.p5.background(255);
-    this.p5.stroke(0);
+    this.stopWatchingTheme = watchThemeColors(THEME_TOKENS, () => this.p5.redraw());
+
+    this.p5.background(getThemeColor('--background'));
+    this.p5.stroke(getThemeColor('--sketch-stroke'));
     this.p5.strokeWeight(3);
     this.p5.strokeCap(this.p5.ROUND);
     this.p5.strokeJoin(this.p5.ROUND);
@@ -62,7 +67,7 @@ export class WarmupOrchestrator {
    * Boucle principale de dessin
    */
   draw() {
-    this.p5.background(255);
+    this.p5.background(getThemeColor('--background'));
 
     this.ensureActiveShape();
 
@@ -86,7 +91,9 @@ export class WarmupOrchestrator {
     const pts = drawingState.currentPathPoints;
     const n = pts.length;
 
-    this.drawingBuffer.stroke(0);
+    const strokeColor = getThemeColor('--sketch-stroke');
+
+    this.drawingBuffer.stroke(strokeColor);
     this.drawingBuffer.strokeWeight(BRUSH_CONFIG.SIZE);
     this.drawingBuffer.strokeCap(this.p5.ROUND);
     this.drawingBuffer.strokeJoin(this.p5.ROUND);
@@ -97,7 +104,7 @@ export class WarmupOrchestrator {
       ctx.beginPath();
       ctx.moveTo(pts[0].x, pts[0].y);
       ctx.lineTo(pts[1].x, pts[1].y);
-      ctx.strokeStyle = 'black';
+      ctx.strokeStyle = strokeColor;
       ctx.lineWidth = BRUSH_CONFIG.SIZE;
       ctx.lineCap = 'round';
       ctx.stroke();
@@ -117,7 +124,7 @@ export class WarmupOrchestrator {
     ctx.beginPath();
     ctx.moveTo(mx1, my1);
     ctx.quadraticCurveTo(p2.x, p2.y, mx2, my2);
-    ctx.strokeStyle = 'black';
+    ctx.strokeStyle = strokeColor;
     ctx.lineWidth = BRUSH_CONFIG.SIZE;
     ctx.lineCap = 'round';
     ctx.lineJoin = 'round';

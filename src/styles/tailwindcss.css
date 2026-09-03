@@ -4,23 +4,28 @@
    CORE TOKENS — from Penpot core/colors, core/radius,
    core/typography
    ===================================================== */
-@theme {
+/* @theme static (pas juste @theme) : la page /style affiche des couleurs en
+   construisant le nom de la variable dynamiquement (var(--color-${nom}-${step})),
+   donc Tailwind ne peut pas détecter ces usages par analyse statique et élaguerait
+   silencieusement toute variable non référencée littéralement ailleurs. */
+@theme static {
   /* Font */
   --font-sans: 'PP Neue Montreal', ui-sans-serif, system-ui, sans-serif;
 
-  /* ── Gray scale ── */
+  /* ── Gray scale — neutre (sans dominante bleue), pour rester lisible aux
+     côtés du bleu d'accent dans les deux thèmes ── */
   --color-white:    #ffffff;
   --color-black:    #000000;
-  --color-gray-50:  #f9fafb;
-  --color-gray-100: #f2f4f6;
-  --color-gray-200: #e4e7eb;
-  --color-gray-300: #BFCBD6;
-  --color-gray-400: #9ca3af;
-  --color-gray-500: #6F859C;
-  --color-gray-600: #446688;
-  --color-gray-700: #374151;
-  --color-gray-800: #242D3C;
-  --color-gray-900: #111827;
+  --color-gray-50:  #FAFAFA;
+  --color-gray-100: #F4F4F5;
+  --color-gray-200: #E4E4E7;
+  --color-gray-300: #D4D4D8;
+  --color-gray-400: #A1A1AA;
+  --color-gray-500: #71717A;
+  --color-gray-600: #52525B;
+  --color-gray-700: #3F3F46;
+  --color-gray-800: #27272A;
+  --color-gray-900: #18181B;
 
   /* ── Green scale ── */
   --color-green-0:   #FBFEFC;
@@ -92,6 +97,16 @@
   --color-purple-900: #581C87;
   --color-purple-950: #3B0764;
 
+  /* ── Font sizes (core/typography) — échelle strictement croissante,
+     corrige le doublon xl=md / 2xl=lg présent dans les tokens précédents ── */
+  --text-xs:  0.75rem;   /* 12px */
+  --text-sm:  0.875rem;  /* 14px */
+  --text-md:  1rem;      /* 16px */
+  --text-lg:  1.125rem;  /* 18px */
+  --text-xl:  1.25rem;   /* 20px */
+  --text-2xl: 1.5rem;    /* 24px */
+  --text-3xl: 2rem;      /* 32px */
+
   /* ── Border radius (core/radius) ── */
   --radius-xs:   0.25rem;   /* 4px  */
   --radius-sm:   0.375rem;  /* 6px  */
@@ -122,29 +137,64 @@
     --background:      var(--color-gray-50);
     --surface-default: var(--color-gray-200);
     --surface-subdue:  var(--color-gray-100);
+    --surface-raised:  var(--color-white);
     --text-default:    var(--color-gray-900);
     --text-subdue:     var(--color-gray-500);
     --border-default:  var(--color-gray-400);
+    --border-subdue:   var(--color-gray-200);
     --text-success:    var(--color-green-500);
     --text-error:      var(--color-red-500);
     --text-warning:    var(--color-yellow-400);
+    --background-dark: var(--color-gray-900);
+    --text-light:         var(--color-gray-50);
+    --text-light-subdue:  var(--color-gray-300);
+    /* Icônes raster en noir fixe (public/icons/*.svg) : inversées en thème
+       sombre pour rester visibles sur les surfaces --surface-raised/--surface-subdue. */
+    --icon-filter: none;
     --frame-hairline:  rgb(0 0 0 / 8%);
 
     /* accent */
     --color-accent:   var(--color-blue-600);
+    --color-accent-hover: var(--color-blue-700);
 
     /* styles (component tokens) */
     --action-bg:      var(--surface-default);
     --action-label:   var(--text-default);
     --action-border:  var(--border-default);
-    --action-corner:  var(--radius-md);
+    --action-corner:  var(--radius-lg);
     --main-background: var(--background);
+    --footer-background:  var(--background-dark);
+    --toolCard-background: var(--surface-subdue);
+    --toolCard-border:     var(--border-subdue);
+    --sketch-stroke:       var(--text-default);
 
     /* Legacy aliases — gardés pour la compatibilité */
     --bg-body:   var(--background);
-    --bg-card:   var(--color-white);
+    --bg-card:   var(--surface-raised);
     --bg-surface: var(--surface-subdue);
     --transition-fast: 150ms ease;
+  }
+
+  /* Force le clair sur un sous-arbre même si un ancêtre est en
+     [data-theme="dark"] (ex. les panneaux de comparaison sur /style) —
+     sans ceci, les custom properties sombres seraient simplement héritées,
+     car :root ne cible que l'élément racine. */
+  [data-theme="light"] {
+    --background:      var(--color-gray-50);
+    --surface-default: var(--color-gray-200);
+    --surface-subdue:  var(--color-gray-100);
+    --surface-raised:  var(--color-white);
+    --text-default:    var(--color-gray-900);
+    --text-subdue:     var(--color-gray-500);
+    --border-default:  var(--color-gray-400);
+    --border-subdue:   var(--color-gray-200);
+    --text-success:    var(--color-green-500);
+    --text-error:      var(--color-red-500);
+    --text-warning:    var(--color-yellow-400);
+    --background-dark: var(--color-gray-900);
+    --icon-filter:     none;
+    --frame-hairline:  rgb(0 0 0 / 8%);
+    --sketch-stroke:   var(--color-gray-900);
   }
 
   html, body {
@@ -168,13 +218,18 @@
     --background:      var(--color-gray-900);
     --surface-default: var(--color-gray-700);
     --surface-subdue:  var(--color-gray-800);
+    --surface-raised:  var(--color-gray-800);
     --text-default:    var(--color-gray-50);
     --text-subdue:     var(--color-gray-400);
     --border-default:  var(--color-gray-300);
+    --border-subdue:   var(--color-gray-700);
     --text-success:    var(--color-green-300);
     --text-error:      var(--color-red-300);
     --text-warning:    var(--color-yellow-300);
+    --background-dark: var(--color-gray-800);
+    --icon-filter:     invert(1);
     --frame-hairline:  rgb(255 255 255 / 8%);
+    --sketch-stroke:   var(--color-gray-50);
   }
 
   /* "Système" — pas de préférence explicite: suit l'OS */
@@ -183,13 +238,18 @@
       --background:      var(--color-gray-900);
       --surface-default: var(--color-gray-700);
       --surface-subdue:  var(--color-gray-800);
+      --surface-raised:  var(--color-gray-800);
       --text-default:    var(--color-gray-50);
       --text-subdue:     var(--color-gray-400);
       --border-default:  var(--color-gray-300);
+      --border-subdue:   var(--color-gray-700);
       --text-success:    var(--color-green-300);
       --text-error:      var(--color-red-300);
       --text-warning:    var(--color-yellow-300);
+      --background-dark: var(--color-gray-800);
+      --icon-filter:     invert(1);
       --frame-hairline:  rgb(255 255 255 / 8%);
+      --sketch-stroke:   var(--color-gray-50);
     }
   }
 }

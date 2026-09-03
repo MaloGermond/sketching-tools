@@ -25,9 +25,9 @@ const COLLAPSE_DELAY = 10_000;
 
 /** @pure */
 const getScoreColor = (score: number): string => {
-  if (score >= 80) return '#22C55E';
-  if (score >= 50) return '#FACC15';
-  return '#EF4444';
+  if (score >= 80) return 'var(--text-success)';
+  if (score >= 50) return 'var(--text-warning)';
+  return 'var(--text-error)';
 };
 
 /** @pure */
@@ -63,19 +63,19 @@ function SnackbarCard({ entry, index }: SnackbarCardProps) {
 
   return (
     <div
-      className="flex items-center gap-2.5 p-2 bg-white border border-gray-200 shadow-[0_2px_8px_rgb(0_0_0_/_0.06)] w-[196px] [--card-radius:14px] rounded-[var(--card-radius)]"
+      className="flex items-center gap-2.5 p-2 bg-[var(--surface-raised)] border border-[var(--border-subdue)] shadow-[0_2px_8px_rgb(0_0_0_/_0.06)] w-[196px] [--card-radius:14px] rounded-[var(--card-radius)]"
       style={{ opacity, transform, transition: 'opacity 300ms ease, transform 350ms cubic-bezier(0.34, 1.56, 0.64, 1)' }}
     >
       {/* Rayon concentrique : rayon carte − padding (8px), clampé à 0 — .claude/best-practices.md#UI */}
-      <div className="w-10 h-10 overflow-hidden bg-gray-50 image-frame shrink-0 rounded-[max(0px,calc(var(--card-radius)-8px))]">
+      <div className="w-10 h-10 overflow-hidden bg-[var(--surface-subdue)] image-frame shrink-0 rounded-[max(0px,calc(var(--card-radius)-8px))]">
         <img src={entry.image} alt="" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
       </div>
       <div style={{ display: 'flex', flexDirection: 'column', gap: '2px', flex: 1 }}>
-        <span style={{ fontSize: '0.625rem', fontWeight: 500, color: '#9ca3af', letterSpacing: '0.02em' }}>
+        <span style={{ fontSize: '0.625rem', fontWeight: 500, color: 'var(--text-subdue)', letterSpacing: '0.02em' }}>
           Ressemblance
         </span>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-          <span style={{ fontSize: '0.9375rem', fontWeight: 700, color: '#111827', lineHeight: 1 }}>
+          <span style={{ fontSize: 'var(--text-md)', fontWeight: 700, color: 'var(--text-default)', lineHeight: 1 }}>
             {entry.score}%
           </span>
           <div style={{
@@ -117,7 +117,7 @@ function CollapsedStack({ entries, visible }: CollapsedStackProps) {
         return (
           <div
             key={entry.id}
-            className="absolute bottom-0 left-0 w-[60px] h-[60px] rounded-lg overflow-hidden bg-white image-frame origin-bottom"
+            className="absolute bottom-0 left-0 w-[60px] h-[60px] rounded-lg overflow-hidden bg-[var(--surface-raised)] image-frame origin-bottom"
             style={{
               transform: `translateY(${-depth * 5}px) translateX(${depth * 3}px) rotate(${depth * -2.5}deg)`,
               opacity: 1 - depth * 0.3,
@@ -133,7 +133,7 @@ function CollapsedStack({ entries, visible }: CollapsedStackProps) {
       {/* Front card — most recent, on top */}
       {visibleEntries[0] && (
         <div
-          className="absolute bottom-0 left-0 w-[60px] h-[60px] rounded-lg overflow-hidden bg-white image-frame shadow-[0_4px_12px_rgb(0_0_0_/_0.12)]"
+          className="absolute bottom-0 left-0 w-[60px] h-[60px] rounded-lg overflow-hidden bg-[var(--surface-raised)] image-frame shadow-[0_4px_12px_rgb(0_0_0_/_0.12)]"
           style={{ zIndex: 3, transition: 'transform 350ms cubic-bezier(0.34, 1.56, 0.64, 1)' }}
         >
           <img src={visibleEntries[0].image} alt="" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
