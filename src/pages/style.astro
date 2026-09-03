@@ -1,0 +1,389 @@
+---
+import MainLayout from "../layouts/MainLayout.astro";
+import Action from "../components/Action.astro";
+import ThemeSwitch from "../components/ThemeSwitch.jsx";
+
+const grayScale = [50, 100, 200, 300, 400, 500, 600, 700, 800, 900];
+const brandScales: { name: string; steps: number[] }[] = [
+  { name: "blue", steps: [50, 100, 300, 500, 600, 700, 900] },
+  { name: "green", steps: [50, 100, 300, 500, 600, 700, 900] },
+  { name: "yellow", steps: [50, 100, 300, 400, 500, 600, 900] },
+  { name: "red", steps: [50, 100, 300, 500, 600, 700, 900] },
+  { name: "purple", steps: [50, 100, 300, 500, 600, 700, 900] },
+];
+
+const semanticTokens = [
+  { name: "--background", label: "Fond de page" },
+  { name: "--surface-subdue", label: "Surface discrète" },
+  { name: "--surface-default", label: "Surface par défaut" },
+  { name: "--surface-raised", label: "Surface flottante (card)" },
+  { name: "--text-default", label: "Texte principal" },
+  { name: "--text-subdue", label: "Texte secondaire" },
+  { name: "--border-default", label: "Bordure par défaut" },
+  { name: "--border-subdue", label: "Bordure discrète" },
+];
+
+const typeScale = [
+  { class: "h1", token: "--text-3xl", label: "H1 · 32px" },
+  { class: "h2", token: "--text-2xl", label: "H2 · 24px" },
+  { class: "h3", token: "--text-xl", label: "H3 · 20px" },
+  { class: "h4", token: "--text-md", label: "H4 · 16px" },
+  { class: "body-text", token: "--text-md", label: "Body · 16px" },
+  { class: "label", token: "--text-sm", label: "Label · 14px" },
+  { class: "caption", token: "--text-xs", label: "Caption · 12px" },
+];
+
+const exportableTokens = [
+  ...grayScale.map((s) => `--color-gray-${s}`),
+  "--color-accent",
+  ...brandScales.flatMap((s) => s.steps.map((step) => `--color-${s.name}-${step}`)),
+  ...semanticTokens.map((t) => t.name),
+  "--text-success",
+  "--text-error",
+  "--text-warning",
+  "--text-xs",
+  "--text-sm",
+  "--text-md",
+  "--text-lg",
+  "--text-xl",
+  "--text-2xl",
+  "--text-3xl",
+];
+---
+
+<MainLayout title="Style — Sketching Tools">
+  <div class="style-page">
+
+    <header class="style-header">
+      <p class="eyebrow">Design system</p>
+      <h1 class="title">Style</h1>
+      <p class="intro">
+        Palette de couleurs, typographie et tokens partagés par les deux thèmes.
+        Source de vérité : <code>src/styles/tailwindcss.css</code>, synchronisée avec la
+        librairie de tokens Penpot.
+      </p>
+      <div class="header-actions">
+        <ThemeSwitch client:load />
+        <Action id="export-btn" variant="default">Copier les tokens CSS</Action>
+      </div>
+    </header>
+
+    <!-- Palette sémantique — comparatif Light / Dark côte à côte -->
+    <section class="style-section">
+      <h2 class="section-title">Palette sémantique</h2>
+      <p class="section-desc">
+        Les tokens s'inversent automatiquement selon le thème actif ; comparaison ci-dessous.
+      </p>
+      <div class="theme-compare">
+        <div class="theme-pane" data-theme="light">
+          <p class="pane-label">Light</p>
+          <div class="swatch-grid">
+            {semanticTokens.map((t) => (
+              <div class="swatch">
+                <div class="swatch-color" style={`background: var(${t.name}); border: 1px solid var(--border-default);`} />
+                <p class="swatch-name">{t.label}</p>
+                <p class="swatch-var">{t.name}</p>
+              </div>
+            ))}
+          </div>
+          <div class="preview-card">
+            <p class="h2" style="margin-bottom: 0.25rem;">Un titre de section</p>
+            <p class="body-text">Texte de paragraphe pour vérifier le contraste et la lisibilité sur ce fond.</p>
+            <div class="preview-actions">
+              <Action variant="primary" size="sm">Primaire</Action>
+              <Action variant="default" size="sm">Default</Action>
+              <Action variant="facultatif" size="sm">Facultatif</Action>
+            </div>
+          </div>
+        </div>
+        <div class="theme-pane" data-theme="dark">
+          <p class="pane-label">Dark</p>
+          <div class="swatch-grid">
+            {semanticTokens.map((t) => (
+              <div class="swatch">
+                <div class="swatch-color" style={`background: var(${t.name}); border: 1px solid var(--border-default);`} />
+                <p class="swatch-name">{t.label}</p>
+                <p class="swatch-var">{t.name}</p>
+              </div>
+            ))}
+          </div>
+          <div class="preview-card">
+            <p class="h2" style="margin-bottom: 0.25rem;">Un titre de section</p>
+            <p class="body-text">Texte de paragraphe pour vérifier le contraste et la lisibilité sur ce fond.</p>
+            <div class="preview-actions">
+              <Action variant="primary" size="sm">Primaire</Action>
+              <Action variant="default" size="sm">Default</Action>
+              <Action variant="facultatif" size="sm">Facultatif</Action>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Échelle de gris -->
+    <section class="style-section">
+      <h2 class="section-title">Gris neutre</h2>
+      <p class="section-desc">Échelle désaturée (aucune dominante bleue) — reste lisible aux côtés du bleu d'accent.</p>
+      <div class="scale-row">
+        {grayScale.map((step) => (
+          <div class="scale-swatch">
+            <div class="scale-color" style={`background: var(--color-gray-${step});`} />
+            <p class="scale-label">{step}</p>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <!-- Couleurs de marque -->
+    <section class="style-section">
+      <h2 class="section-title">Couleurs de marque</h2>
+      <p class="section-desc">Bleu d'accent + couleurs sémantiques (succès / avertissement / erreur), constantes dans les deux thèmes.</p>
+      {brandScales.map((s) => (
+        <div class="scale-row">
+          {s.steps.map((step) => (
+            <div class="scale-swatch">
+              <div class="scale-color" style={`background: var(--color-${s.name}-${step});`} />
+              <p class="scale-label">{s.name}-{step}</p>
+            </div>
+          ))}
+        </div>
+      ))}
+    </section>
+
+    <!-- Typographie -->
+    <section class="style-section">
+      <h2 class="section-title">Typographie</h2>
+      <p class="section-desc">Échelle strictement croissante — <code>--text-xs</code> à <code>--text-3xl</code>.</p>
+      <div class="type-scale">
+        {typeScale.map((t) => (
+          <div class="type-row">
+            <span class={`type-sample ${t.class}`}>Dessiner, esquisser, s'échauffer</span>
+            <span class="type-meta">{t.label} · <code>{t.token}</code></span>
+          </div>
+        ))}
+      </div>
+    </section>
+
+  </div>
+</MainLayout>
+
+<script define:vars={{ exportableTokens }} is:inline>
+  document.getElementById('export-btn')?.addEventListener('click', (event) => {
+    const btn = event.currentTarget;
+    const original = btn.textContent;
+    const styles = getComputedStyle(document.documentElement);
+    const lines = exportableTokens.map((name) => {
+      const value = styles.getPropertyValue(name).trim();
+      return `  ${name}: ${value};`;
+    });
+    const css = `:root {\n${lines.join('\n')}\n}`;
+
+    const done = () => {
+      btn.textContent = 'Copié ✓';
+      setTimeout(() => { btn.textContent = original; }, 1800);
+    };
+
+    if (navigator.clipboard?.writeText) {
+      navigator.clipboard.writeText(css).then(done).catch(() => {});
+    }
+  });
+</script>
+
+<style>
+  .style-page {
+    max-width: 62rem;
+    margin: 0 auto;
+    padding: 4rem 1.5rem 6rem;
+    display: flex;
+    flex-direction: column;
+    gap: 3.5rem;
+  }
+
+  .style-header {
+    padding-bottom: 2rem;
+    border-bottom: 1px solid var(--border-subdue);
+  }
+
+  .eyebrow {
+    font-size: var(--text-xs);
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--text-subdue);
+    margin-bottom: 0.5rem;
+  }
+
+  .title {
+    font-size: var(--text-3xl);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: var(--text-default);
+    margin-bottom: 0.75rem;
+  }
+
+  .intro {
+    font-size: var(--text-md);
+    color: var(--text-subdue);
+    max-width: 40rem;
+    line-height: 1.5;
+    margin-bottom: 1.5rem;
+  }
+
+  .intro code {
+    font-family: 'SF Mono', Monaco, monospace;
+    font-size: var(--text-sm);
+    background: var(--surface-subdue);
+    padding: 0.1rem 0.35rem;
+    border-radius: var(--radius-sm);
+  }
+
+  .header-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+  }
+
+  .section-title {
+    font-size: var(--text-xl);
+    font-weight: 600;
+    color: var(--text-default);
+    margin-bottom: 0.375rem;
+  }
+
+  .section-desc {
+    font-size: var(--text-sm);
+    color: var(--text-subdue);
+    margin-bottom: 1.25rem;
+  }
+
+  .section-desc code {
+    font-family: 'SF Mono', Monaco, monospace;
+    font-size: var(--text-xs);
+    background: var(--surface-subdue);
+    padding: 0.1rem 0.35rem;
+    border-radius: var(--radius-sm);
+  }
+
+  /* Comparatif light/dark */
+  .theme-compare {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.25rem;
+  }
+
+  .theme-pane {
+    background: var(--background);
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius-lg);
+    padding: 1.25rem;
+  }
+
+  .pane-label {
+    font-size: var(--text-xs);
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--text-subdue);
+    margin-bottom: 0.875rem;
+  }
+
+  .swatch-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .swatch-color {
+    width: 100%;
+    height: 2.5rem;
+    border-radius: var(--radius-sm);
+  }
+
+  .swatch-name {
+    font-size: var(--text-xs);
+    color: var(--text-default);
+    margin-top: 0.375rem;
+  }
+
+  .swatch-var {
+    font-family: 'SF Mono', Monaco, monospace;
+    font-size: 0.6875rem;
+    color: var(--text-subdue);
+  }
+
+  .preview-card {
+    background: var(--surface-raised);
+    border: 1px solid var(--border-subdue);
+    border-radius: var(--radius-md);
+    padding: 1rem;
+  }
+
+  .preview-actions {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 0.875rem;
+    flex-wrap: wrap;
+  }
+
+  @media (max-width: 767px) {
+    .theme-compare {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  /* Échelles de couleur */
+  .scale-row {
+    display: flex;
+    gap: 0.625rem;
+    margin-bottom: 0.75rem;
+    flex-wrap: wrap;
+  }
+
+  .scale-swatch {
+    width: 4.5rem;
+  }
+
+  .scale-color {
+    width: 100%;
+    height: 3rem;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border-subdue);
+  }
+
+  .scale-label {
+    font-size: 0.6875rem;
+    color: var(--text-subdue);
+    margin-top: 0.25rem;
+    text-align: center;
+    font-family: 'SF Mono', Monaco, monospace;
+  }
+
+  /* Typographie */
+  .type-scale {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .type-row {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--border-subdue);
+    flex-wrap: wrap;
+  }
+
+  .type-meta {
+    font-size: var(--text-xs);
+    color: var(--text-subdue);
+    white-space: nowrap;
+  }
+
+  .type-meta code {
+    font-family: 'SF Mono', Monaco, monospace;
+  }
+</style>
