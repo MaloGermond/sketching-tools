@@ -4,7 +4,11 @@
    CORE TOKENS — from Penpot core/colors, core/radius,
    core/typography
    ===================================================== */
-@theme {
+/* @theme static (pas juste @theme) : la page /style affiche des couleurs en
+   construisant le nom de la variable dynamiquement (var(--color-${nom}-${step})),
+   donc Tailwind ne peut pas détecter ces usages par analyse statique et élaguerait
+   silencieusement toute variable non référencée littéralement ailleurs. */
+@theme static {
   /* Font */
   --font-sans: 'PP Neue Montreal', ui-sans-serif, system-ui, sans-serif;
 
@@ -141,6 +145,12 @@
     --text-success:    var(--color-green-500);
     --text-error:      var(--color-red-500);
     --text-warning:    var(--color-yellow-400);
+    --background-dark: var(--color-gray-900);
+    --text-light:         var(--color-gray-50);
+    --text-light-subdue:  var(--color-gray-300);
+    /* Icônes raster en noir fixe (public/icons/*.svg) : inversées en thème
+       sombre pour rester visibles sur les surfaces --surface-raised/--surface-subdue. */
+    --icon-filter: none;
 
     /* accent */
     --color-accent:   var(--color-blue-600);
@@ -150,8 +160,11 @@
     --action-bg:      var(--surface-default);
     --action-label:   var(--text-default);
     --action-border:  var(--border-default);
-    --action-corner:  var(--radius-md);
+    --action-corner:  var(--radius-lg);
     --main-background: var(--background);
+    --footer-background:  var(--background-dark);
+    --toolCard-background: var(--surface-default);
+    --toolCard-border:     var(--border-subdue);
 
     /* Legacy aliases — gardés pour la compatibilité */
     --bg-body:   var(--background);
@@ -189,6 +202,8 @@
     --text-success:    var(--color-green-300);
     --text-error:      var(--color-red-300);
     --text-warning:    var(--color-yellow-300);
+    --background-dark: var(--color-gray-800);
+    --icon-filter:     invert(1);
   }
 
   /* "Système" — pas de préférence explicite: suit l'OS */
@@ -205,6 +220,8 @@
       --text-success:    var(--color-green-300);
       --text-error:      var(--color-red-300);
       --text-warning:    var(--color-yellow-300);
+      --background-dark: var(--color-gray-800);
+      --icon-filter:     invert(1);
     }
   }
 }
