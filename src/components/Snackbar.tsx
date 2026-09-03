@@ -18,6 +18,7 @@ interface ScoreState {
 // ===== CONSTANTS =====
 
 const EXIT_DURATION = 300;
+const ENTRY_LIFETIME = 3_000;
 const COLLAPSE_DELAY = 10_000;
 
 // ===== PURE FUNCTIONS =====
@@ -166,6 +167,13 @@ export default function ScoreSnackbar() {
     collapseTimer.current = setTimeout(() => setIsCollapsed(true), COLLAPSE_DELAY);
   };
 
+  /** @impure — side effect: programme la sortie d'une entrée après ENTRY_LIFETIME */
+  const scheduleEntryExit = (id: number) => {
+    setTimeout(() => {
+      setEntries(prev => prev.map(e => (e.id === id && e.status !== 'exiting' ? { ...e, status: 'exiting' } : e)));
+    }, ENTRY_LIFETIME);
+  };
+
   // Remove exiting entries after animation completes
   useEffect(() => {
     const hasExiting = entries.some(e => e.status === 'exiting');
@@ -184,14 +192,14 @@ export default function ScoreSnackbar() {
       const traces = window.scoreState?.traces?.slice(0, 5) ?? [];
       if (!traces.length) return;
 
-      setEntries(prev => {
-        const newEntry: ManagedEntry = {
-          id: ++idCounter.current,
-          image: traces[0].image,
-          score: Math.floor(traces[0].score),
-          status: 'entering',
-        };
+      const newEntry: ManagedEntry = {
+        id: ++idCounter.current,
+        image: traces[0].image,
+        score: Math.floor(traces[0].score),
+        status: 'entering',
+      };
 
+      setEntries(prev => {
         // Keep up to 4 previous visible entries, shift them to visible
         const kept = prev
           .filter(e => e.status !== 'exiting')
@@ -207,6 +215,7 @@ export default function ScoreSnackbar() {
         return [newEntry, ...kept, ...dropped];
       });
 
+      scheduleEntryExit(newEntry.id);
       resetCollapseTimer();
     };
 
