@@ -125,6 +125,7 @@ export default function SketchToolbarActions() {
         }
         .sketch-toolbar-menu-item img {
           opacity: 0.75;
+          filter: var(--icon-filter);
         }
       `}</style>
       <div class="sketch-toolbar-history">
