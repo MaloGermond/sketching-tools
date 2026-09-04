@@ -18,15 +18,16 @@ interface ScoreState {
 // ===== CONSTANTS =====
 
 const EXIT_DURATION = 300;
+const ENTRY_LIFETIME = 3_000;
 const COLLAPSE_DELAY = 10_000;
 
 // ===== PURE FUNCTIONS =====
 
 /** @pure */
 const getScoreColor = (score: number): string => {
-  if (score >= 80) return '#22C55E';
-  if (score >= 50) return '#FACC15';
-  return '#EF4444';
+  if (score >= 80) return 'var(--text-success)';
+  if (score >= 50) return 'var(--text-warning)';
+  return 'var(--text-error)';
 };
 
 /** @pure */
@@ -61,41 +62,20 @@ function SnackbarCard({ entry, index }: SnackbarCardProps) {
   const transform = getCardTransform(entry.status, mounted);
 
   return (
-    <div style={{
-      display: 'flex',
-      alignItems: 'center',
-      gap: '10px',
-      padding: '8px',
-      background: 'white',
-      borderWidth: '1px',
-      borderStyle: 'solid',
-      borderColor: '#e4e7eb',
-      borderRadius: '14px',
-      boxShadow: '0 2px 8px rgb(0 0 0 / 0.06)',
-      width: '196px',
-      opacity,
-      transform,
-      transition: 'opacity 300ms ease, transform 350ms cubic-bezier(0.34, 1.56, 0.64, 1)',
-    }}>
-      <div style={{
-        width: '40px',
-        height: '40px',
-        borderRadius: '8px',
-        overflow: 'hidden',
-        background: '#f9fafb',
-        borderWidth: '1px',
-        borderStyle: 'solid',
-        borderColor: '#f2f4f6',
-        flexShrink: 0,
-      }}>
+    <div
+      className="flex items-center gap-2.5 p-2 bg-[var(--surface-raised)] border border-[var(--border-subdue)] shadow-[0_2px_8px_rgb(0_0_0_/_0.06)] w-[196px] [--card-radius:14px] rounded-[var(--card-radius)]"
+      style={{ opacity, transform, transition: 'opacity 300ms ease, transform 350ms cubic-bezier(0.34, 1.56, 0.64, 1)' }}
+    >
+      {/* Rayon concentrique : rayon carte − padding (8px), clampé à 0 — .claude/best-practices.md#UI */}
+      <div className="w-10 h-10 overflow-hidden bg-[var(--surface-subdue)] image-frame shrink-0 rounded-[max(0px,calc(var(--card-radius)-8px))]">
         <img src={entry.image} alt="" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
       </div>
       <div style={{ display: 'flex', flexDirection: 'column', gap: '2px', flex: 1 }}>
-        <span style={{ fontSize: '0.625rem', fontWeight: 500, color: '#9ca3af', letterSpacing: '0.02em' }}>
+        <span style={{ fontSize: '0.625rem', fontWeight: 500, color: 'var(--text-subdue)', letterSpacing: '0.02em' }}>
           Ressemblance
         </span>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-          <span style={{ fontSize: '0.9375rem', fontWeight: 700, color: '#111827', lineHeight: 1 }}>
+          <span style={{ fontSize: 'var(--text-md)', fontWeight: 700, color: 'var(--text-default)', lineHeight: 1 }}>
             {entry.score}%
           </span>
           <div style={{
@@ -135,24 +115,16 @@ function CollapsedStack({ entries, visible }: CollapsedStackProps) {
       {visibleEntries.slice(1).reverse().map((entry, i) => {
         const depth = visibleEntries.length - 1 - i;
         return (
-          <div key={entry.id} style={{
-            position: 'absolute',
-            bottom: 0,
-            left: 0,
-            width: '60px',
-            height: '60px',
-            borderRadius: '12px',
-            overflow: 'hidden',
-            background: 'white',
-            borderWidth: '1px',
-            borderStyle: 'solid',
-            borderColor: '#e4e7eb',
-            transform: `translateY(${-depth * 5}px) translateX(${depth * 3}px) rotate(${depth * -2.5}deg)`,
-            transformOrigin: 'bottom center',
-            opacity: 1 - depth * 0.3,
-            zIndex: 3 - depth,
-            transition: 'transform 350ms cubic-bezier(0.34, 1.56, 0.64, 1)',
-          }}>
+          <div
+            key={entry.id}
+            className="absolute bottom-0 left-0 w-[60px] h-[60px] rounded-lg overflow-hidden bg-[var(--surface-raised)] image-frame origin-bottom"
+            style={{
+              transform: `translateY(${-depth * 5}px) translateX(${depth * 3}px) rotate(${depth * -2.5}deg)`,
+              opacity: 1 - depth * 0.3,
+              zIndex: 3 - depth,
+              transition: 'transform 350ms cubic-bezier(0.34, 1.56, 0.64, 1)',
+            }}
+          >
             <img src={entry.image} alt="" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
           </div>
         );
@@ -160,22 +132,10 @@ function CollapsedStack({ entries, visible }: CollapsedStackProps) {
 
       {/* Front card — most recent, on top */}
       {visibleEntries[0] && (
-        <div style={{
-          position: 'absolute',
-          bottom: 0,
-          left: 0,
-          width: '60px',
-          height: '60px',
-          borderRadius: '12px',
-          overflow: 'hidden',
-          background: 'white',
-          borderWidth: '1px',
-          borderStyle: 'solid',
-          borderColor: '#e4e7eb',
-          boxShadow: '0 4px 12px rgb(0 0 0 / 0.12)',
-          zIndex: 3,
-          transition: 'transform 350ms cubic-bezier(0.34, 1.56, 0.64, 1)',
-        }}>
+        <div
+          className="absolute bottom-0 left-0 w-[60px] h-[60px] rounded-lg overflow-hidden bg-[var(--surface-raised)] image-frame shadow-[0_4px_12px_rgb(0_0_0_/_0.12)]"
+          style={{ zIndex: 3, transition: 'transform 350ms cubic-bezier(0.34, 1.56, 0.64, 1)' }}
+        >
           <img src={visibleEntries[0].image} alt="" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
         </div>
       )}
@@ -207,6 +167,13 @@ export default function ScoreSnackbar() {
     collapseTimer.current = setTimeout(() => setIsCollapsed(true), COLLAPSE_DELAY);
   };
 
+  /** @impure — side effect: programme la sortie d'une entrée après ENTRY_LIFETIME */
+  const scheduleEntryExit = (id: number) => {
+    setTimeout(() => {
+      setEntries(prev => prev.map(e => (e.id === id && e.status !== 'exiting' ? { ...e, status: 'exiting' } : e)));
+    }, ENTRY_LIFETIME);
+  };
+
   // Remove exiting entries after animation completes
   useEffect(() => {
     const hasExiting = entries.some(e => e.status === 'exiting');
@@ -225,14 +192,14 @@ export default function ScoreSnackbar() {
       const traces = window.scoreState?.traces?.slice(0, 5) ?? [];
       if (!traces.length) return;
 
-      setEntries(prev => {
-        const newEntry: ManagedEntry = {
-          id: ++idCounter.current,
-          image: traces[0].image,
-          score: Math.floor(traces[0].score),
-          status: 'entering',
-        };
+      const newEntry: ManagedEntry = {
+        id: ++idCounter.current,
+        image: traces[0].image,
+        score: Math.floor(traces[0].score),
+        status: 'entering',
+      };
 
+      setEntries(prev => {
         // Keep up to 4 previous visible entries, shift them to visible
         const kept = prev
           .filter(e => e.status !== 'exiting')
@@ -248,6 +215,7 @@ export default function ScoreSnackbar() {
         return [newEntry, ...kept, ...dropped];
       });
 
+      scheduleEntryExit(newEntry.id);
       resetCollapseTimer();
     };
 

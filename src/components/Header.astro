@@ -1,5 +1,6 @@
 ---
 import Action from "../components/Action.astro";
+import Icon from "../components/Icon.astro";
 
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 const currentPath = Astro.url.pathname;
@@ -26,10 +27,7 @@ const relativePath = currentPath.startsWith(base)
     )}
 
     <a href={`${base}/settings`} class="settings-link" aria-label="Réglages" title="Réglages">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-        <path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z" stroke="currentColor" stroke-width="1.5"/>
-        <path d="M19.4 13a7.97 7.97 0 0 0 0-2l2.1-1.6-2-3.4-2.5 1a8 8 0 0 0-1.7-1L14.9 3h-4l-.4 2.6a8 8 0 0 0-1.7 1l-2.5-1-2 3.4L6.4 11a8 8 0 0 0 0 2l-2.1 1.6 2 3.4 2.5-1a8 8 0 0 0 1.7 1l.4 2.6h4l.4-2.6a8 8 0 0 0 1.7-1l2.5 1 2-3.4-2.1-1.6Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-      </svg>
+      <Icon name="settings" size={16} />
     </a>
   </div>
 </header>
@@ -42,8 +40,8 @@ const relativePath = currentPath.startsWith(base)
     right: 0;
     z-index: 50;
     height: 3.5rem;
-    background: var(--color-gray-50);
-    border-bottom: 1px solid var(--color-gray-400);
+    background: var(--background);
+    border-bottom: 1px solid var(--border-subdue);
   }
 
   .header-inner {
@@ -62,7 +60,7 @@ const relativePath = currentPath.startsWith(base)
     gap: 0.5rem;
     font-size: 0.9375rem;
     font-weight: 500;
-    color: var(--color-gray-900);
+    color: var(--text-default);
     text-decoration: none;
     transition: opacity 150ms ease;
   }
@@ -72,7 +70,7 @@ const relativePath = currentPath.startsWith(base)
   .wordmark-dot {
     width: 7px;
     height: 7px;
-    background: #2563EB;
+    background: var(--color-accent);
     border-radius: 50%;
     flex-shrink: 0;
   }
@@ -84,13 +82,13 @@ const relativePath = currentPath.startsWith(base)
   }
 
   .breadcrumb-sep {
-    color: var(--color-gray-300);
+    color: var(--border-default);
     font-size: 0.9375rem;
   }
 
   .breadcrumb-page {
-    font-size: 0.875rem;
-    color: var(--color-gray-500);
+    font-size: var(--text-sm);
+    color: var(--text-subdue);
     text-transform: capitalize;
   }
 
@@ -102,13 +100,13 @@ const relativePath = currentPath.startsWith(base)
     width: 32px;
     height: 32px;
     border-radius: var(--radius-xs);
-    background: var(--color-gray-100);
-    color: var(--color-gray-500);
+    background: var(--surface-subdue);
+    color: var(--text-subdue);
     transition: background-color 150ms ease, color 150ms ease;
   }
 
   .settings-link:hover {
-    background: var(--color-gray-200);
-    color: var(--color-gray-900);
+    background: var(--surface-default);
+    color: var(--text-default);
   }
 </style>

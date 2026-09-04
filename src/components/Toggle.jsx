@@ -20,10 +20,10 @@ export default function Toggle({
           flex-shrink: 0;
         }
         .toggle-btn:hover:not([data-selected="true"]) {
-          background: var(--color-gray-100);
+          background: var(--surface-subdue);
         }
         .toggle-btn[data-selected="true"] {
-          background: #54adff;
+          background: var(--color-accent);
         }
       `}</style>
       <button
@@ -39,7 +39,7 @@ export default function Toggle({
           alt={icon}
           width={size * 0.5}
           height={size * 0.5}
-          style={selected ? 'filter: brightness(0) invert(1)' : 'opacity: 0.7'}
+          style={selected ? 'filter: brightness(0) invert(1)' : 'opacity: 0.7; filter: var(--icon-filter)'}
         />
       </button>
     </>
