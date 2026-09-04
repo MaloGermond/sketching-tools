@@ -2,6 +2,7 @@
 import MainLayout from "../layouts/MainLayout.astro";
 import Action from "../components/Action.astro";
 import ThemeSwitch from "../components/ThemeSwitch.jsx";
+import TokenVisualizer from "../components/TokenVisualizer.tsx";
 
 // Palette : couleurs brutes, agnostiques de l'interface (core/colors dans Penpot).
 // Rien ici n'est un choix d'UI — ça vient plus loin, dans les Thèmes puis les Styles.
@@ -104,6 +105,43 @@ const componentStyles: {
 exportableTokens.push(
   ...componentStyles.flatMap((c) => c.tokens.map((t) => t.name)),
 );
+
+// Visualisation des tokens — un carré isole une seule propriété à la fois
+// (ticket #61). Stroke et box-shadow n'ont pas encore de tokens dédiés dans
+// Penpot : les valeurs ci-dessous viennent du code (tailwindcss.css) et sont
+// listées comme tokens à créer plutôt qu'inventées.
+const radiusTokens = [
+  { value: "var(--radius-xs)", label: "--radius-xs" },
+  { value: "var(--radius-sm)", label: "--radius-sm" },
+  { value: "var(--radius-md)", label: "--radius-md" },
+  { value: "var(--radius-lg)", label: "--radius-lg" },
+  { value: "var(--radius-xl)", label: "--radius-xl" },
+  { value: "var(--radius-full)", label: "--radius-full" },
+];
+
+const backgroundTokens = [
+  { value: "var(--surface-subdue)", label: "--surface-subdue" },
+  { value: "var(--surface-default)", label: "--surface-default" },
+  { value: "var(--surface-raised)", label: "--surface-raised" },
+  { value: "var(--background)", label: "--background" },
+];
+
+const strokeTokens = [
+  { value: "1px solid var(--border-subdue)", label: "--border-subdue" },
+  { value: "1px solid var(--border-default)", label: "--border-default" },
+];
+
+const shadowTokens = [
+  { value: "var(--shadow-sm)", label: "--shadow-sm" },
+  { value: "var(--shadow-card)", label: "--shadow-card" },
+  { value: "var(--shadow-elevated)", label: "--shadow-elevated" },
+  { value: "var(--shadow-float)", label: "--shadow-float" },
+];
+
+const missingTokens = [
+  "Stroke — épaisseurs dédiées (thin / medium / bold), actuellement fixées à 1px en dur",
+  "Box-shadow — sm / card / elevated / float existent dans tailwindcss.css mais pas encore comme tokens Penpot",
+];
 ---
 
 <MainLayout title="Style — Sketching Tools">
@@ -226,6 +264,55 @@ exportableTokens.push(
             </div>
           </div>
         ))}
+      </div>
+    </section>
+
+    <!-- Visualisation des tokens — une propriété isolée par carré (ticket #61) -->
+    <section class="style-section">
+      <h2 class="section-title">Visualisation des tokens</h2>
+      <p class="section-desc">
+        Chaque carré isole une seule propriété pour comparer les tokens sans distraction :
+        un coin surligné pour le <code>border-radius</code>, une couleur de fond seule pour le
+        <code>background</code>, une bordure seule pour le <code>stroke</code>, une ombre seule
+        pour le <code>box-shadow</code>.
+      </p>
+      <div class="token-viz-group">
+        <p class="token-viz-title">border-radius</p>
+        <div class="token-viz-row">
+          {radiusTokens.map((t) => (
+            <TokenVisualizer tokenType="border-radius" value={t.value} label={t.label} />
+          ))}
+        </div>
+      </div>
+      <div class="token-viz-group">
+        <p class="token-viz-title">background</p>
+        <div class="token-viz-row">
+          {backgroundTokens.map((t) => (
+            <TokenVisualizer tokenType="background" value={t.value} label={t.label} />
+          ))}
+        </div>
+      </div>
+      <div class="token-viz-group">
+        <p class="token-viz-title">stroke</p>
+        <div class="token-viz-row">
+          {strokeTokens.map((t) => (
+            <TokenVisualizer tokenType="stroke" value={t.value} label={t.label} />
+          ))}
+        </div>
+      </div>
+      <div class="token-viz-group">
+        <p class="token-viz-title">box-shadow</p>
+        <div class="token-viz-row">
+          {shadowTokens.map((t) => (
+            <TokenVisualizer tokenType="box-shadow" value={t.value} label={t.label} />
+          ))}
+        </div>
+      </div>
+      <div class="token-viz-missing">
+        <p class="token-viz-missing-title">Tokens Penpot à créer</p>
+        <ul class="token-viz-missing-list">
+          {missingTokens.map((m) => <li>{m}</li>)}
+        </ul>
       </div>
     </section>
 
@@ -495,6 +582,49 @@ exportableTokens.push(
     font-family: 'SF Mono', Monaco, monospace;
     font-size: 0.6875rem;
     color: var(--text-subdue);
+  }
+
+  /* Visualisation des tokens */
+  .token-viz-group {
+    margin-bottom: 1.75rem;
+  }
+
+  .token-viz-title {
+    font-family: 'SF Mono', Monaco, monospace;
+    font-size: var(--text-sm);
+    font-weight: 600;
+    color: var(--text-default);
+    margin-bottom: 0.75rem;
+  }
+
+  .token-viz-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+  }
+
+  .token-viz-missing {
+    background: var(--surface-subdue);
+    border: 1px solid var(--border-subdue);
+    border-radius: var(--radius-md);
+    padding: 1rem 1.25rem;
+  }
+
+  .token-viz-missing-title {
+    font-size: var(--text-sm);
+    font-weight: 600;
+    color: var(--text-default);
+    margin-bottom: 0.5rem;
+  }
+
+  .token-viz-missing-list {
+    margin: 0;
+    padding-left: 1.25rem;
+    font-size: var(--text-sm);
+    color: var(--text-subdue);
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
   }
 
   /* Typographie */
