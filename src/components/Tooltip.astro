@@ -20,65 +20,14 @@ interface Props {
 const { text, position = 'top', delay = 500 } = Astro.props;
 ---
 
-<div class="tooltip-container" data-tooltip-text={text} data-tooltip-position={position} data-tooltip-delay={delay}>
+<div
+  class="relative inline-block after:content-[attr(data-tooltip-text)] after:absolute after:py-1 after:px-2 after:text-sm after:bg-[var(--color-gray-900)] after:text-white after:rounded-sm after:whitespace-nowrap after:opacity-0 after:pointer-events-none after:[transition:opacity_200ms_ease] after:[transition-delay:calc(var(--tooltip-delay,500ms)+100ms)] after:z-50 hover:after:opacity-100 data-[tooltip-position=top]:after:bottom-full data-[tooltip-position=top]:after:left-1/2 data-[tooltip-position=top]:after:-translate-x-1/2 data-[tooltip-position=top]:after:mb-2 data-[tooltip-position=bottom]:after:top-full data-[tooltip-position=bottom]:after:left-1/2 data-[tooltip-position=bottom]:after:-translate-x-1/2 data-[tooltip-position=bottom]:after:mt-2 data-[tooltip-position=left]:after:right-full data-[tooltip-position=left]:after:top-1/2 data-[tooltip-position=left]:after:-translate-y-1/2 data-[tooltip-position=left]:after:mr-2 data-[tooltip-position=right]:after:left-full data-[tooltip-position=right]:after:top-1/2 data-[tooltip-position=right]:after:-translate-y-1/2 data-[tooltip-position=right]:after:ml-2"
+  data-tooltip-text={text}
+  data-tooltip-position={position}
+  data-tooltip-delay={delay}
+>
   <slot />
 </div>
-
-<style>
-  .tooltip-container {
-    position: relative;
-    display: inline-block;
-  }
-
-  .tooltip-container::after {
-    content: attr(data-tooltip-text);
-    position: absolute;
-    padding: 0.25rem 0.5rem;
-    font-size: var(--font-size-sm);
-    background: var(--color-gray-900);
-    color: var(--color-white);
-    border-radius: var(--radius-sm);
-    white-space: nowrap;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 200ms ease;
-    transition-delay: calc(var(--tooltip-delay, 500ms) + 100ms);
-    z-index: 50;
-  }
-
-  .tooltip-container:hover::after {
-    opacity: 1;
-  }
-
-  /* Positionnement */
-  .tooltip-container[data-tooltip-position="top"]::after {
-    bottom: 100%;
-    left: 50%;
-    transform: translateX(-50%);
-    margin-bottom: 0.5rem;
-  }
-
-  .tooltip-container[data-tooltip-position="bottom"]::after {
-    top: 100%;
-    left: 50%;
-    transform: translateX(-50%);
-    margin-top: 0.5rem;
-  }
-
-  .tooltip-container[data-tooltip-position="left"]::after {
-    right: 100%;
-    top: 50%;
-    transform: translateY(-50%);
-    margin-right: 0.5rem;
-  }
-
-  .tooltip-container[data-tooltip-position="right"]::after {
-    left: 100%;
-    top: 50%;
-    transform: translateY(-50%);
-    margin-left: 0.5rem;
-  }
-</style>
 
 <script>
   // Appliquer le délai via CSS variable

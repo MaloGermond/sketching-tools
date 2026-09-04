@@ -183,7 +183,7 @@ function ShapeRow({ shape, progress, isCurrent, appearDelay }: ShapeRowProps) {
 
   return (
     <div
-      class="shape-row-appear"
+      class="motion-safe:animate-[shape-row-appear_0.22s_ease-out_both]"
       onClick={handleClick}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
@@ -337,17 +337,6 @@ export default function LevelsPanel() {
       gap: '4px',
       width: '9rem',
     }}>
-      <style>{`
-        @media (prefers-reduced-motion: no-preference) {
-          .shape-row-appear {
-            animation: shape-row-appear 0.22s ease-out both;
-          }
-        }
-        @keyframes shape-row-appear {
-          from { opacity: 0; transform: translateX(10px); }
-          to { opacity: 1; transform: translateX(0); }
-        }
-      `}</style>
       {Object.keys(SHAPE_CONFIG).map(shape => {
         const shapeProgress = getShapeProgress(progress, shape);
         const isCurrent = shape === currentShape;

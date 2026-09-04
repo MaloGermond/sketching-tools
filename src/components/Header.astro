@@ -10,103 +10,29 @@ const relativePath = currentPath.startsWith(base)
   : currentPath.replace(/^\//, '');
 ---
 
-<header class="site-header">
-  <div class="header-inner">
-    <a href={base} class="wordmark">
-      <span class="wordmark-dot" />
+<header class="fixed top-0 left-0 right-0 z-50 h-14 bg-[var(--background)] border-b border-[var(--border-subdue)]">
+  <div class="flex items-center gap-2 h-full py-0 px-6 max-w-[80rem] mx-auto">
+    <a href={base} class="inline-flex items-center gap-2 text-[0.9375rem] font-medium text-[var(--text-default)] no-underline [transition:opacity_150ms_ease] hover:opacity-70">
+      <span class="w-[7px] h-[7px] bg-[var(--color-accent)] rounded-full shrink-0" />
       Sketching Tools
     </a>
 
     {!isHome && (
-      <nav class="breadcrumb">
-        <span class="breadcrumb-sep">/</span>
-        <span class="breadcrumb-page">
+      <nav class="flex items-center gap-2">
+        <span class="text-[var(--border-default)] text-[0.9375rem]">/</span>
+        <span class="text-sm text-[var(--text-subdue)] capitalize">
           {relativePath.replace(/\/$/g, '').replace(/\//g, ' › ')}
         </span>
       </nav>
     )}
 
-    <a href={`${base}/settings`} class="settings-link" aria-label="Réglages" title="Réglages">
+    <a
+      href={`${base}/settings`}
+      class="ml-auto inline-flex items-center justify-center w-8 h-8 rounded-xs bg-[var(--surface-subdue)] text-[var(--text-subdue)] [transition:background-color_150ms_ease,color_150ms_ease] hover:bg-[var(--surface-default)] hover:text-[var(--text-default)]"
+      aria-label="Réglages"
+      title="Réglages"
+    >
       <Icon name="settings" size={16} />
     </a>
   </div>
 </header>
-
-<style>
-  .site-header {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    z-index: 50;
-    height: 3.5rem;
-    background: var(--background);
-    border-bottom: 1px solid var(--border-subdue);
-  }
-
-  .header-inner {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    height: 100%;
-    padding: 0 1.5rem;
-    max-width: 80rem;
-    margin: 0 auto;
-  }
-
-  .wordmark {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    font-size: 0.9375rem;
-    font-weight: 500;
-    color: var(--text-default);
-    text-decoration: none;
-    transition: opacity 150ms ease;
-  }
-
-  .wordmark:hover { opacity: 0.7; }
-
-  .wordmark-dot {
-    width: 7px;
-    height: 7px;
-    background: var(--color-accent);
-    border-radius: 50%;
-    flex-shrink: 0;
-  }
-
-  .breadcrumb {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-  }
-
-  .breadcrumb-sep {
-    color: var(--border-default);
-    font-size: 0.9375rem;
-  }
-
-  .breadcrumb-page {
-    font-size: var(--text-sm);
-    color: var(--text-subdue);
-    text-transform: capitalize;
-  }
-
-  .settings-link {
-    margin-left: auto;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 32px;
-    height: 32px;
-    border-radius: var(--radius-xs);
-    background: var(--surface-subdue);
-    color: var(--text-subdue);
-    transition: background-color 150ms ease, color 150ms ease;
-  }
-
-  .settings-link:hover {
-    background: var(--surface-default);
-    color: var(--text-default);
-  }
-</style>

@@ -5,43 +5,21 @@ export default function Toggle({
   size = 36
 }) {
   return (
-    <>
-      <style>{`
-        .toggle-btn {
-          display: inline-flex;
-          align-items: center;
-          justify-content: center;
-          border: none;
-          border-radius: 10px;
-          cursor: pointer;
-          padding: 0;
-          background: transparent;
-          transition: background-color 150ms ease;
-          flex-shrink: 0;
-        }
-        .toggle-btn:hover:not([data-selected="true"]) {
-          background: var(--surface-subdue);
-        }
-        .toggle-btn[data-selected="true"] {
-          background: var(--color-accent);
-        }
-      `}</style>
-      <button
-        type="button"
-        className="toggle-btn"
-        data-selected={selected ? 'true' : 'false'}
-        data-icon={icon}
-        onClick={onClick}
-        style={{ width: `${size}px`, height: `${size}px` }}
-      >
-        <img
-          src={`${import.meta.env.BASE_URL.replace(/\/$/, '')}/icons/${icon}.svg`}
-          alt={icon}
-          width={size * 0.5}
-          height={size * 0.5}
-          style={selected ? 'filter: brightness(0) invert(1)' : 'opacity: 0.7; filter: var(--icon-filter)'}
-        />
-      </button>
-    </>
+    <button
+      type="button"
+      className="inline-flex items-center justify-center border-none rounded-[10px] cursor-pointer p-0 bg-transparent [transition:background-color_150ms_ease] shrink-0 not-data-[selected=true]:hover:bg-[var(--surface-subdue)] data-[selected=true]:bg-[var(--color-accent)]"
+      data-selected={selected ? 'true' : 'false'}
+      data-icon={icon}
+      onClick={onClick}
+      style={{ width: `${size}px`, height: `${size}px` }}
+    >
+      <img
+        src={`${import.meta.env.BASE_URL.replace(/\/$/, '')}/icons/${icon}.svg`}
+        alt={icon}
+        width={size * 0.5}
+        height={size * 0.5}
+        style={selected ? 'filter: brightness(0) invert(1)' : 'opacity: 0.7; filter: var(--icon-filter)'}
+      />
+    </button>
   );
 }

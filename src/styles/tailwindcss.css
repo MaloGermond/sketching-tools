@@ -255,6 +255,26 @@
 }
 
 /* =====================================================
+   COMPONENT KEYFRAMES — référencées via l'utilitaire
+   arbitraire Tailwind `animate-[...]` (pas de <style>
+   dupliqué dans les composants, cf. ticket #60)
+   ===================================================== */
+@keyframes toolbar-appear {
+  from { opacity: 0; transform: translateY(0.75rem); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes toolbar-appear-fixed {
+  from { opacity: 0; transform: translateX(-50%) translateY(0.75rem); }
+  to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+
+@keyframes shape-row-appear {
+  from { opacity: 0; transform: translateX(10px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+/* =====================================================
    UTILITIES — Interfaces.dev cheat sheet
    (.claude/best-practices.md)
    ===================================================== */
