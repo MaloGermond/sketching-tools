@@ -35,54 +35,28 @@ export default function ThemeSwitch() {
     window.umami?.track('theme_change', { theme: value });
   };
 
+  const baseOptionClasses = "appearance-none border-none cursor-pointer py-2 px-3.5 rounded-md font-sans text-sm [transition:background-color_150ms_ease,color_150ms_ease,box-shadow_150ms_ease]";
+  const activeOptionClasses = `${baseOptionClasses} bg-[var(--surface-raised)] text-[var(--text-default)] font-semibold shadow-[0_1px_3px_rgb(0_0_0_/_0.12)]`;
+  const inactiveOptionClasses = `${baseOptionClasses} font-normal text-[var(--text-subdue)] bg-transparent hover:text-[var(--text-default)]`;
+
   return (
-    <>
-      <style>{`
-        .theme-switch {
-          display: inline-flex;
-          align-items: center;
-          gap: 4px;
-          padding: 4px;
-          background: var(--surface-default);
-          border-radius: 10px;
-        }
-        .theme-switch-option {
-          appearance: none;
-          border: none;
-          cursor: pointer;
-          padding: 8px 14px;
-          border-radius: 8px;
-          font-family: var(--font-sans);
-          font-size: var(--text-sm);
-          font-weight: 400;
-          color: var(--text-subdue);
-          background: transparent;
-          transition: background-color 150ms ease, color 150ms ease, box-shadow 150ms ease;
-        }
-        .theme-switch-option:hover:not(.is-active) {
-          color: var(--text-default);
-        }
-        .theme-switch-option.is-active {
-          background: var(--surface-raised);
-          color: var(--text-default);
-          font-weight: 600;
-          box-shadow: 0 1px 3px rgb(0 0 0 / 0.12);
-        }
-      `}</style>
-      <div class="theme-switch" role="radiogroup" aria-label="Thème de l'application">
-        {OPTIONS.map((opt) => (
-          <button
-            key={opt.value}
-            type="button"
-            role="radio"
-            aria-checked={selected === opt.value}
-            class={`theme-switch-option ${selected === opt.value ? 'is-active' : ''}`}
-            onClick={() => handleSelect(opt.value)}
-          >
-            {opt.label}
-          </button>
-        ))}
-      </div>
-    </>
+    <div
+      class="inline-flex items-center gap-1 p-1 bg-[var(--surface-default)] rounded-[10px]"
+      role="radiogroup"
+      aria-label="Thème de l'application"
+    >
+      {OPTIONS.map((opt) => (
+        <button
+          key={opt.value}
+          type="button"
+          role="radio"
+          aria-checked={selected === opt.value}
+          class={selected === opt.value ? activeOptionClasses : inactiveOptionClasses}
+          onClick={() => handleSelect(opt.value)}
+        >
+          {opt.label}
+        </button>
+      ))}
+    </div>
   );
 }
