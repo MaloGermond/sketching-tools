@@ -3,15 +3,24 @@
 // Gère l'état du dessin (position, points, historique)
 // ============================================
 
+import { computeMovingAveragePoint } from './drawingBuffer.js';
+
+/**
+ * Taille par défaut de la fenêtre de moyenne mobile (lissage phase 2)
+ */
+export const DEFAULT_SMOOTHING_WINDOW = 3;
+
 /**
  * État du dessin
  */
 export class DrawingState {
-  constructor() {
+  constructor(smoothingWindow = DEFAULT_SMOOTHING_WINDOW) {
     this.drawing = false;
     this.prevX = null;
     this.prevY = null;
     this.currentPathPoints = [];
+    this.smoothedPoints = [];
+    this.smoothingWindow = smoothingWindow;
     this.traceHistory = [];
     this.maxHistorySize = 20;
   }
@@ -24,6 +33,7 @@ export class DrawingState {
     this.prevX = x;
     this.prevY = y;
     this.currentPathPoints = [{ x, y }];
+    this.smoothedPoints = [{ x, y }];
   }
 
   /**
@@ -34,10 +44,14 @@ export class DrawingState {
   }
 
   /**
-   * Ajoute un point au tracé actuel
+   * Ajoute un point au tracé actuel et calcule le point lissé correspondant
+   * (moyenne mobile sur les `smoothingWindow` derniers points bruts)
    */
   addPoint(x, y) {
     this.currentPathPoints.push({ x, y });
+    this.smoothedPoints.push(
+      computeMovingAveragePoint(this.currentPathPoints, this.smoothingWindow)
+    );
     this.prevX = x;
     this.prevY = y;
   }
@@ -84,6 +98,7 @@ export class DrawingState {
     this.prevX = null;
     this.prevY = null;
     this.currentPathPoints = [];
+    this.smoothedPoints = [];
   }
 }
 
