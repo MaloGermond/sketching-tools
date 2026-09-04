@@ -43,95 +43,16 @@ export default function SketchToolbarActions() {
   const handleNew = () => { dispatch('new'); track('sketch_new'); setMenuOpen(false); };
   const handleDownload = () => { dispatch('download'); track('sketch_download'); setMenuOpen(false); };
 
+  const btnClasses = "inline-flex items-center justify-center w-8 h-8 border-none rounded-md bg-[var(--surface-subdue)] text-[var(--text-default)] text-lg leading-none cursor-pointer p-0 [transition:background-color_150ms_ease,opacity_150ms_ease] not-disabled:hover:bg-[var(--surface-default)] disabled:opacity-40 disabled:cursor-default";
+  const menuBtnClasses = `${btnClasses} bg-[var(--color-accent)] text-white text-xs font-bold tracking-[0.05em] hover:bg-[var(--color-accent-hover)]`;
+  const menuItemClasses = "flex items-center gap-2.5 py-2 px-2.5 border-none rounded-md bg-transparent text-[var(--text-default)] font-sans text-sm text-left cursor-pointer hover:bg-[var(--surface-subdue)]";
+
   return (
     <>
-      <style>{`
-        .sketch-toolbar-history {
-          display: flex;
-          align-items: center;
-          gap: 0.5rem;
-        }
-        .sketch-toolbar-btn {
-          display: inline-flex;
-          align-items: center;
-          justify-content: center;
-          width: 32px;
-          height: 32px;
-          border: none;
-          border-radius: 8px;
-          background: var(--surface-subdue);
-          color: var(--text-default);
-          font-size: 1.125rem;
-          line-height: 1;
-          cursor: pointer;
-          padding: 0;
-          transition: background-color 150ms ease, opacity 150ms ease;
-        }
-        .sketch-toolbar-btn:hover:not(:disabled) {
-          background: var(--surface-default);
-        }
-        .sketch-toolbar-btn:disabled {
-          opacity: 0.4;
-          cursor: default;
-        }
-        .sketch-toolbar-divider {
-          width: 1px;
-          height: 32px;
-          background: var(--border-subdue);
-        }
-        .sketch-toolbar-menu {
-          position: relative;
-        }
-        .sketch-toolbar-menu-btn {
-          background: var(--color-accent);
-          color: var(--color-white);
-          font-size: var(--text-xs);
-          font-weight: 700;
-          letter-spacing: 0.05em;
-        }
-        .sketch-toolbar-menu-btn:hover {
-          background: var(--color-accent-hover);
-        }
-        .sketch-toolbar-overlay {
-          position: absolute;
-          bottom: calc(100% + 0.5rem);
-          right: 0;
-          display: flex;
-          flex-direction: column;
-          gap: 2px;
-          padding: 6px;
-          min-width: 200px;
-          background: var(--surface-raised);
-          border: 1px solid var(--border-subdue);
-          border-radius: 12px;
-          box-shadow: 0 4px 16px rgb(0 0 0 / 0.16);
-        }
-        .sketch-toolbar-menu-item {
-          display: flex;
-          align-items: center;
-          gap: 10px;
-          padding: 8px 10px;
-          border: none;
-          border-radius: 8px;
-          background: transparent;
-          color: var(--text-default);
-          font-family: var(--font-sans);
-          font-size: var(--text-sm);
-          text-align: left;
-          cursor: pointer;
-        }
-        .sketch-toolbar-menu-item:hover {
-          background: var(--surface-subdue);
-        }
-        .sketch-toolbar-menu-item img {
-          opacity: 0.75;
-          filter: var(--icon-filter);
-        }
-      `}</style>
-      <div class="sketch-toolbar-history">
+      <div class="flex items-center gap-2">
         <button
           type="button"
-          class="sketch-toolbar-btn"
+          class={btnClasses}
           disabled={!canUndo}
           title="Annuler"
           aria-label="Annuler"
@@ -141,7 +62,7 @@ export default function SketchToolbarActions() {
         </button>
         <button
           type="button"
-          class="sketch-toolbar-btn"
+          class={btnClasses}
           disabled={!canRedo}
           title="Rétablir"
           aria-label="Rétablir"
@@ -151,12 +72,12 @@ export default function SketchToolbarActions() {
         </button>
       </div>
 
-      <div class="sketch-toolbar-divider" />
+      <div class="w-px h-8 bg-[var(--border-subdue)]" />
 
-      <div class="sketch-toolbar-menu" ref={wrapperRef}>
+      <div class="relative" ref={wrapperRef}>
         <button
           type="button"
-          class="sketch-toolbar-btn sketch-toolbar-menu-btn"
+          class={menuBtnClasses}
           title="Options"
           aria-label="Options"
           aria-expanded={menuOpen}
@@ -165,13 +86,13 @@ export default function SketchToolbarActions() {
           •••
         </button>
         {menuOpen && (
-          <div class="sketch-toolbar-overlay">
-            <button type="button" class="sketch-toolbar-menu-item" onClick={handleDownload}>
-              <img src={iconUrl('download')} alt="" width={14} height={14} />
+          <div class="absolute bottom-[calc(100%+0.5rem)] right-0 flex flex-col gap-0.5 p-1.5 min-w-[200px] bg-[var(--surface-raised)] border border-[var(--border-subdue)] rounded-lg shadow-[0_4px_16px_rgb(0_0_0_/_0.16)]">
+            <button type="button" class={menuItemClasses} onClick={handleDownload}>
+              <img src={iconUrl('download')} alt="" width={14} height={14} class="opacity-75 [filter:var(--icon-filter)]" />
               Télécharger
             </button>
-            <button type="button" class="sketch-toolbar-menu-item" onClick={handleNew}>
-              <img src={iconUrl('plus')} alt="" width={14} height={14} />
+            <button type="button" class={menuItemClasses} onClick={handleNew}>
+              <img src={iconUrl('plus')} alt="" width={14} height={14} class="opacity-75 [filter:var(--icon-filter)]" />
               Nouveau dessin
             </button>
           </div>

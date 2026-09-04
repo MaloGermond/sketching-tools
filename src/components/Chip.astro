@@ -10,37 +10,8 @@ interface Props {
 const { value, unit, color = 'success' } = Astro.props;
 ---
 
-<div class="chip">
+<div class="inline-flex items-center gap-2 py-1.5 px-3 bg-[var(--surface-subdue)] border border-[var(--border-default)] rounded-full whitespace-nowrap">
   <Pill color={color} />
-  <span class="chip-value">{value}</span>
-  {unit && <span class="chip-unit">{unit}</span>}
+  <span class="font-sans text-lg font-[var(--font-weight-default)] text-[var(--text-default)] leading-none">{value}</span>
+  {unit && <span class="font-sans text-lg font-[var(--font-weight-default)] text-[var(--text-subdue)] leading-none">{unit}</span>}
 </div>
-
-<style>
-  .chip {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    padding: 6px 12px;
-    background: var(--surface-subdue);
-    border: 1px solid var(--border-default);
-    border-radius: var(--radius-full);
-    white-space: nowrap;
-  }
-
-  .chip-value {
-    font-family: var(--font-sans);
-    font-size: 1.125rem;
-    font-weight: var(--font-weight-default);
-    color: var(--text-default);
-    line-height: 1;
-  }
-
-  .chip-unit {
-    font-family: var(--font-sans);
-    font-size: 1.125rem;
-    font-weight: var(--font-weight-default);
-    color: var(--text-subdue);
-    line-height: 1;
-  }
-</style>
