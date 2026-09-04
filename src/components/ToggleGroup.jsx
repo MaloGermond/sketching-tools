@@ -13,8 +13,17 @@ export default function ToggleGroup({
     const handleShapeSelected = (event) => {
       if (event.detail?.shape) setSelected(event.detail.shape);
     };
+    // Garde le groupe synchronisé quand la sélection vient d'ailleurs
+    // (ex: menu Ellipsis) plutôt que d'un clic direct sur ce groupe.
+    const handleToggleGroupSelected = (event) => {
+      if (event.detail?.icon) setSelected(event.detail.icon);
+    };
     document.addEventListener('shapeSelected', handleShapeSelected);
-    return () => document.removeEventListener('shapeSelected', handleShapeSelected);
+    document.addEventListener('toggleGroupSelected', handleToggleGroupSelected);
+    return () => {
+      document.removeEventListener('shapeSelected', handleShapeSelected);
+      document.removeEventListener('toggleGroupSelected', handleToggleGroupSelected);
+    };
   }, []);
 
   useEffect(() => {
