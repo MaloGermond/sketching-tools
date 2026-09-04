@@ -3,7 +3,7 @@
 // Orchestre les modules drawing, shapes et scoring
 // ============================================
 
-import { createDrawingBuffer, drawSmoothLine } from '../drawing/drawingBuffer.js';
+import { getSmoothSegment } from '../drawing/drawingBuffer.js';
 import { BRUSH_CONFIG, MIN_TRACE_LENGTH } from '../drawing/index.js';
 import { drawingState } from '../drawing/drawingState.js';
 import { warmupState } from './warmupState.js';
@@ -80,7 +80,8 @@ export class WarmupOrchestrator {
   }
 
   /**
-   * Gère le dessin de l'utilisateur
+   * Gère le dessin de l'utilisateur : capte le point puis délègue le rendu
+   * du segment lissé (moyenne mobile + courbe quadratique par midpoints)
    */
   handleUserDrawing() {
     const d = this.p5.dist(this.p5.mouseX, this.p5.mouseY, drawingState.prevX, drawingState.prevY);
@@ -88,46 +89,32 @@ export class WarmupOrchestrator {
 
     drawingState.addPoint(this.p5.mouseX, this.p5.mouseY);
 
-    const pts = drawingState.currentPathPoints;
-    const n = pts.length;
+    const segment = getSmoothSegment(drawingState.smoothedPoints);
+    if (segment) this.drawSegment(segment);
+  }
 
+  /**
+   * Trace un segment lissé sur le buffer de dessin
+   * @impure - Dessine sur this.drawingBuffer (mutation du canvas via drawingContext)
+   */
+  drawSegment(segment) {
     const strokeColor = getThemeColor('--sketch-stroke');
-
-    this.drawingBuffer.stroke(strokeColor);
-    this.drawingBuffer.strokeWeight(BRUSH_CONFIG.SIZE);
-    this.drawingBuffer.strokeCap(this.p5.ROUND);
-    this.drawingBuffer.strokeJoin(this.p5.ROUND);
-    this.drawingBuffer.noFill();
-
-    if (n === 2) {
-      const ctx = this.drawingBuffer.drawingContext;
-      ctx.beginPath();
-      ctx.moveTo(pts[0].x, pts[0].y);
-      ctx.lineTo(pts[1].x, pts[1].y);
-      ctx.strokeStyle = strokeColor;
-      ctx.lineWidth = BRUSH_CONFIG.SIZE;
-      ctx.lineCap = 'round';
-      ctx.stroke();
-      return;
-    }
-
-    // Bezier quadratique entre midpoints via canvas natif
-    const p1 = pts[n - 3];
-    const p2 = pts[n - 2];
-    const p3 = pts[n - 1];
-    const mx1 = (p1.x + p2.x) / 2;
-    const my1 = (p1.y + p2.y) / 2;
-    const mx2 = (p2.x + p3.x) / 2;
-    const my2 = (p2.y + p3.y) / 2;
-
     const ctx = this.drawingBuffer.drawingContext;
-    ctx.beginPath();
-    ctx.moveTo(mx1, my1);
-    ctx.quadraticCurveTo(p2.x, p2.y, mx2, my2);
+
     ctx.strokeStyle = strokeColor;
     ctx.lineWidth = BRUSH_CONFIG.SIZE;
     ctx.lineCap = 'round';
     ctx.lineJoin = 'round';
+
+    ctx.beginPath();
+    ctx.moveTo(segment.from.x, segment.from.y);
+
+    if (segment.type === 'quadratic') {
+      ctx.quadraticCurveTo(segment.control.x, segment.control.y, segment.to.x, segment.to.y);
+    } else {
+      ctx.lineTo(segment.to.x, segment.to.y);
+    }
+
     ctx.stroke();
   }
 
