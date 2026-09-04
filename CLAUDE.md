@@ -110,6 +110,7 @@ document.addEventListener('showToast', (e) => { const score = e.detail.score; })
 - Commit après chaque tâche terminée
 - **Branches** : toujours créer une branche dédiée à partir de `dev` (jamais depuis `main`), nommée `<numero-ticket>-<nom-du-ticket>` en kebab-case (ex : `42-ajout-mode-sombre`). Sans numéro de ticket, utiliser les préfixes `feature/`, `bugfix/`, etc.
 - **Pull Requests** : une fois le développement terminé, créer une PR en **draft** ciblant `dev` (jamais `main`)
+- **Lien ticket** : si la branche/tâche correspond à un ticket GitHub, lier ce ticket dans la description de la PR avec un mot-clé de fermeture (`Closes #<numéro>`, `Fixes #<numéro>`) afin que le ticket se ferme automatiquement au merge de la PR
 
 ### Design (Penpot)
 - Le fichier Penpot est organisé en pages par périmètre : **Website** (site vitrine/marketing) et **Tools** (produits/outils). Les composants suivent le même découpage : **Website / Components** et **Tools / Components**. Toujours vérifier ces pages en premier pour retrouver les références existantes.
