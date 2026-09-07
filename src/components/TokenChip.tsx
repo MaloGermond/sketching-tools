@@ -10,14 +10,22 @@ interface TokenChipProps {
 }
 
 // ===== CONSTANTS =====
-// Carte de référence toujours sombre (comme --footer-background), pour que
-// chaque token soit comparable indépendamment du thème actif de la page.
+// Valeurs exactes copiées du dev mode Penpot (ticket #61, page
+// "61 - Visualisation standardisée des tokens de style").
+// Le cadre (Frame 1) est toujours sombre et fixe, indépendant du thème actif
+// de la page, pour que les tokens restent comparables entre eux.
 
 const CHIP_SIZE = '56px';
 const CHIP_RADIUS = '12px';
+const CHIP_BACKGROUND = '#191919';
+const CHIP_BORDER = '1px solid #2A2A2A';
 const INNER_SIZE = '32px';
 const INNER_RADIUS = '4px';
-const FRAME_BORDER = '1px solid var(--color-gray-800)';
+const DROP_SHADOW = '0px 4px 12px rgba(0, 0, 0, 0.6)';
+const RADIUS_GHOST_OFFSET_LEFT = '-19px';
+const RADIUS_GHOST_OFFSET_TOP = '20px';
+const RADIUS_GHOST_BORDER_NEUTRAL = '1px solid #6E6E6E';
+const RADIUS_GHOST_BORDER_ACCENT = '1px solid var(--color-accent)';
 
 const wrapperStyle: Record<string, string | number> = {
   display: 'flex',
@@ -26,24 +34,31 @@ const wrapperStyle: Record<string, string | number> = {
   gap: '0.5rem',
 };
 
-const baseChipStyle: Record<string, string | number> = {
+const frameStyle: Record<string, string | number> = {
+  boxSizing: 'border-box',
+  position: 'relative',
   width: CHIP_SIZE,
   height: CHIP_SIZE,
+  background: CHIP_BACKGROUND,
+  border: CHIP_BORDER,
   borderRadius: CHIP_RADIUS,
-  background: 'var(--background-dark)',
-  border: FRAME_BORDER,
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
+  overflow: 'hidden',
   flexShrink: 0,
+};
+
+const centeredInnerStyle: Record<string, string | number> = {
+  position: 'absolute',
+  width: INNER_SIZE,
+  height: INNER_SIZE,
+  left: `calc(50% - ${INNER_SIZE}/2)`,
+  top: `calc(50% - ${INNER_SIZE}/2)`,
 };
 
 const pillStyle: Record<string, string | number> = {
   fontFamily: "'SF Mono', Monaco, monospace",
   fontSize: '0.6875rem',
-  color: 'var(--text-light)',
-  background: 'var(--background-dark)',
-  border: FRAME_BORDER,
+  color: 'var(--text-default)',
+  background: 'var(--surface-subdue)',
   borderRadius: '7.5px',
   padding: '0.25rem 0.625rem',
   whiteSpace: 'nowrap',
@@ -58,58 +73,87 @@ const refStyle: Record<string, string | number> = {
 // ===== PURE FUNCTIONS =====
 
 /**
- * @pure - Style du cadre. Pour "radius" : dégradé sur la bordure elle-même
- * (accent au coin haut-gauche, s'estompant vers une couleur neutre), pas un
- * remplissage uni — reproduit la maquette Penpot (ticket #61) où seul ce
- * coin est mis en valeur plutôt que toute la bordure.
+ * @pure - Contenu isolant une seule propriété par nature de token, aux
+ * valeurs exactes du dev mode Penpot pour chaque kind.
  */
-function getChipStyle(kind: TokenKind, value: string): Record<string, string | number> {
-  if (kind === 'radius') {
-    return {
-      ...baseChipStyle,
-      borderRadius: value,
-      border: '1px solid transparent',
-      background:
-        'linear-gradient(var(--background-dark), var(--background-dark)) padding-box, ' +
-        'linear-gradient(135deg, var(--color-accent) 0%, var(--color-gray-700) 45%) border-box',
-    };
-  }
-  return baseChipStyle;
-}
-
-/** @pure - Contenu isolant une seule propriété par nature de token. */
-function getInnerStyle(kind: TokenKind, value: string): Record<string, string | number> | null {
+function renderInner(kind: TokenKind, value: string) {
   if (kind === 'background') {
-    return { width: INNER_SIZE, height: INNER_SIZE, borderRadius: INNER_RADIUS, background: value };
+    return (
+      <div style={{ ...centeredInnerStyle, background: value, boxShadow: DROP_SHADOW, borderRadius: INNER_RADIUS }} />
+    );
   }
+
   if (kind === 'border') {
-    return { width: INNER_SIZE, height: INNER_SIZE, borderRadius: INNER_RADIUS, border: `1px solid ${value}` };
+    return (
+      <div
+        style={{
+          ...centeredInnerStyle,
+          boxSizing: 'border-box',
+          border: `1px solid ${value}`,
+          filter: `drop-shadow(${DROP_SHADOW})`,
+          borderRadius: INNER_RADIUS,
+        }}
+      />
+    );
   }
+
+  if (kind === 'label') {
+    return (
+      <span
+        style={{
+          position: 'absolute',
+          left: '50%',
+          top: '50%',
+          transform: 'translate(-50%, -50%)',
+          fontFamily: 'Georgia, serif',
+          fontWeight: 700,
+          fontSize: '1.375rem',
+          lineHeight: 1,
+          color: value,
+          filter: `drop-shadow(${DROP_SHADOW})`,
+        }}
+      >
+        T
+      </span>
+    );
+  }
+
+  if (kind === 'radius') {
+    const ghostStyle: Record<string, string | number> = {
+      boxSizing: 'border-box',
+      position: 'absolute',
+      width: CHIP_SIZE,
+      height: CHIP_SIZE,
+      left: RADIUS_GHOST_OFFSET_LEFT,
+      top: RADIUS_GHOST_OFFSET_TOP,
+      background: CHIP_BACKGROUND,
+      borderRadius: value,
+    };
+    return (
+      <>
+        <div style={{ ...ghostStyle, border: RADIUS_GHOST_BORDER_NEUTRAL, boxShadow: DROP_SHADOW }} />
+        <div style={{ ...ghostStyle, border: RADIUS_GHOST_BORDER_ACCENT }} />
+      </>
+    );
+  }
+
   return null;
 }
 
 // ===== COMPONENT =====
 
 /**
- * Icône de 56x56px illustrant un seul token de style à la fois : fond seul
+ * Cadre de 56x56px illustrant un seul token de style à la fois : fond seul
  * (background), bordure seule (border/stroke), couleur de texte seule (label)
- * ou border-radius appliqué au cadre lui-même et surligné (radius).
+ * ou border-radius appliqué à un second cadre décalé et surligné en accent
+ * (radius) — reproduction exacte de la maquette Penpot du ticket #61.
  */
 export default function TokenChip({ kind, value, name, refToken }: TokenChipProps) {
   if (!kind || !value || !name) return null;
 
-  const innerStyle = getInnerStyle(kind, value);
-
   return (
     <div style={wrapperStyle}>
-      <div style={getChipStyle(kind, value)}>
-        {innerStyle && <div style={innerStyle} />}
-        {kind === 'label' && (
-          <span style={{ fontFamily: 'Georgia, serif', fontWeight: 700, fontSize: '1.25rem', color: value, lineHeight: 1 }}>
-            T
-          </span>
-        )}
-      </div>
+      <div style={frameStyle}>{renderInner(kind, value)}</div>
       <span style={pillStyle}>{name}</span>
       <span style={refStyle}>{refToken}</span>
     </div>
