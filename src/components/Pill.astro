@@ -16,15 +16,7 @@ const bg = colorMap[color] ?? colorMap.success;
 ---
 
 <span
-  class="pill"
+  class="inline-block rounded-full shrink-0"
   style={`width: ${size}px; height: ${size}px; background: ${bg};`}
   aria-label={color}
 />
-
-<style>
-  .pill {
-    display: inline-block;
-    border-radius: 50%;
-    flex-shrink: 0;
-  }
-</style>

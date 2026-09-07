@@ -7,55 +7,12 @@ interface Props {
 const { heading, description } = Astro.props;
 ---
 
-<div class="setting-card">
-  <div class="setting-text">
-    <p class="setting-heading">{heading}</p>
-    <p class="setting-description">{description}</p>
+<div class="flex flex-col items-stretch sm:flex-row sm:items-center justify-between gap-6 p-5 bg-[var(--surface-subdue)] border border-[var(--border-default)] rounded-lg">
+  <div class="flex flex-col gap-1 min-w-0">
+    <p class="text-md font-semibold text-[var(--text-default)]">{heading}</p>
+    <p class="text-sm text-[var(--text-subdue)] leading-snug">{description}</p>
   </div>
-  <div class="setting-control">
+  <div class="shrink-0">
     <slot />
   </div>
 </div>
-
-<style>
-  .setting-card {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 1.5rem;
-    padding: 1.25rem;
-    background: var(--surface-subdue);
-    border: 1px solid var(--border-default);
-    border-radius: var(--radius-lg);
-  }
-
-  .setting-text {
-    display: flex;
-    flex-direction: column;
-    gap: 0.25rem;
-    min-width: 0;
-  }
-
-  .setting-heading {
-    font-size: var(--text-md);
-    font-weight: 600;
-    color: var(--text-default);
-  }
-
-  .setting-description {
-    font-size: var(--text-sm);
-    color: var(--text-subdue);
-    line-height: 1.4;
-  }
-
-  .setting-control {
-    flex-shrink: 0;
-  }
-
-  @media (max-width: 640px) {
-    .setting-card {
-      flex-direction: column;
-      align-items: stretch;
-    }
-  }
-</style>

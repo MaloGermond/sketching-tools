@@ -4,7 +4,6 @@
 
 :root {
   --font-family: var(--font-sans);
-  --leading-tight: 1.1;
   --leading-normal: 1.5;
   --leading-relaxed: 1.75;
 }
@@ -15,34 +14,12 @@ body {
   line-height: var(--leading-normal);
 }
 
-.h1 {
-  font-size: var(--text-3xl);
-  font-weight: 700;
-  line-height: var(--leading-tight);
-  color: var(--text-default);
-  letter-spacing: -0.02em;
-}
-
 .h2 {
   font-size: var(--text-2xl);
   font-weight: 600;
   line-height: var(--leading-normal);
   color: var(--text-default);
   letter-spacing: -0.015em;
-}
-
-.h3 {
-  font-size: var(--text-xl);
-  font-weight: 600;
-  line-height: var(--leading-normal);
-  color: var(--text-default);
-}
-
-.h4 {
-  font-size: var(--text-md);
-  font-weight: 500;
-  line-height: var(--leading-normal);
-  color: var(--text-default);
 }
 
 .body-text {
@@ -64,8 +41,4 @@ body {
   font-weight: 400;
   line-height: var(--leading-normal);
   color: var(--text-subdue);
-}
-
-.font-mono {
-  font-family: 'SF Mono', Monaco, 'Courier New', monospace;
 }

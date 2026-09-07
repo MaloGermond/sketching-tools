@@ -5,54 +5,13 @@ interface Props {
 }
 
 const { fixed = true } = Astro.props;
+
+const baseClasses = 'flex items-center gap-4 py-3 px-4 bg-[var(--surface-raised)] border border-[var(--border-subdue)] rounded-3xl shadow-[0_0_28px_rgb(0_0_0_/_0.16)] max-w-[calc(100vw-2rem)]';
+const toolbarClasses = fixed
+  ? `${baseClasses} fixed bottom-6 left-1/2 -translate-x-1/2 z-10 animate-[toolbar-appear-fixed_0.22s_ease-out_0.3s_both]`
+  : `${baseClasses} animate-[toolbar-appear_0.22s_ease-out_0.3s_both]`;
 ---
 
-<div class={`toolbar ${fixed ? 'toolbar--fixed' : ''}`}>
+<div class={toolbarClasses}>
   <slot />
 </div>
-
-<style>
-  .toolbar {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    padding: 0.75rem 1rem;
-    background: var(--surface-raised);
-    border: 1px solid var(--border-subdue);
-    border-radius: 1.5rem;
-    box-shadow: 0 0 28px rgb(0 0 0 / 0.16);
-    max-width: calc(100vw - 2rem);
-    animation: toolbar-appear 0.22s ease-out 0.3s both;
-  }
-
-  .toolbar--fixed {
-    position: fixed;
-    bottom: 1.5rem;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 10;
-    animation-name: toolbar-appear-fixed;
-  }
-
-  @keyframes toolbar-appear {
-    from {
-      opacity: 0;
-      transform: translateY(0.75rem);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-
-  @keyframes toolbar-appear-fixed {
-    from {
-      opacity: 0;
-      transform: translateX(-50%) translateY(0.75rem);
-    }
-    to {
-      opacity: 1;
-      transform: translateX(-50%) translateY(0);
-    }
-  }
-</style>
