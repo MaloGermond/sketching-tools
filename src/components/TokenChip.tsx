@@ -22,10 +22,8 @@ const CHIP_BORDER = '1px solid #2A2A2A';
 const INNER_SIZE = '32px';
 const INNER_RADIUS = '4px';
 const DROP_SHADOW = '0px 4px 12px rgba(0, 0, 0, 0.6)';
-const RADIUS_GHOST_OFFSET_LEFT = '-19px';
-const RADIUS_GHOST_OFFSET_TOP = '20px';
-const RADIUS_GHOST_BORDER_NEUTRAL = '1px solid #6E6E6E';
-const RADIUS_GHOST_BORDER_ACCENT = '1px solid var(--color-accent)';
+const RADIUS_BORDER_NEUTRAL = '1px solid #6E6E6E';
+const RADIUS_BORDER_ACCENT = '1px solid var(--color-accent)';
 
 const wrapperStyle: Record<string, string | number> = {
   display: 'flex',
@@ -118,26 +116,30 @@ function renderInner(kind: TokenKind, value: string) {
     );
   }
 
-  if (kind === 'radius') {
-    const ghostStyle: Record<string, string | number> = {
-      boxSizing: 'border-box',
-      position: 'absolute',
-      width: CHIP_SIZE,
-      height: CHIP_SIZE,
-      left: RADIUS_GHOST_OFFSET_LEFT,
-      top: RADIUS_GHOST_OFFSET_TOP,
-      background: CHIP_BACKGROUND,
-      borderRadius: value,
-    };
-    return (
-      <>
-        <div style={{ ...ghostStyle, border: RADIUS_GHOST_BORDER_NEUTRAL, boxShadow: DROP_SHADOW }} />
-        <div style={{ ...ghostStyle, border: RADIUS_GHOST_BORDER_ACCENT }} />
-      </>
-    );
-  }
-
+  // 'radius' n'a pas de contenu interne : le cadre lui-même isole et
+  // surligne le coin haut-droit (voir getFrameStyle).
   return null;
+}
+
+/**
+ * @pure - Style du cadre. Pour "radius", isole le coin haut-droit : lui seul
+ * est arrondi (borderRadius: 0 value 0 0) et surligné en accent, les 3 autres
+ * restent carrés en bordure neutre — sinon le cadre standard (background/
+ * border/label).
+ */
+function getFrameStyle(kind: TokenKind, value: string): Record<string, string | number> {
+  if (kind === 'radius') {
+    return {
+      ...frameStyle,
+      borderRadius: `0 ${value} 0 0`,
+      borderTop: RADIUS_BORDER_ACCENT,
+      borderRight: RADIUS_BORDER_ACCENT,
+      borderBottom: RADIUS_BORDER_NEUTRAL,
+      borderLeft: RADIUS_BORDER_NEUTRAL,
+      boxShadow: DROP_SHADOW,
+    };
+  }
+  return frameStyle;
 }
 
 // ===== COMPONENT =====
@@ -153,7 +155,7 @@ export default function TokenChip({ kind, value, name, refToken }: TokenChipProp
 
   return (
     <div style={wrapperStyle}>
-      <div style={frameStyle}>{renderInner(kind, value)}</div>
+      <div style={getFrameStyle(kind, value)}>{renderInner(kind, value)}</div>
       <span style={pillStyle}>{name}</span>
       <span style={refStyle}>{refToken}</span>
     </div>
