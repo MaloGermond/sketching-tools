@@ -24,6 +24,20 @@ const INNER_RADIUS = '4px';
 const DROP_SHADOW = '0px 4px 12px rgba(0, 0, 0, 0.6)';
 const RADIUS_BORDER_NEUTRAL = '1px solid #6E6E6E';
 const RADIUS_BORDER_ACCENT = '1px solid var(--color-accent)';
+// Carré offset pour amener son coin haut-droit (celui qui porte le
+// border-radius) au centre du cadre général.
+const RADIUS_SQUARE_OFFSET: Record<string, string | number> = {
+  position: 'absolute',
+  boxSizing: 'border-box',
+  width: CHIP_SIZE,
+  height: CHIP_SIZE,
+  left: `calc(50% - ${CHIP_SIZE})`,
+  top: '50%',
+  background: CHIP_BACKGROUND,
+};
+// Masque : ne laisse visible que la zone du coin haut-droit (là où le
+// border-radius du carré accent est réellement dessiné).
+const RADIUS_MASK_SIZE = '24px';
 
 const wrapperStyle: Record<string, string | number> = {
   display: 'flex',
@@ -116,30 +130,33 @@ function renderInner(kind: TokenKind, value: string) {
     );
   }
 
-  // 'radius' n'a pas de contenu interne : le cadre lui-même isole et
-  // surligne le coin haut-droit (voir getFrameStyle).
-  return null;
-}
-
-/**
- * @pure - Style du cadre. Pour "radius", isole le coin haut-droit : lui seul
- * est arrondi (borderRadius: 0 value 0 0) et surligné en accent, les 3 autres
- * restent carrés en bordure neutre — sinon le cadre standard (background/
- * border/label).
- */
-function getFrameStyle(kind: TokenKind, value: string): Record<string, string | number> {
   if (kind === 'radius') {
-    return {
-      ...frameStyle,
-      borderRadius: `0 ${value} 0 0`,
-      borderTop: RADIUS_BORDER_ACCENT,
-      borderRight: RADIUS_BORDER_ACCENT,
-      borderBottom: RADIUS_BORDER_NEUTRAL,
-      borderLeft: RADIUS_BORDER_NEUTRAL,
-      boxShadow: DROP_SHADOW,
-    };
+    return (
+      <>
+        {/* Repère neutre : le carré complet, pour situer le coin dans le cadre */}
+        <div
+          style={{
+            ...RADIUS_SQUARE_OFFSET,
+            border: RADIUS_BORDER_NEUTRAL,
+            borderRadius: value,
+            boxShadow: DROP_SHADOW,
+          }}
+        />
+        {/* Même carré, mais masqué pour n'afficher que le coin haut-droit
+            (celui qui porte réellement le border-radius) en accent */}
+        <div
+          style={{
+            ...RADIUS_SQUARE_OFFSET,
+            border: RADIUS_BORDER_ACCENT,
+            borderRadius: value,
+            clipPath: `inset(0 0 calc(100% - ${RADIUS_MASK_SIZE}) calc(100% - ${RADIUS_MASK_SIZE}))`,
+          }}
+        />
+      </>
+    );
   }
-  return frameStyle;
+
+  return null;
 }
 
 // ===== COMPONENT =====
@@ -155,7 +172,7 @@ export default function TokenChip({ kind, value, name, refToken }: TokenChipProp
 
   return (
     <div style={wrapperStyle}>
-      <div style={getFrameStyle(kind, value)}>{renderInner(kind, value)}</div>
+      <div style={frameStyle}>{renderInner(kind, value)}</div>
       <span style={pillStyle}>{name}</span>
       <span style={refStyle}>{refToken}</span>
     </div>
