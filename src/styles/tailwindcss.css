@@ -17,15 +17,15 @@
   --color-white:    #ffffff;
   --color-black:    #000000;
   --color-gray-50:  #FAFAFA;
-  --color-gray-100: #F4F4F5;
-  --color-gray-200: #E4E4E7;
-  --color-gray-300: #D4D4D8;
-  --color-gray-400: #A1A1AA;
-  --color-gray-500: #71717A;
-  --color-gray-600: #52525B;
-  --color-gray-700: #3F3F46;
-  --color-gray-800: #27272A;
-  --color-gray-900: #18181B;
+  --color-gray-100: #ECECEE;
+  --color-gray-200: #D6D6DB;
+  --color-gray-300: #BCBCC4;
+  --color-gray-400: #9F9FA9;
+  --color-gray-500: #78787E;
+  --color-gray-600: #4B4B4E;
+  --color-gray-700: #2A2A2A;
+  --color-gray-800: #191919;
+  --color-gray-900: #0B0B0B;
 
   /* ── Green scale ── */
   --color-green-0:   #FBFEFC;
@@ -120,11 +120,17 @@
   --font-weight-default:  500;
   --font-weight-emphasis: 700;
 
-  /* ── Shadows ── */
-  --shadow-sm:       0 1px 2px 0 rgb(0 0 0 / 0.05);
-  --shadow-card:     0 1px 3px 0 rgb(0 0 0 / 0.07), 0 1px 2px -1px rgb(0 0 0 / 0.05);
-  --shadow-elevated: 0 4px 6px -1px rgb(0 0 0 / 0.08), 0 2px 4px -2px rgb(0 0 0 / 0.05);
-  --shadow-float:    0 4px 16px rgb(0 0 0 / 0.10), 0 1px 4px rgb(0 0 0 / 0.06);
+  /* ── Shadows (styles/shadow dans Penpot) — dégradé théme-agnostique,
+     référencé par les tokens de thème (ex. --shadow-elevated) plutôt que
+     redéfini à chaque palier de thème. ── */
+  --shadow-xs: 0px 4px 12px rgba(0, 0, 0, 0.06);
+  --shadow-sm: 0px 4px 12px rgba(0, 0, 0, 0.10);
+  --shadow-md: 0px 4px 12px rgba(0, 0, 0, 0.12);
+  --shadow-lg: 0px 4px 12px rgba(0, 0, 0, 0.30);
+  --shadow-xl: 0px 4px 12px rgba(0, 0, 0, 0.60);
+  /* --shadow-elevated : théme-réactif (voir theme/light et theme/dark
+     plus bas), pas ici — une même ombre trop marquée sur fond clair
+     paraît écrasante, et trop discrète sur fond sombre. */
 }
 
 /* =====================================================
@@ -152,6 +158,7 @@
        sombre pour rester visibles sur les surfaces --surface-raised/--surface-subdue. */
     --icon-filter: none;
     --frame-hairline:  rgb(0 0 0 / 8%);
+    --shadow-elevated: var(--shadow-md);
 
     /* accent */
     --color-accent:   var(--color-blue-600);
@@ -195,6 +202,7 @@
     --icon-filter:     none;
     --frame-hairline:  rgb(0 0 0 / 8%);
     --sketch-stroke:   var(--color-gray-900);
+    --shadow-elevated: var(--shadow-md);
   }
 
   html, body {
@@ -230,6 +238,7 @@
     --icon-filter:     invert(1);
     --frame-hairline:  rgb(255 255 255 / 8%);
     --sketch-stroke:   var(--color-gray-50);
+    --shadow-elevated: var(--shadow-xl);
   }
 
   /* "Système" — pas de préférence explicite: suit l'OS */
@@ -250,6 +259,7 @@
       --icon-filter:     invert(1);
       --frame-hairline:  rgb(255 255 255 / 8%);
       --sketch-stroke:   var(--color-gray-50);
+      --shadow-elevated: var(--shadow-xl);
     }
   }
 }

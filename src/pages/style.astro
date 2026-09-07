@@ -434,29 +434,28 @@ exportableTokens.push(
     font-family: 'SF Mono', Monaco, monospace;
   }
 
-  /* Styles (tokens par composant) — carte de référence toujours sombre,
-     standardisée, pour comparer les tokens indépendamment du thème actif. */
+  /* Styles (tokens par composant) — seuls les TokenChip individuels ont un
+     fond sombre (référence fixe pour comparer indépendamment du thème actif),
+     pas la section qui les entoure. */
   .component-styles {
     display: flex;
     flex-direction: column;
-    gap: 1.25rem;
+    gap: 1.75rem;
   }
 
   .component-group {
-    background: var(--background-dark);
-    border-radius: var(--radius-lg);
-    padding: 1.5rem;
+    padding: 0;
   }
 
   .component-title {
     font-size: var(--text-lg);
     font-weight: 600;
-    color: var(--text-light);
+    color: var(--text-default);
   }
 
   .component-desc {
     font-size: var(--text-xs);
-    color: var(--text-light-subdue);
+    color: var(--text-subdue);
     margin-bottom: 1.25rem;
   }
 
