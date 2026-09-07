@@ -6,76 +6,19 @@ interface Props {
 const { toastId } = Astro.props;
 ---
 
-<div id={toastId} data-toast-id={toastId} class="toast-wrapper">
-  <div class="toast-chip">
-    <span id={toastId + '-dot'} class="toast-dot"></span>
-    <div class="toast-text">
-      <p id={toastId + '-value'} class="toast-value"></p>
-      <p class="toast-unit">%</p>
+<div
+  id={toastId}
+  data-toast-id={toastId}
+  class="fixed top-4 left-1/2 z-50 pointer-events-none -translate-x-1/2 -translate-y-[calc(100%+2rem)] opacity-0 [transition:transform_200ms_ease-in,opacity_200ms_ease-in] [&.is-visible]:translate-y-0 [&.is-visible]:opacity-100 [&.is-visible]:[transition:transform_380ms_cubic-bezier(0.34,1.56,0.64,1),opacity_250ms_ease-out]"
+>
+  <div class="inline-flex items-center gap-2 py-1.5 px-3 bg-white border border-[var(--border-default)] rounded-full shadow-float whitespace-nowrap">
+    <span id={toastId + '-dot'} class="w-4 h-4 rounded-full bg-[var(--text-success)] shrink-0 [transition:background-color_200ms_ease]"></span>
+    <div class="flex flex-row gap-px items-baseline">
+      <p id={toastId + '-value'} class="text-lg font-[var(--font-weight-default)] text-[var(--text-default)] leading-none"></p>
+      <p class="text-lg font-[var(--font-weight-subdue)] text-[var(--text-subdue)] leading-none">%</p>
     </div>
   </div>
 </div>
-
-<style>
-  .toast-wrapper {
-    position: fixed;
-    top: 1rem;
-    left: 50%;
-    z-index: 50;
-    pointer-events: none;
-    transform: translateX(-50%) translateY(calc(-100% - 2rem));
-    opacity: 0;
-    transition: transform 200ms ease-in, opacity 200ms ease-in;
-  }
-
-  .toast-wrapper.is-visible {
-    transform: translateX(-50%) translateY(0);
-    opacity: 1;
-    transition: transform 380ms cubic-bezier(0.34, 1.56, 0.64, 1), opacity 250ms ease-out;
-  }
-
-  .toast-chip {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    padding: 6px 12px;
-    background: var(--color-white);
-    border: 1px solid var(--border-default);
-    border-radius: var(--radius-full);
-    box-shadow: var(--shadow-float);
-    white-space: nowrap;
-  }
-
-  .toast-dot {
-    width: 16px;
-    height: 16px;
-    border-radius: 50%;
-    background: var(--text-success);
-    flex-shrink: 0;
-    transition: background 200ms ease;
-  }
-
-  .toast-text {
-    display: flex;
-    flex-direction: row;
-    gap: 1px;
-    align-items: baseline;
-  }
-
-  .toast-value {
-    font-size: 1.125rem;
-    font-weight: var(--font-weight-default);
-    color: var(--text-default);
-    line-height: 1;
-  }
-
-  .toast-unit {
-    font-size: 1.125rem;
-    font-weight: var(--font-weight-subdue);
-    color: var(--text-subdue);
-    line-height: 1;
-  }
-</style>
 
 <script>
   document.addEventListener('DOMContentLoaded', () => {
