@@ -23,7 +23,7 @@ const CHIP_BACKGROUND = 'var(--surface-raised)';
 const CHIP_BORDER = '1px solid var(--border-subdue)';
 const INNER_SIZE = '32px';
 const INNER_RADIUS = '4px';
-const DROP_SHADOW = '0px 4px 12px rgba(0, 0, 0, 0.6)';
+const DROP_SHADOW = 'var(--shadow-elevated)';
 const RADIUS_BORDER_NEUTRAL = '1px solid var(--border-default)';
 const RADIUS_BORDER_ACCENT = '1px solid var(--color-accent)';
 // Carré offset pour amener son coin haut-droit (celui qui porte le

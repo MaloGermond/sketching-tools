@@ -123,8 +123,10 @@
   /* ── Shadows ── */
   --shadow-sm:       0 1px 2px 0 rgb(0 0 0 / 0.05);
   --shadow-card:     0 1px 3px 0 rgb(0 0 0 / 0.07), 0 1px 2px -1px rgb(0 0 0 / 0.05);
-  --shadow-elevated: 0 4px 6px -1px rgb(0 0 0 / 0.08), 0 2px 4px -2px rgb(0 0 0 / 0.05);
   --shadow-float:    0 4px 16px rgb(0 0 0 / 0.10), 0 1px 4px rgb(0 0 0 / 0.06);
+  /* --shadow-elevated : théme-réactif (voir theme/light et theme/dark
+     plus bas), pas ici — une même ombre trop marquée sur fond clair
+     paraît écrasante, et trop discrète sur fond sombre. */
 }
 
 /* =====================================================
@@ -152,6 +154,7 @@
        sombre pour rester visibles sur les surfaces --surface-raised/--surface-subdue. */
     --icon-filter: none;
     --frame-hairline:  rgb(0 0 0 / 8%);
+    --shadow-elevated: 0px 4px 12px rgba(0, 0, 0, 0.12);
 
     /* accent */
     --color-accent:   var(--color-blue-600);
@@ -195,6 +198,7 @@
     --icon-filter:     none;
     --frame-hairline:  rgb(0 0 0 / 8%);
     --sketch-stroke:   var(--color-gray-900);
+    --shadow-elevated: 0px 4px 12px rgba(0, 0, 0, 0.12);
   }
 
   html, body {
@@ -230,6 +234,7 @@
     --icon-filter:     invert(1);
     --frame-hairline:  rgb(255 255 255 / 8%);
     --sketch-stroke:   var(--color-gray-50);
+    --shadow-elevated: 0px 4px 12px rgba(0, 0, 0, 0.6);
   }
 
   /* "Système" — pas de préférence explicite: suit l'OS */
@@ -250,6 +255,7 @@
       --icon-filter:     invert(1);
       --frame-hairline:  rgb(255 255 255 / 8%);
       --sketch-stroke:   var(--color-gray-50);
+      --shadow-elevated: 0px 4px 12px rgba(0, 0, 0, 0.6);
     }
   }
 }
