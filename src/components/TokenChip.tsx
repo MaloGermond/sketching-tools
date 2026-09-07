@@ -18,7 +18,6 @@ const CHIP_RADIUS = '12px';
 const INNER_SIZE = '32px';
 const INNER_RADIUS = '4px';
 const FRAME_BORDER = '1px solid var(--color-gray-800)';
-const FRAME_BORDER_HIGHLIGHT = '1px solid var(--color-accent)';
 
 const wrapperStyle: Record<string, string | number> = {
   display: 'flex',
@@ -58,10 +57,22 @@ const refStyle: Record<string, string | number> = {
 
 // ===== PURE FUNCTIONS =====
 
-/** @pure - Style du cadre : accent surligné pour isoler le border-radius, neutre sinon. */
+/**
+ * @pure - Style du cadre. Pour "radius" : dégradé sur la bordure elle-même
+ * (accent au coin haut-gauche, s'estompant vers une couleur neutre), pas un
+ * remplissage uni — reproduit la maquette Penpot (ticket #61) où seul ce
+ * coin est mis en valeur plutôt que toute la bordure.
+ */
 function getChipStyle(kind: TokenKind, value: string): Record<string, string | number> {
   if (kind === 'radius') {
-    return { ...baseChipStyle, borderRadius: value, border: FRAME_BORDER_HIGHLIGHT };
+    return {
+      ...baseChipStyle,
+      borderRadius: value,
+      border: '1px solid transparent',
+      background:
+        'linear-gradient(var(--background-dark), var(--background-dark)) padding-box, ' +
+        'linear-gradient(135deg, var(--color-accent) 0%, var(--color-gray-700) 45%) border-box',
+    };
   }
   return baseChipStyle;
 }
