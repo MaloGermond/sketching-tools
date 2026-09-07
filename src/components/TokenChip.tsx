@@ -10,19 +10,21 @@ interface TokenChipProps {
 }
 
 // ===== CONSTANTS =====
-// Valeurs exactes copiées du dev mode Penpot (ticket #61, page
-// "61 - Visualisation standardisée des tokens de style").
-// Le cadre (Frame 1) est toujours sombre et fixe, indépendant du thème actif
-// de la page, pour que les tokens restent comparables entre eux.
+// Dimensions et ombre copiées du dev mode Penpot (ticket #61, page
+// "61 - Visualisation standardisée des tokens de style"), mais les couleurs
+// du cadre utilisent les tokens sémantiques du thème (--surface-raised,
+// --border-subdue, --border-default) plutôt que les hex fixes de la
+// maquette (qui n'était qu'une capture en thème sombre) — le cadre suit
+// donc le thème actif de la page au lieu d'être toujours sombre.
 
 const CHIP_SIZE = '56px';
 const CHIP_RADIUS = '12px';
-const CHIP_BACKGROUND = '#191919';
-const CHIP_BORDER = '1px solid #2A2A2A';
+const CHIP_BACKGROUND = 'var(--surface-raised)';
+const CHIP_BORDER = '1px solid var(--border-subdue)';
 const INNER_SIZE = '32px';
 const INNER_RADIUS = '4px';
 const DROP_SHADOW = '0px 4px 12px rgba(0, 0, 0, 0.6)';
-const RADIUS_BORDER_NEUTRAL = '1px solid #6E6E6E';
+const RADIUS_BORDER_NEUTRAL = '1px solid var(--border-default)';
 const RADIUS_BORDER_ACCENT = '1px solid var(--color-accent)';
 // Carré offset pour amener son coin haut-droit (celui qui porte le
 // border-radius) au centre du cadre général.
