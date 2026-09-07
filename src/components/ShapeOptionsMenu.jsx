@@ -71,15 +71,16 @@ export default function ShapeOptionsMenu({ icons = [], selectedIcon = null, grou
           border: none;
           border-radius: 10px;
           background: transparent;
-          color: var(--text-default);
-          font-size: 1rem;
-          line-height: 1;
           cursor: pointer;
           padding: 0;
           transition: background-color 150ms ease;
         }
         .shape-options-menu-btn:hover {
           background: var(--surface-subdue);
+        }
+        .shape-options-menu-btn img {
+          opacity: 0.7;
+          filter: var(--icon-filter);
         }
         .shape-options-overlay {
           position: absolute;
@@ -133,7 +134,7 @@ export default function ShapeOptionsMenu({ icons = [], selectedIcon = null, grou
         aria-expanded={menuOpen}
         onClick={() => setMenuOpen((open) => !open)}
       >
-        •••
+        <img src={iconUrl('ellipses')} alt="" width={18} height={18} />
       </button>
       {menuOpen && (
         <div class="shape-options-overlay">

@@ -83,7 +83,7 @@ export default function SketchToolbarActions() {
           aria-expanded={menuOpen}
           onClick={() => setMenuOpen((open) => !open)}
         >
-          •••
+          <img src={iconUrl('ellipses')} alt="" width={16} height={16} class="[filter:brightness(0)_invert(1)]" />
         </button>
         {menuOpen && (
           <div class="absolute bottom-[calc(100%+0.5rem)] right-0 flex flex-col gap-0.5 p-1.5 min-w-[200px] bg-[var(--surface-raised)] border border-[var(--border-subdue)] rounded-lg shadow-[0_4px_16px_rgb(0_0_0_/_0.16)]">

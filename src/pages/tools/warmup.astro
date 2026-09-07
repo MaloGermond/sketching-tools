@@ -21,7 +21,6 @@ const shapeIcons = ['circle', 'horizontal-line', 'square', 'triangle', 'ellipse'
   <LevelsPanel client:load />
   <Toolbar>
     <ToggleGroup client:load icons={shapeIcons} selectedIcon="circle" groupId="shape-toggle-group" />
-    <div class="shape-toolbar-divider"></div>
     <ShapeOptionsMenu client:load icons={shapeIcons} selectedIcon="circle" groupId="shape-options-menu" />
   </Toolbar>
 </MainLayout>
@@ -33,12 +32,6 @@ const shapeIcons = ['circle', 'horizontal-line', 'square', 'triangle', 'ellipse'
     top: 3.5rem;
     z-index: 0;
     border-radius: 0 !important;
-  }
-
-  .shape-toolbar-divider {
-    width: 1px;
-    height: 32px;
-    background: var(--border-subdue);
   }
 </style>
 
@@ -74,6 +67,11 @@ const shapeIcons = ['circle', 'horizontal-line', 'square', 'triangle', 'ellipse'
     #shape-toggle-group .toggle-btn {
       width: 36px !important;
       height: 36px !important;
+    }
+
+    /* Toutes les options tiennent déjà dans la barre, le menu est redondant */
+    #shape-options-menu {
+      display: none;
     }
   }
 </style>
