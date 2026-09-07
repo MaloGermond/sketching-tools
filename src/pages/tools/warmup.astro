@@ -4,10 +4,13 @@ import Snackbar from "../../components/Snackbar.tsx";
 import LevelsPanel from "../../components/LevelsPanel.tsx";
 import Toolbar from "../../components/Toolbar.astro";
 import ToggleGroup from "../../components/ToggleGroup.jsx";
+import ShapeOptionsMenu from "../../components/ShapeOptionsMenu.jsx";
 import P5Sketch from "../../components/P5Sketch.tsx";
 import PreventPullToRefresh from "../../components/PreventPullToRefresh.astro";
 
-const shapeIcons = ['circle', 'ellipse', 'square', 'triangle', 'horizontal-line', 'vertical-line'];
+// Ordre : options de base (Cercle, Ligne, Carré) en premier, puis options
+// supplémentaires révélées progressivement au redimensionnement de la barre.
+const shapeIcons = ['circle', 'horizontal-line', 'square', 'triangle', 'ellipse', 'vertical-line'];
 ---
 
 <MainLayout title="Échauffement" footer={false}>
@@ -18,6 +21,7 @@ const shapeIcons = ['circle', 'ellipse', 'square', 'triangle', 'horizontal-line'
   <LevelsPanel client:load />
   <Toolbar>
     <ToggleGroup client:load icons={shapeIcons} selectedIcon="circle" groupId="shape-toggle-group" />
+    <ShapeOptionsMenu client:load icons={shapeIcons} selectedIcon="circle" groupId="shape-options-menu" />
   </Toolbar>
 </MainLayout>
 
@@ -63,6 +67,11 @@ const shapeIcons = ['circle', 'ellipse', 'square', 'triangle', 'horizontal-line'
     #shape-toggle-group .toggle-btn {
       width: 36px !important;
       height: 36px !important;
+    }
+
+    /* Toutes les options tiennent déjà dans la barre, le menu est redondant */
+    #shape-options-menu {
+      display: none;
     }
   }
 </style>
