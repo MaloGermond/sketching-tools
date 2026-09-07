@@ -7,22 +7,6 @@
 // ===== PURE FUNCTIONS =====
 
 /**
- * Calcule la distance entre deux points
- * @pure
- */
-export function dist(x1, y1, x2, y2) {
-  return Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
-}
-
-/**
- * Interpolation linéaire
- * @pure
- */
-export function lerp(start, end, t) {
-  return start + (end - start) * t;
-}
-
-/**
  * Calcule le point milieu entre deux points
  * @pure
  */
