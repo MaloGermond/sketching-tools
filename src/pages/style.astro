@@ -2,6 +2,7 @@
 import MainLayout from "../layouts/MainLayout.astro";
 import Action from "../components/Action.astro";
 import ThemeSwitch from "../components/ThemeSwitch.jsx";
+import TokenChip from "../components/TokenChip.tsx";
 
 // Palette : couleurs brutes, agnostiques de l'interface (core/colors dans Penpot).
 // Rien ici n'est un choix d'UI — ça vient plus loin, dans les Thèmes puis les Styles.
@@ -55,48 +56,52 @@ const exportableTokens = [
 
 // Styles : tokens propres à un composant, qui puisent dans les tokens de thème
 // (jamais directement dans la palette brute). Hiérarchie : Palette → Thèmes → Styles.
+// `kind` détermine l'illustration isolée d'une seule propriété à la fois
+// (ticket #61) : background (fond seul), border (bordure seule — couvre aussi
+// le stroke), label (couleur de texte seule), radius (le cadre lui-même prend
+// le rayon et se surligne).
 const componentStyles: {
   component: string;
   description: string;
-  tokens: { name: string; type: "color" | "radius"; refToken: string }[];
+  tokens: { name: string; kind: "background" | "border" | "label" | "radius"; refToken: string }[];
 }[] = [
   {
     component: "Action",
     description: "Bouton / élément interactif générique",
     tokens: [
-      { name: "--action-bg", type: "color", refToken: "--surface-default" },
-      { name: "--action-label", type: "color", refToken: "--text-default" },
-      { name: "--action-border", type: "color", refToken: "--border-default" },
-      { name: "--action-corner", type: "radius", refToken: "--radius-lg" },
+      { name: "--action-bg", kind: "background", refToken: "--surface-default" },
+      { name: "--action-border", kind: "border", refToken: "--border-default" },
+      { name: "--action-label", kind: "label", refToken: "--text-default" },
+      { name: "--action-corner", kind: "radius", refToken: "--radius-lg" },
     ],
   },
   {
     component: "ToolCard",
     description: "Carte outil affichée sur la home",
     tokens: [
-      { name: "--toolCard-background", type: "color", refToken: "--surface-subdue" },
-      { name: "--toolCard-border", type: "color", refToken: "--border-subdue" },
+      { name: "--toolCard-background", kind: "background", refToken: "--surface-subdue" },
+      { name: "--toolCard-border", kind: "border", refToken: "--border-subdue" },
     ],
   },
   {
     component: "Footer",
     description: "Pied de page — toujours sombre, quel que soit le thème actif",
     tokens: [
-      { name: "--footer-background", type: "color", refToken: "--background-dark" },
+      { name: "--footer-background", kind: "background", refToken: "--background-dark" },
     ],
   },
   {
     component: "Main",
     description: "Fond de la zone de contenu principal",
     tokens: [
-      { name: "--main-background", type: "color", refToken: "--background" },
+      { name: "--main-background", kind: "background", refToken: "--background" },
     ],
   },
   {
     component: "Sketch",
     description: "Canvas p5.js (warmup) — fond et trait dessiné à la main",
     tokens: [
-      { name: "--sketch-stroke", type: "color", refToken: "--text-default" },
+      { name: "--sketch-stroke", kind: "border", refToken: "--text-default" },
     ],
   },
 ];
@@ -209,19 +214,9 @@ exportableTokens.push(
           <div class="component-group">
             <p class="component-title">{c.component}</p>
             <p class="component-desc">{c.description}</p>
-            <div class="token-rows">
+            <div class="token-chip-row">
               {c.tokens.map((t) => (
-                <div class="token-row">
-                  {t.type === "color" ? (
-                    <div class="token-preview" style={`background: var(${t.name}); border: 1px solid var(--border-default);`} />
-                  ) : (
-                    <div class="token-preview token-preview--radius" style={`border-radius: var(${t.name});`} />
-                  )}
-                  <div class="token-meta">
-                    <p class="token-name"><code>{t.name}</code></p>
-                    <p class="token-ref">→ <code>{t.refToken}</code></p>
-                  </div>
-                </div>
+                <TokenChip kind={t.kind} value={`var(${t.name})`} name={t.name} refToken={t.refToken} />
               ))}
             </div>
           </div>
@@ -439,62 +434,36 @@ exportableTokens.push(
     font-family: 'SF Mono', Monaco, monospace;
   }
 
-  /* Styles (tokens par composant) */
+  /* Styles (tokens par composant) — carte de référence toujours sombre,
+     standardisée, pour comparer les tokens indépendamment du thème actif. */
   .component-styles {
     display: flex;
     flex-direction: column;
-    gap: 1.75rem;
+    gap: 1.25rem;
+  }
+
+  .component-group {
+    background: var(--background-dark);
+    border-radius: var(--radius-lg);
+    padding: 1.5rem;
   }
 
   .component-title {
-    font-size: var(--text-sm);
+    font-size: var(--text-lg);
     font-weight: 600;
-    color: var(--text-default);
+    color: var(--text-light);
   }
 
   .component-desc {
     font-size: var(--text-xs);
-    color: var(--text-subdue);
-    margin-bottom: 0.75rem;
+    color: var(--text-light-subdue);
+    margin-bottom: 1.25rem;
   }
 
-  .token-rows {
+  .token-chip-row {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.75rem;
-  }
-
-  .token-row {
-    display: flex;
-    align-items: center;
-    gap: 0.625rem;
-    padding: 0.5rem 0.75rem;
-    background: var(--surface-subdue);
-    border-radius: var(--radius-md);
-  }
-
-  .token-preview {
-    width: 1.75rem;
-    height: 1.75rem;
-    border-radius: var(--radius-sm);
-    flex-shrink: 0;
-  }
-
-  .token-preview--radius {
-    background: var(--surface-raised);
-    border: 1px solid var(--border-default);
-  }
-
-  .token-name {
-    font-family: 'SF Mono', Monaco, monospace;
-    font-size: 0.6875rem;
-    color: var(--text-default);
-  }
-
-  .token-ref {
-    font-family: 'SF Mono', Monaco, monospace;
-    font-size: 0.6875rem;
-    color: var(--text-subdue);
+    gap: 1.5rem;
   }
 
   /* Typographie */
