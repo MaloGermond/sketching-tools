@@ -1,0 +1,76 @@
+[
+  {
+    "version": "0.4.0",
+    "date": "2026-08-31",
+    "status": "alpha",
+    "new": [
+      "Page Réglages : thème clair/sombre et purge du cache local",
+      "Raccourcis clavier annuler/rétablir (Ctrl+Z / Ctrl+Maj+Z) dans l'outil Dessin",
+      "Suivi analytics des actions clés (Umami)"
+    ],
+    "improved": [
+      "Pages Composants et Légales rendues responsives (mobile, tablette, desktop)",
+      "Pied de page aligné sur la maquette Penpot"
+    ],
+    "fixed": [
+      "Couleurs du header et de la page Réglages alignées sur la maquette Penpot"
+    ]
+  },
+  {
+    "version": "0.3.0",
+    "date": "2026-08-27",
+    "status": "alpha",
+    "new": [
+      "Outil « Page blanche » : dessin libre avec historique annuler/rétablir, nouveau dessin, téléchargement et curseur personnalisé",
+      "Warmup migré vers une architecture modulaire (canvas P5.js réutilisable)"
+    ],
+    "improved": [
+      "Barre d'outils unifiée en un seul composant, documentée dans la page Composants"
+    ],
+    "fixed": [
+      "Alignement de la barre d'outils et du curseur sur la maquette",
+      "Décalage visuel entre le header et le canvas"
+    ]
+  },
+  {
+    "version": "0.2.0",
+    "date": "2026-08-25",
+    "status": "alpha",
+    "new": [
+      "Pages légales : Conditions Générales d'Utilisation et Politique de Confidentialité",
+      "Pied de page complet, fidèle à la maquette Penpot"
+    ],
+    "improved": [],
+    "fixed": [
+      "Centrage du numéro de version sous le badge « Alpha »"
+    ]
+  },
+  {
+    "version": "0.1.2",
+    "date": "2026-08-20",
+    "status": "alpha",
+    "new": [
+      "Système de composants UI (boutons, cartes, toasts) et page Composants",
+      "Progression par forme dans l'échauffement, avec séries (streaks) sauvegardées",
+      "Déploiement automatique sur GitHub Pages"
+    ],
+    "improved": [
+      "Design épuré, inspiré de Linear",
+      "Police PP Neue Montreal intégrée sur l'ensemble du site"
+    ],
+    "fixed": [
+      "Chemins des assets et liens internes corrigés pour GitHub Pages",
+      "Synchronisation du niveau lors du changement de forme dans l'échauffement"
+    ]
+  },
+  {
+    "version": "0.0.1",
+    "date": "2026-08-07",
+    "status": "alpha",
+    "new": [
+      "Lancement initial du hub Sketching Tools, avec détection automatique des outils sur la page d'accueil"
+    ],
+    "improved": [],
+    "fixed": []
+  }
+]

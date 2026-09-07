@@ -1,0 +1,17 @@
+---
+interface Props {
+  label: string;
+  items: string[];
+}
+
+const { label, items } = Astro.props;
+---
+
+<div>
+  <p class="text-sm font-[var(--font-weight-default)] text-[var(--text-default)] mb-1.5">{label}</p>
+  <ul class="flex flex-col gap-1 list-disc pl-4 marker:text-[var(--border-default)]">
+    {items.map((item) => (
+      <li class="text-sm text-[var(--text-subdue)] leading-relaxed">{item}</li>
+    ))}
+  </ul>
+</div>
