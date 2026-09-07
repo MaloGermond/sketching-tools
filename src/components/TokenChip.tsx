@@ -10,22 +10,21 @@ interface TokenChipProps {
 }
 
 // ===== CONSTANTS =====
-// Dimensions et ombre copiées du dev mode Penpot (ticket #61, page
-// "61 - Visualisation standardisée des tokens de style"), mais les couleurs
-// du cadre utilisent les tokens sémantiques du thème (--surface-raised,
-// --border-subdue, --border-default) plutôt que les hex fixes de la
-// maquette (qui n'était qu'une capture en thème sombre) — le cadre suit
-// donc le thème actif de la page au lieu d'être toujours sombre.
+// Chrome du composant : tokens dédiés styles/tokenChip dans Penpot
+// (tokenChip-background/border/corner/inner-corner/radius-neutral/
+// radius-accent/shadow), qui référencent les tokens de thème plutôt que
+// des valeurs brutes — le cadre suit donc le thème actif de la page au
+// lieu d'être toujours sombre comme sur la maquette d'origine.
 
 const CHIP_SIZE = '56px';
-const CHIP_RADIUS = '12px';
-const CHIP_BACKGROUND = 'var(--surface-raised)';
-const CHIP_BORDER = '1px solid var(--border-subdue)';
+const CHIP_RADIUS = 'var(--radius-lg)'; // tokenChip-corner -> {radius-lg}
+const CHIP_BACKGROUND = 'var(--surface-raised)'; // tokenChip-background -> {surface-raised}
+const CHIP_BORDER = '1px solid var(--border-subdue)'; // tokenChip-border -> {border-subdue}
 const INNER_SIZE = '32px';
-const INNER_RADIUS = '4px';
-const DROP_SHADOW = 'var(--shadow-elevated)';
-const RADIUS_BORDER_SUBDUED = '1px solid var(--border-subdue)';
-const RADIUS_BORDER_ACCENT = '1px solid var(--color-accent)';
+const INNER_RADIUS = 'var(--radius-xs)'; // tokenChip-inner-corner -> {radius-xs}
+const DROP_SHADOW = 'var(--shadow-elevated)'; // tokenChip-shadow -> {shadow-elevated}
+const RADIUS_BORDER_SUBDUED = '1px solid var(--border-subdue)'; // tokenChip-radius-neutral -> {border-subdue}
+const RADIUS_BORDER_ACCENT = '1px solid var(--color-accent)'; // tokenChip-radius-accent -> {accent}
 // Carré offset pour amener son coin haut-droit (celui qui porte le
 // border-radius) au centre du cadre général.
 const RADIUS_SQUARE_OFFSET: Record<string, string | number> = {
