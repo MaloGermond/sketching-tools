@@ -16,13 +16,13 @@
      côtés du bleu d'accent dans les deux thèmes ── */
   --color-white:    #ffffff;
   --color-black:    #000000;
-  --color-gray-50:  #FAFAFA;
-  --color-gray-100: #F4F4F5;
-  --color-gray-200: #E4E4E7;
-  --color-gray-300: #D4D4D8;
+  --color-gray-50:  #F9F9FF;
+  --color-gray-100: #EBEBF6;
+  --color-gray-200: #D6D6E0;
+  --color-gray-300: #BCBCC6;
   --color-gray-400: #9F9FA9;
-  --color-gray-500: #71717A;
-  --color-gray-600: #52525B;
+  --color-gray-500: #787881;
+  --color-gray-600: #4A4A53;
   --color-gray-700: #2A2A2A;
   --color-gray-800: #191919;
   --color-gray-900: #0B0B0B;
