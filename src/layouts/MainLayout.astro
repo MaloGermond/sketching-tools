@@ -1,6 +1,7 @@
 ---
 import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
+import CookieConsentModal from "../components/CookieConsentModal.jsx";
 import '../styles/typography.css';
 import '../styles/tailwindcss.css';
 
@@ -42,7 +43,27 @@ const umamiWebsiteId = import.meta.env.PUBLIC_UMAMI_WEBSITE_ID;
     @font-face { font-family: 'PP Neue Montreal'; src: url('${f}/PPNeueMontreal-BoldItalic.woff2') format('woff2'); font-weight: 700; font-style: italic; font-display: swap; }
   </style>`} />
   {umamiWebsiteId && (
-    <script defer src="https://cloud.umami.is/script.js" data-website-id={umamiWebsiteId}></script>
+    <script is:inline define:vars={{ umamiWebsiteId }}>
+      (function () {
+        function loadUmami() {
+          if (document.querySelector('script[data-umami-consent]')) return;
+          var script = document.createElement('script');
+          script.defer = true;
+          script.src = 'https://cloud.umami.is/script.js';
+          script.dataset.websiteId = umamiWebsiteId;
+          script.dataset.umamiConsent = 'true';
+          document.head.appendChild(script);
+        }
+
+        try {
+          if (localStorage.getItem('cookie-consent') === 'accepted') loadUmami();
+        } catch (e) {}
+
+        document.addEventListener('cookie-consent-changed', function (event) {
+          if (event.detail?.consent === 'accepted') loadUmami();
+        });
+      })();
+    </script>
   )}
 </head>
 <body class="flex flex-col min-h-screen">
@@ -51,5 +72,6 @@ const umamiWebsiteId = import.meta.env.PUBLIC_UMAMI_WEBSITE_ID;
     <slot />
   </main>
   {footer && <Footer />}
+  {umamiWebsiteId && <CookieConsentModal client:load />}
 </body>
 </html>
