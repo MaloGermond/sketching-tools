@@ -1,3 +1,6 @@
+import { computeMovingAveragePoint, getSmoothSegment } from '../modules/drawing/drawingBuffer.js';
+import { DEFAULT_SMOOTHING_WINDOW } from '../modules/drawing/drawingState.js';
+
 const STROKE_WEIGHT = 4;
 const CURSOR_RING_SIZE = 20;
 const CURSOR_DOT_SIZE = 3;
@@ -7,7 +10,8 @@ export default function (p) {
   let buffer;
   let strokes = [];
   let redoStack = [];
-  let currentStroke = null;
+  let currentRawPoints = null;
+  let currentSmoothedPoints = null;
 
   function configureBuffer() {
     buffer.background(255);
@@ -17,13 +21,31 @@ export default function (p) {
     buffer.strokeJoin(p.ROUND);
   }
 
+  // Trace un segment (droit ou courbe quadratique par midpoints) sur le buffer,
+  // même logique de lissage que le warm-up (drawingBuffer.js).
+  function drawSegmentOnBuffer(segment) {
+    const ctx = buffer.drawingContext;
+    ctx.beginPath();
+    ctx.moveTo(segment.from.x, segment.from.y);
+    if (segment.type === 'quadratic') {
+      ctx.quadraticCurveTo(segment.control.x, segment.control.y, segment.to.x, segment.to.y);
+    } else {
+      ctx.lineTo(segment.to.x, segment.to.y);
+    }
+    ctx.stroke();
+  }
+
+  // Rejoue un tracé (déjà lissé) point par point, ex. après undo/redo.
   function drawStrokeOnBuffer(stroke) {
     if (stroke.length === 1) {
       buffer.point(stroke[0].x, stroke[0].y);
       return;
     }
-    for (let i = 1; i < stroke.length; i++) {
-      buffer.line(stroke[i - 1].x, stroke[i - 1].y, stroke[i].x, stroke[i].y);
+    for (let i = 2; i < stroke.length; i++) {
+      drawSegmentOnBuffer(getSmoothSegment([stroke[i - 2], stroke[i - 1], stroke[i]]));
+    }
+    if (stroke.length === 2) {
+      drawSegmentOnBuffer({ type: 'line', from: stroke[0], to: stroke[1] });
     }
   }
 
@@ -89,7 +111,8 @@ export default function (p) {
 
   function startStroke(event) {
     if (!isCanvasEvent(event) || !isInCanvas()) return;
-    currentStroke = [{ x: p.mouseX, y: p.mouseY }];
+    currentRawPoints = [{ x: p.mouseX, y: p.mouseY }];
+    currentSmoothedPoints = [{ x: p.mouseX, y: p.mouseY }];
     buffer.point(p.mouseX, p.mouseY);
     if (redoStack.length) {
       redoStack = [];
@@ -98,17 +121,24 @@ export default function (p) {
   }
 
   function continueStroke() {
-    if (!currentStroke || !isInCanvas()) return;
-    const last = currentStroke[currentStroke.length - 1];
+    if (!currentRawPoints || !isInCanvas()) return;
+    const last = currentRawPoints[currentRawPoints.length - 1];
     if (p.mouseX === last.x && p.mouseY === last.y) return;
-    currentStroke.push({ x: p.mouseX, y: p.mouseY });
-    buffer.line(last.x, last.y, p.mouseX, p.mouseY);
+
+    currentRawPoints.push({ x: p.mouseX, y: p.mouseY });
+    currentSmoothedPoints.push(
+      computeMovingAveragePoint(currentRawPoints, DEFAULT_SMOOTHING_WINDOW)
+    );
+
+    const segment = getSmoothSegment(currentSmoothedPoints);
+    if (segment) drawSegmentOnBuffer(segment);
   }
 
   function endStroke() {
-    if (currentStroke) {
-      strokes.push(currentStroke);
-      currentStroke = null;
+    if (currentSmoothedPoints) {
+      strokes.push(currentSmoothedPoints);
+      currentRawPoints = null;
+      currentSmoothedPoints = null;
       emitHistoryChanged();
     }
   }
@@ -119,7 +149,7 @@ export default function (p) {
 
   // Gestionnaires tactiles dédiés : sur mobile, la simulation souris de p5
   // à partir des évènements touch peut perdre le mouseReleased (ex. iOS
-  // Safari), laissant currentStroke actif — le trait suivant se retrouvait
+  // Safari), laissant le tracé actif — le trait suivant se retrouvait
   // alors relié au point précédent malgré le doigt relevé entre-temps.
   p.touchStarted = function (event) {
     startStroke(event);
