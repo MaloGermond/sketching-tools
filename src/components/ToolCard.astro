@@ -1,4 +1,6 @@
 ---
+import Card from './Card.astro';
+
 interface Props {
   title: string;
   description: string;
@@ -30,9 +32,14 @@ const bg = iconBg[color] ?? iconBg.gray;
 const fg = iconColor[color] ?? iconColor.gray;
 ---
 
-<a
+<Card
+  as="a"
   href={href}
-  class="group flex items-center gap-3.5 py-3.5 px-4 bg-[var(--toolCard-background)] border border-[var(--toolCard-border)] rounded-lg no-underline [transition:box-shadow_180ms_ease,border-color_180ms_ease,transform_180ms_ease] hover:shadow-[0_4px_12px_rgb(0_0_0_/_0.07),0_1px_3px_rgb(0_0_0_/_0.05)] hover:border-[var(--border-default)] hover:-translate-y-px"
+  background="bg-[var(--toolCard-background)]"
+  border="border-[var(--toolCard-border)]"
+  radius="rounded-lg"
+  padding="py-3.5 px-4"
+  class="group flex items-center gap-3.5 no-underline [transition:box-shadow_180ms_ease,border-color_180ms_ease,transform_180ms_ease] hover:shadow-[0_4px_12px_rgb(0_0_0_/_0.07),0_1px_3px_rgb(0_0_0_/_0.05)] hover:border-[var(--border-default)] hover:-translate-y-px"
   {...(track && { 'data-umami-event': 'tool_open', 'data-umami-event-tool': title })}
 >
   <div class="w-10 h-10 rounded-[10px] flex items-center justify-center shrink-0" style={`background: ${bg};`}>
@@ -48,4 +55,4 @@ const fg = iconColor[color] ?? iconColor.gray;
   >
     <path d="M2.5 7h9M8 3.5L11.5 7 8 10.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
   </svg>
-</a>
+</Card>
