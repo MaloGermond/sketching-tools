@@ -120,10 +120,14 @@
   --font-weight-default:  500;
   --font-weight-emphasis: 700;
 
-  /* ── Shadows ── */
-  --shadow-sm:       0 1px 2px 0 rgb(0 0 0 / 0.05);
-  --shadow-card:     0 1px 3px 0 rgb(0 0 0 / 0.07), 0 1px 2px -1px rgb(0 0 0 / 0.05);
-  --shadow-float:    0 4px 16px rgb(0 0 0 / 0.10), 0 1px 4px rgb(0 0 0 / 0.06);
+  /* ── Shadows (styles/shadow dans Penpot) — dégradé théme-agnostique,
+     référencé par les tokens de thème (ex. --shadow-elevated) plutôt que
+     redéfini à chaque palier de thème. ── */
+  --shadow-xs: 0px 4px 12px rgba(0, 0, 0, 0.06);
+  --shadow-sm: 0px 4px 12px rgba(0, 0, 0, 0.10);
+  --shadow-md: 0px 4px 12px rgba(0, 0, 0, 0.12);
+  --shadow-lg: 0px 4px 12px rgba(0, 0, 0, 0.30);
+  --shadow-xl: 0px 4px 12px rgba(0, 0, 0, 0.60);
   /* --shadow-elevated : théme-réactif (voir theme/light et theme/dark
      plus bas), pas ici — une même ombre trop marquée sur fond clair
      paraît écrasante, et trop discrète sur fond sombre. */
@@ -154,7 +158,7 @@
        sombre pour rester visibles sur les surfaces --surface-raised/--surface-subdue. */
     --icon-filter: none;
     --frame-hairline:  rgb(0 0 0 / 8%);
-    --shadow-elevated: 0px 4px 12px rgba(0, 0, 0, 0.12);
+    --shadow-elevated: var(--shadow-md);
 
     /* accent */
     --color-accent:   var(--color-blue-600);
@@ -198,7 +202,7 @@
     --icon-filter:     none;
     --frame-hairline:  rgb(0 0 0 / 8%);
     --sketch-stroke:   var(--color-gray-900);
-    --shadow-elevated: 0px 4px 12px rgba(0, 0, 0, 0.12);
+    --shadow-elevated: var(--shadow-md);
   }
 
   html, body {
@@ -234,7 +238,7 @@
     --icon-filter:     invert(1);
     --frame-hairline:  rgb(255 255 255 / 8%);
     --sketch-stroke:   var(--color-gray-50);
-    --shadow-elevated: 0px 4px 12px rgba(0, 0, 0, 0.6);
+    --shadow-elevated: var(--shadow-xl);
   }
 
   /* "Système" — pas de préférence explicite: suit l'OS */
@@ -255,7 +259,7 @@
       --icon-filter:     invert(1);
       --frame-hairline:  rgb(255 255 255 / 8%);
       --sketch-stroke:   var(--color-gray-50);
-      --shadow-elevated: 0px 4px 12px rgba(0, 0, 0, 0.6);
+      --shadow-elevated: var(--shadow-xl);
     }
   }
 }
