@@ -35,9 +35,6 @@ const RADIUS_SQUARE_OFFSET: Record<string, string | number> = {
   top: '50%',
   background: CHIP_BACKGROUND,
 };
-// Masque : ne laisse visible que la zone du coin haut-droit (là où le
-// border-radius du carré accent est réellement dessiné).
-const RADIUS_MASK_SIZE = '24px';
 
 const wrapperStyle: Record<string, string | number> = {
   display: 'flex',
@@ -142,14 +139,15 @@ function renderInner(kind: TokenKind, value: string) {
             boxShadow: DROP_SHADOW,
           }}
         />
-        {/* Même carré, mais masqué pour n'afficher que le coin haut-droit
-            (celui qui porte réellement le border-radius) en accent */}
+        {/* Même carré, mais masqué à la taille exacte du radius pour
+            n'afficher que le coin haut-droit (là où la courbe se dessine
+            réellement) en accent */}
         <div
           style={{
             ...RADIUS_SQUARE_OFFSET,
             border: RADIUS_BORDER_ACCENT,
             borderRadius: value,
-            clipPath: `inset(0 0 calc(100% - ${RADIUS_MASK_SIZE}) calc(100% - ${RADIUS_MASK_SIZE}))`,
+            clipPath: `inset(0 0 calc(100% - ${value}) calc(100% - ${value}))`,
           }}
         />
       </>
