@@ -117,6 +117,21 @@ sketching-tools/
 | `astro dev --background` | Démarre le serveur en arrière-plan |
 | `astro dev stop` | Arrête le serveur en arrière-plan |
 
+## Hiérarchie des composants Card
+
+`Card.astro` est le conteneur de base (fond, bordure, radius, padding) pour tous les composants de type "carte". Les cartes spécifiques (`ToolCard`, `SettingCard`) l'utilisent comme conteneur et ne surchargent que ce qui leur est propre (mise en page, couleurs, icônes) :
+
+```astro
+<!-- Exemple : ToolCard qui étend Card -->
+<Card as="a" href={href} radius="rounded-lg" class="tool-specific-layout">
+  <!-- Contenu spécifique à ToolCard -->
+</Card>
+```
+
+Props de `Card` pour surcharger la structure commune : `as` (`div` | `a`), `href`, `background`, `border`, `radius`, `padding`. Tout le reste (`class`, attributs) passe à travers.
+
+`Action.astro` reste indépendant : c'est un bouton/lien interactif (variants, tailles, icônes), pas un conteneur de contenu, donc il n'a pas vocation à utiliser `<Card>`.
+
 ## Couleurs disponibles pour ToolCard
 
 - `blue` (défaut)

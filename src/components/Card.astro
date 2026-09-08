@@ -1,17 +1,50 @@
 ---
+/**
+ * Card - conteneur de base pour tous les composants de type "carte"
+ * (ToolCard, SettingCard, ...). Porte la structure commune (fond,
+ * bordure, radius, padding) ; les cartes spécifiques surchargent ces
+ * valeurs via les props `background`/`border`/`radius`/`padding` et
+ * ajoutent leur propre mise en page/couleurs via `class`.
+ *
+ * Exemple : ToolCard qui étend Card
+ * <Card as="a" href={href} radius="rounded-lg" class="tool-specific-layout">
+ *   <!-- Contenu spécifique à ToolCard -->
+ * </Card>
+ */
 interface Props {
   title?: string;
   class?: string;
   id?: string;
+  as?: 'div' | 'a';
+  href?: string;
+  background?: string;
+  border?: string;
+  radius?: string;
+  padding?: string;
 }
 
-const { title, class: className, id } = Astro.props;
+const {
+  title,
+  class: className,
+  id,
+  as = 'div',
+  href,
+  background = 'bg-[var(--surface-raised)]',
+  border = 'border-[var(--border-subdue)]',
+  radius = 'rounded-xl',
+  padding = 'p-4',
+  ...rest
+} = Astro.props;
+
+const Tag = as;
 ---
 
-<div
+<Tag
   id={id}
-  class:list={['bg-[var(--surface-raised)] border border-[var(--border-subdue)] rounded-xl p-4', className]}
+  href={as === 'a' ? href : undefined}
+  class:list={[background, 'border', border, radius, padding, className]}
+  {...rest}
 >
   {title && <h2 class="h4 mb-3">{title}</h2>}
   <slot />
-</div>
+</Tag>
