@@ -1,0 +1,24 @@
+---
+import { getStatusLabel } from '../utils/changelog';
+
+interface Props {
+  status: 'alpha' | 'beta' | 'stable';
+}
+
+const { status } = Astro.props;
+
+const colorVar: Record<string, string> = {
+  alpha: '--color-purple-600',
+  beta: '--color-blue-600',
+  stable: '--color-green-600',
+};
+
+const color = `var(${colorVar[status] ?? colorVar.alpha})`;
+---
+
+<span
+  class="inline-flex items-center text-xs font-[var(--font-weight-emphasis)] uppercase tracking-wide px-2.5 py-1 rounded-full whitespace-nowrap"
+  style={`color: ${color}; background: color-mix(in srgb, ${color} 12%, transparent); border: 1px solid color-mix(in srgb, ${color} 30%, transparent);`}
+>
+  {getStatusLabel(status)}
+</span>

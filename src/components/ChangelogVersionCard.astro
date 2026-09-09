@@ -1,0 +1,30 @@
+---
+import ChangelogBadge from './ChangelogBadge.astro';
+import ChangelogSection from './ChangelogSection.astro';
+import { getVersionSections, formatChangelogDate } from '../utils/changelog';
+
+interface Props {
+  version: string;
+  date: string;
+  status: 'alpha' | 'beta' | 'stable';
+  new?: string[];
+  improved?: string[];
+  fixed?: string[];
+}
+
+const props = Astro.props;
+const { version, date, status } = props;
+const sections = getVersionSections(props);
+---
+
+<article class="flex flex-col gap-4 bg-[var(--surface-raised)] border border-[var(--border-subdue)] rounded-xl p-6">
+  <header class="flex flex-wrap items-center gap-3">
+    <ChangelogBadge status={status} />
+    <h2 class="text-lg font-[var(--font-weight-emphasis)] text-[var(--text-default)] leading-none">v{version}</h2>
+    <time datetime={date} class="text-sm text-[var(--text-subdue)] leading-none">{formatChangelogDate(date)}</time>
+  </header>
+
+  {sections.map((section) => (
+    <ChangelogSection label={section.label} items={section.items} />
+  ))}
+</article>

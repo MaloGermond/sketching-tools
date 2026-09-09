@@ -27,8 +27,15 @@ const relativePath = currentPath.startsWith(base)
     )}
 
     <a
+      href={`${base}/changelog`}
+      class="ml-auto hidden sm:inline-flex items-center text-sm text-[var(--text-subdue)] no-underline whitespace-nowrap [transition:color_150ms_ease] hover:text-[var(--text-default)]"
+    >
+      Changelog
+    </a>
+
+    <a
       href={`${base}/settings`}
-      class="ml-auto inline-flex items-center justify-center w-8 h-8 rounded-xs bg-[var(--surface-subdue)] text-[var(--text-subdue)] [transition:background-color_150ms_ease,color_150ms_ease] hover:bg-[var(--surface-default)] hover:text-[var(--text-default)]"
+      class="sm:ml-0 ml-auto inline-flex items-center justify-center w-8 h-8 rounded-xs bg-[var(--surface-subdue)] text-[var(--text-subdue)] [transition:background-color_150ms_ease,color_150ms_ease] hover:bg-[var(--surface-default)] hover:text-[var(--text-default)]"
       aria-label="Réglages"
       title="Réglages"
     >
